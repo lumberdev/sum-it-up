@@ -1,18 +1,27 @@
-import "./globals.css";
-
+import './globals.css';
+import Header from '~/components/Header';
+import Footer from '~/components/Footer';
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      {/*
+	return (
+		<html lang='en'>
+			{/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
-      <head />
-      <body>{children}</body>
-    </html>
-  );
+			<head />
+			<body className='flex flex-col justify-between'>
+				<Header />
+				<main className='relative flex-1'>
+					<div className='absolute top-0 bottom-0 h-full w-full'>
+						{children}
+					</div>
+				</main>
+				<Footer />
+			</body>
+		</html>
+	);
 }
