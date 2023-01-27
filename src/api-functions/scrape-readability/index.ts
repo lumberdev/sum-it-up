@@ -1,5 +1,6 @@
 import { Readability } from "@mozilla/readability";
 import { JSDOM } from "jsdom";
+import { getResponseBasedOnContentType } from "~/utils/get-response-based-on-contentType";
 
 // Based on Dennis Heihoff's contribution
 
@@ -22,15 +23,22 @@ const getHTML = async (url: string): Promise<string> => {
       // If googleusercontent cache search fails, use the raw url version.
       res = await fetch(url, {
         method: "get",
-        headers: { "User-Agent": userAgent },
+        headers: {
+          "User-Agent": userAgent,
+        },
       });
+
       if (res.status === 200) {
-        return await res.text();
+        try {
+          return await getResponseBasedOnContentType(res);
+        } catch (error) {
+          throw Error("Something went wrong while consuming response");
+        }
       }
     }
 
     if (res.ok) {
-      return await res.text();
+      return await getResponseBasedOnContentType(res);
     } else {
       throw Error("Unable to parse url");
     }
