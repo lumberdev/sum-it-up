@@ -38,7 +38,7 @@ const SongInputField = ({
 				onChange={(e) => setArtistName(e.target.value)}
 			/>
 			<button
-				className='mx-auto mt-4 flex h-[48px] w-[10rem] items-center justify-center rounded-full bg-darkest text-heading4 font-semibold text-white'
+				className='mx-auto mt-4 flex h-11 w-[10rem] items-center justify-center rounded-full bg-darkest text-heading4 font-semibold text-white md:h-12'
 				type='submit'>
 				Summarize
 			</button>

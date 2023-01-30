@@ -1,6 +1,6 @@
 const Header = () => {
 	return (
-		<header className='flex min-h-[10rem]  flex-col items-center justify-center px-10 text-center'>
+		<header className='flex min-h-[10rem] flex-col items-center justify-center px-10 pt-10 text-center'>
 			<h1 className='text-heading1 font-semibold text-darkest'>Sum it up!</h1>
 			<div className='text-dark'>
 				Get an instant summary of any text, website content (URL) or song for

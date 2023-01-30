@@ -9,12 +9,12 @@ const WebsiteInputField = ({
 
 	return (
 		<form
-			className='flex h-12 w-full justify-center overflow-hidden rounded-full'
+			className='flex h-11 w-full justify-center overflow-hidden rounded-full md:h-12'
 			onSubmit={(event: React.SyntheticEvent) =>
 				handleFormSubmit(event, inputUrl)
 			}>
 			<input
-				className='flex w-3/4 items-center justify-center px-6'
+				className='flex w-3/4 items-center justify-center px-4 pl-6'
 				type='text'
 				name='website-url'
 				value={inputUrl}
@@ -23,7 +23,7 @@ const WebsiteInputField = ({
 			/>
 			<button
 				type='submit'
-				className='flex min-w-[10rem] items-center justify-center bg-darkest text-heading4 font-semibold text-white'>
+				className='flex min-w-[8rem] items-center justify-center bg-darkest font-semibold text-white md:min-w-[10rem] md:text-heading4'>
 				Summarize
 			</button>
 		</form>

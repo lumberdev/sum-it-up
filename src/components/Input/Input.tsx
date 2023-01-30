@@ -27,10 +27,8 @@ const Input = () => {
 				const existingDataArr: { [key: string]: string }[] =
 					JSON.parse(existingData);
 				existingDataArr.push(res);
-				console.log(JSON.stringify(existingDataArr));
 				localStorage.setItem('summaries', JSON.stringify(existingDataArr));
 			} else {
-				console.log(JSON.stringify([res]));
 				localStorage.setItem('summaries', JSON.stringify([res]));
 			}
 		} catch (error) {
@@ -41,12 +39,12 @@ const Input = () => {
 	return (
 		<Container>
 			<div className='mx-auto max-w-[31.875rem] py-8 text-center'>
-				<div className='mx-auto inline-flex h-12 items-center justify-center rounded-full bg-dark p-1 text-white'>
+				<div className='mx-auto inline-flex h-12 w-full max-w-[21.5rem] items-center justify-center rounded-full bg-dark p-1 text-white'>
 					{(Object.keys(InputType) as Array<keyof typeof InputType>).map(
 						(key) => (
 							<button
 								key={key}
-								className={`h-full min-w-[6.625rem] rounded-full transition${
+								className={`h-full flex-1 rounded-full transition${
 									InputType[key] === inputTypeSelected && ' bg-white text-dark'
 								}`}
 								onClick={() => setInputTypeSelected(InputType[key])}>
@@ -61,7 +59,7 @@ const Input = () => {
 					</label>
 					<input
 						type='range'
-						className='flex min-w-[30rem] cursor-pointer items-center bg-medium p-0 focus:shadow-none'
+						className='flex w-full cursor-pointer items-center bg-medium p-0 focus:shadow-none md:max-w-[30rem]'
 						min='100'
 						max='300'
 						step='100'
