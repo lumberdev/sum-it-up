@@ -18,11 +18,7 @@ export default function RootLayout({
 			<body className='flex flex-col justify-between'>
 				<ReactQueryWrapper>
 					<Header />
-					<main className='relative flex-1'>
-						<div className='absolute top-0 bottom-0 h-full w-full'>
-							{children}
-						</div>
-					</main>
+					<main className='flex-1'>{children}</main>
 					<Footer />
 				</ReactQueryWrapper>
 			</body>

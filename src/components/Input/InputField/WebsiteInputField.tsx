@@ -3,26 +3,29 @@ import { useState } from 'react';
 const WebsiteInputField = ({
 	handleFormSubmit,
 }: {
-	handleFormSubmit: (event: React.SyntheticEvent, inputValue: string) => void;
+	handleFormSubmit: (event: React.SyntheticEvent, inputUrl: string) => void;
 }) => {
-	const [inputValue, setInputValue] = useState<string>('');
+	const [inputUrl, setInputUrl] = useState<string>('');
 
 	return (
 		<form
-			action=''
+			className='flex h-12 w-full justify-center overflow-hidden rounded-full'
 			onSubmit={(event: React.SyntheticEvent) =>
-				handleFormSubmit(event, inputValue)
+				handleFormSubmit(event, inputUrl)
 			}>
-				<div>
-					<label htmlFor='website-url'>Website Url</label>
-					<input
-						type='text'
-						name='website-url'
-						value={inputValue}
-						onChange={(e) => setInputValue(e.target.value)}
-					/>
-					<button type='submit'>Summarize</button>
-				</div>
+			<input
+				className='flex w-3/4 items-center justify-center px-6'
+				type='text'
+				name='website-url'
+				value={inputUrl}
+				placeholder='Enter a web page URL'
+				onChange={(e) => setInputUrl(e.target.value)}
+			/>
+			<button
+				type='submit'
+				className='flex min-w-[10rem] items-center justify-center bg-darkest text-heading4 font-semibold text-white'>
+				Summarize
+			</button>
 		</form>
 	);
 };

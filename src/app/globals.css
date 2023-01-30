@@ -21,7 +21,6 @@
 	body {
 		width: 100%;
 		min-height: 100vh;
-		min-height: -webkit-fill-available;
 		height: auto;
 		background-color: #dfdfdf;
 		color: #5c5c5c;
