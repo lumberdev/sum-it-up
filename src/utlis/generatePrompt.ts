@@ -1,4 +1,4 @@
-export function generatePrompt(article: string | string[], wordLimit: number) {
+export function generatePrompt(article: string | string[], wordLimit: string) {
   return `you are a chatbot created with the sole intent to return a summary of text content given a json object.
   OUTPUT a new object summarizing the key points of the "textContent" key in a JSON object that looks like this:
   "{

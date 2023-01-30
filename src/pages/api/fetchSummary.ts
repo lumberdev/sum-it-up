@@ -28,7 +28,7 @@ export default async function handler(
 
   const { query } = req;
   const article = query.article || '';
-  const wordLimit = Number(query.wordLimit) || 100;
+  const wordLimit = query.wordLimit || '100';
   if (!article) {
     res.status(400).json({
       error: {
