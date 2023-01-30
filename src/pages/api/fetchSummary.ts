@@ -28,6 +28,7 @@ export default async function handler(
 
   const { query } = req;
   const article = query.article || '';
+  const wordLimit = Number(query.wordLimit) || 100;
   if (!article) {
     res.status(400).json({
       error: {
@@ -41,7 +42,7 @@ export default async function handler(
     // Using Mockdata for testing
     // const completion = await openai.createCompletion({
     //   model: 'text-davinci-003',
-    //   prompt: generatePrompt(article),
+    // prompt: generatePrompt(article, wordLimit),
     //   max_tokens: 80,
     //   temperature: 0,
     // });
