@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { InputType } from '~/types/types';
+import { InputType } from '~/types';
 import WebsiteInputField from './InputField/WebsiteInputField';
 import SongInputField from './InputField/SongInputField';
 import TextInputField from './InputField/TextInputField';

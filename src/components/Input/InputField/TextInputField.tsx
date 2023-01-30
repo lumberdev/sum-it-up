@@ -1,4 +1,3 @@
-import { InputType } from '~/types/types';
 import { useState } from 'react';
 
 const TextInputField = ({
