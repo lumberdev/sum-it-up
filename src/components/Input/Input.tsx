@@ -7,8 +7,12 @@ import SongInputField from './InputField/SongInputField';
 import TextInputField from './InputField/TextInputField';
 import { fetchArticleData } from '~/query/fetch-article-data';
 import Container from '../utility-components/Container';
-
-const Input = () => {
+import { mockResponse, DataType } from '~/mock-response';
+const Input = ({
+	handleSummarize,
+}: {
+	handleSummarize: (newResult: DataType) => void;
+}) => {
 	const [inputTypeSelected, setInputTypeSelected] = useState<InputType>(
 		InputType.WEBSITE
 	);
@@ -28,8 +32,10 @@ const Input = () => {
 					JSON.parse(existingData);
 				existingDataArr.push(res);
 				localStorage.setItem('summaries', JSON.stringify(existingDataArr));
+				handleSummarize(mockResponse.data);
 			} else {
 				localStorage.setItem('summaries', JSON.stringify([res]));
+				handleSummarize(mockResponse.data);
 			}
 		} catch (error) {
 			console.error(error);
