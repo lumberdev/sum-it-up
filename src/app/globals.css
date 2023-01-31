@@ -1,11 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 @layer base {
-  html {
-    font-family: Poppin, sans-serif;
-    font-size: 16px;
-  }
+	html {
+		font-family: Poppin, sans-serif;
+		width: 100%;
+		height: auto;
+		min-height: 100vh;
+		box-sizing: border-box;
+	}
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: inherit;
+	}
+
+	body {
+		width: 100%;
+		min-height: 100vh;
+		height: auto;
+		background-color: #dfdfdf;
+		color: #5c5c5c;
+	}
 }

@@ -20,3 +20,9 @@ export type DocumentResponseData = {
 export type ErrorMessage = {
   message: string;
 };
+
+export enum InputType {
+	WEBSITE = 'Website',
+	TEXT = 'Text',
+	SONG = 'Song',
+}

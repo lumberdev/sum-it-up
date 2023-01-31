@@ -1,10 +1,10 @@
-import Image from "next/image";
-import TestComponent from "~/components/test";
-
+import InputComponent from '~/components/Input/Input';
+import About from '~/components/About';
 export default function Home() {
-  return (
-    <main>
-      <TestComponent />
-    </main>
-  );
+	return (
+		<>
+			<InputComponent />
+			<About />
+		</>
+	);
 }
