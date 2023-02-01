@@ -20,6 +20,7 @@ const TextInputField = ({
 				name='text-input'
 				value={inputValue}
 				placeholder='Enter some text'
+        required
 				onChange={(e) => setInputValue(e.target.value)}
 			/>
 			<button

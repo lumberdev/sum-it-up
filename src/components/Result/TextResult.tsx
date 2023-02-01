@@ -2,14 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import Container from '../utility-components/Container';
-import { DataType } from '~/mock-response';
+import { TextSummaryResponseType } from '~/types';
 
 type ResultProp = {
-	currentResult: DataType | null;
+	textSummaryResponse?: TextSummaryResponseType | null;
 	handNewSearchBtnClick: () => void;
 };
 
-const Result = ({ currentResult, handNewSearchBtnClick }: ResultProp) => {
+const TextResult = ({
+	textSummaryResponse,
+	handNewSearchBtnClick,
+}: ResultProp) => {
 	const [resultType, setResultType] = useState<string>('summary');
 	const [didCopy, setDidCopy] = useState<boolean>(false);
 
@@ -69,14 +72,14 @@ const Result = ({ currentResult, handNewSearchBtnClick }: ResultProp) => {
 				</button>
 			</div>
 			<div className='mx-auto mb-8 max-w-3xl md:mt-8'>
-				{resultType === 'summary' && currentResult && (
+				{resultType === 'summary' && textSummaryResponse && (
 					<>
 						<h3 className='my-4 text-heading3'>Summed Up!</h3>
 						<div className='rounded-md bg-medium p-8 pb-6'>
-							{currentResult.summary}
+							{textSummaryResponse.summary}
 							<button
 								onClick={() => {
-									copyToClipboard(currentResult.summary);
+									copyToClipboard(textSummaryResponse.summary);
 								}}
 								className='mt-6 ml-auto block rounded-md bg-darkest px-4 py-1 text-white'>
 								{didCopy ? 'Copied' : 'Copy'}
@@ -84,33 +87,31 @@ const Result = ({ currentResult, handNewSearchBtnClick }: ResultProp) => {
 						</div>
 					</>
 				)}
-				{resultType === 'key-points' && currentResult && (
+				{resultType === 'key-points' && textSummaryResponse && (
 					<>
 						<h3 className='my-4 text-heading3'>The Key Points</h3>
 						<ul className='list-disc'>
-							{currentResult.keyPoints.map((keyPoint, id) => (
+							{textSummaryResponse.keyPoints.map((keyPoint, id) => (
 								<li key={id}>{keyPoint}</li>
 							))}
 						</ul>
 					</>
 				)}
-				{resultType === 'analysis' && currentResult && (
+				{resultType === 'analysis' && textSummaryResponse && (
 					<>
 						<h3 className='my-4 text-heading3'>Our take</h3>
 						<div className='rounded-md bg-medium p-8'>
 							<h4 className='my-2 text-heading4 font-bold'>
-								Bias: {currentResult.bias}
+								Bias: {textSummaryResponse.bias}
 							</h4>
 							<div className='mb-4 p-2'>
-								This articles has a {currentResult.bias} Lorem, ipsum dolor sit
-								amet consectetur adipisicing elit. Unde, maiores.{' '}
+								This articles has a {textSummaryResponse.bias} bias
 							</div>
 							<h4 className='my-2 text-heading4 font-bold'>
-								Tone: {currentResult.tone}
+								Tone: {textSummaryResponse.tone}
 							</h4>
 							<div className='p-2'>
-								This articles has a {currentResult.tone} Lorem, ipsum dolor sit
-								amet consectetur adipisicing elit. Unde, maiores.{' '}
+								This articles has a {textSummaryResponse.tone} tone
 							</div>
 						</div>
 					</>
@@ -120,4 +121,4 @@ const Result = ({ currentResult, handNewSearchBtnClick }: ResultProp) => {
 	);
 };
 
-export default Result;
+export default TextResult;

@@ -27,6 +27,7 @@ const SongInputField = ({
 				type='text'
 				name='song-name'
 				value={songTitle}
+        required
 				onChange={(e) => setSongTitle(e.target.value)}
 			/>
 			<label className='mb-3 font-semibold' htmlFor='artist-name'>

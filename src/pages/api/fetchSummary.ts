@@ -111,6 +111,7 @@ async function callWithUrl(
         title: json.title,
         dir: json.dir,
         url: json.url,
+        type,
       };
     }
   } catch (error) {

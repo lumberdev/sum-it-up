@@ -59,3 +59,29 @@ export type SongType = {
   mood: string;
   moodColor: string;
 };
+
+
+export type TextSummaryResponseType = {
+  bias: string;
+  byline: string | null;
+  dir: any; // not sure what this would be
+  keyPoints: string[];
+  summary: string;
+  title: string;
+  tone: string;
+  trust?: number;
+  url: string;
+  type: string;
+}
+export type SongMeaningResponseType = {
+  byline: string | null;
+  dir: any; // not sure what this would be
+  meaning: string;
+  mood: string;
+  moodColor: string;
+  title: string;
+  url: string;
+  type: string;
+}
+
+export type ResponseType = TextSummaryResponseType | SongMeaningResponseType;

@@ -21,6 +21,7 @@ const WebsiteInputField = ({
 				name='website-url'
 				value={inputUrl}
 				placeholder='Enter a web page URL'
+        required
 				onChange={(e) => setInputUrl(e.target.value)}
 			/>
 			<button
