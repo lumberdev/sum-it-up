@@ -83,7 +83,7 @@ const Input = ({
 	return (
 		<Container>
 			<div className='mx-auto max-w-[31.875rem] py-8 text-center'>
-				<div className='mx-auto inline-flex h-12 w-full max-w-[21.5rem] items-center justify-center rounded-full bg-dark p-1 text-white'>
+				<div className='mx-auto inline-flex h-12 w-full max-w-[21.5rem] items-center justify-center rounded-full bg-primary p-1 text-white'>
 					{(Object.keys(InputType) as Array<keyof typeof InputType>).map(
 						(key) => (
 							<button

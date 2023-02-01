@@ -26,7 +26,7 @@ const WebsiteInputField = ({
 			/>
 			<button
 				type='submit'
-				className='flex min-w-[8rem] items-center justify-center bg-darkest font-semibold text-white md:min-w-[10rem] md:text-heading4'>
+				className='flex min-w-[8rem] items-center justify-center bg-primaryDark font-semibold text-white md:min-w-[10rem] md:text-heading4'>
 				Summarize
 			</button>
 		</form>

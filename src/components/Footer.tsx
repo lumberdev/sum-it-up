@@ -11,8 +11,9 @@ const Footer = () => {
 					</div>
 				</div>
 				<div className='flex flex-1 flex-col items-center justify-between text-paragraph md:items-end'>
-					<div>
+					<div className='flex items-center'>
 						Made by
+						<span className='mr-1 ml-2 inline-block h-4 w-4 rounded-full bg-[#FFCC08] relative bottom-0.5'></span>
 						<span className='font-bold'> Lumber</span>
 					</div>
 					<div className='flex justify-end gap-10 py-4 md:py-0'>
