@@ -5,9 +5,10 @@ import { InputType } from '~/types';
 import WebsiteInputField from './InputField/WebsiteInputField';
 import SongInputField from './InputField/SongInputField';
 import TextInputField from './InputField/TextInputField';
-import { fetchArticleData } from '~/query/fetch-article-data';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Container from '../utility-components/Container';
 import { mockResponse, DataType } from '~/mock-response';
+import { postUrl } from '~/query/post-url';
 const Input = ({
 	handleSummarize,
 }: {
@@ -18,29 +19,27 @@ const Input = ({
 	);
 	const [summaryLength, setSummaryLength] = useState('200');
 
+	const queryClient = useQueryClient();
+	const { isLoading, mutate, error, isError } = useMutation({
+		mutationFn: postUrl,
+		onSuccess: (res) => {
+			queryClient.invalidateQueries(['test']);
+			handleSummarize(res);
+		},
+	});
+
 	const handleFormSubmit = async (
 		event: React.SyntheticEvent,
-		inputUrl: string
+		inputText: string
 	) => {
 		event.preventDefault();
-		try {
-			const res = await fetchArticleData(inputUrl);
-
-			const existingData = localStorage.getItem('summaries');
-			if (existingData) {
-				const existingDataArr: { [key: string]: string }[] =
-					JSON.parse(existingData);
-				existingDataArr.push(res);
-				localStorage.setItem('summaries', JSON.stringify(existingDataArr));
-				handleSummarize(mockResponse.data);
-			} else {
-				localStorage.setItem('summaries', JSON.stringify([res]));
-				handleSummarize(mockResponse.data);
-			}
-		} catch (error) {
-			console.error(error);
-		}
+		mutate({
+			inputType: inputTypeSelected,
+			inputText,
+			summaryLength,
+		});
 	};
+	if (isLoading) return <div>Loading</div>;
 
 	return (
 		<Container>

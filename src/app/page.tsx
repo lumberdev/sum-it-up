@@ -10,11 +10,24 @@ export default function Home() {
 	const [currentResult, setCurrentResult] = useState<DataType | null>(null);
 
 	const handleSummarize = (newResult: DataType) => {
+		setLocalStorage(newResult);
 		setDisplayResult(true);
 		setCurrentResult((prev) => ({ ...prev, ...newResult }));
 	};
 	const handNewSearchBtnClick = () => {
 		setDisplayResult(false);
+	};
+
+	const setLocalStorage = (newData: DataType) => {
+		console.log(newData);
+		const existingData = localStorage.getItem('summaries');
+		if (existingData) {
+			const existingDataArr: DataType[] = JSON.parse(existingData);
+			existingDataArr.push(newData);
+			localStorage.setItem('summaries', JSON.stringify(existingDataArr));
+		} else {
+			localStorage.setItem('summaries', JSON.stringify([newData]));
+		}
 	};
 
 	return (

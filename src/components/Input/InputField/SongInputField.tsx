@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { InputType } from '~/types';
 
 const SongInputField = ({
 	handleFormSubmit,
