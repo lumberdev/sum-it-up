@@ -1,4 +1,4 @@
-### Interesting responses
+### Interesting responses.
 
 A song in a different language:
 {
