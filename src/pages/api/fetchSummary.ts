@@ -9,7 +9,7 @@ import {
   SongType,
 } from "~/types";
 import { openAIRequest } from "~/api-functions/open-ai-request";
-
+import os from "os";
 /**
  * Make a POST request:
  * {
@@ -42,7 +42,7 @@ export default async function handler(
       code: 405,
     });
   const { url, type, text, wordLimit } = body;
-
+  const HOST_URL = req.headers.host;
   if (type === "text" && (!text || text.length <= 0))
     return res.status(400).json({
       message: "Please pass text value for this type of request",
@@ -62,7 +62,7 @@ export default async function handler(
     if (type === "text" && typeof text === "string")
       openAiResponse = await callWithText(text, wordLimit, type);
     if (type === "song" || type === "article")
-      openAiResponse = await callWithUrl(url, wordLimit, type);
+      openAiResponse = await callWithUrl(url, wordLimit, type, HOST_URL);
     return res.status(200).json({ openAiResponse });
   } catch (error) {
     res.status(500).json({ message: "Request errored out", code: 500 });
@@ -87,13 +87,14 @@ async function callWithText(
 async function callWithUrl(
   url: string,
   wordLimit: number,
-  type: "song" | "article" | "text"
+  type: ContentType,
+  host?: string
 ) {
   try {
     const CHUNK_LENGTH = 500;
     // await fetchRetry(`/readability?url_resource=${url}`, 100, 3)
     const innerResponse = await fetch(
-      `${process.env.HOST_URL}/api/readability?url_resource="${url}"&chunk_length=${CHUNK_LENGTH}`
+      `${host}/api/readability?url_resource="${url}"&chunk_length=${CHUNK_LENGTH}`
     );
     // if res is good, process in openAPI
     if (innerResponse.ok) {
