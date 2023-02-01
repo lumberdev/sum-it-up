@@ -1,6 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ContentType, DataType, ErrorMessage, SongType } from "~/types";
+import {
+  ContentType,
+  CustomRequest,
+  DataType,
+  ErrorMessage,
+  RequestBody,
+  SongType,
+} from "~/types";
 import { openAIRequest } from "~/api-functions/open-ai-request";
 
 /**
@@ -13,16 +20,6 @@ import { openAIRequest } from "~/api-functions/open-ai-request";
  * }
  */
 
-type RequestBody = {
-  url: string;
-  text?: string;
-  type: ContentType;
-  wordLimit: number;
-};
-
-interface CustomRequest<T> extends NextApiRequest {
-  body: T;
-}
 // byline: any;
 // title: any;
 // dir: any;
@@ -93,10 +90,10 @@ async function callWithUrl(
   type: "song" | "article" | "text"
 ) {
   try {
-    const CHUNK_LENGTH = 1000;
+    const CHUNK_LENGTH = 500;
     // await fetchRetry(`/readability?url_resource=${url}`, 100, 3)
     const innerResponse = await fetch(
-      `http://localhost:3000/api/readability?url_resource="${url}"&chunk_length=${CHUNK_LENGTH}`
+      `${process.env.HOST_URL}/api/readability?url_resource="${url}"&chunk_length=${CHUNK_LENGTH}`
     );
     // if res is good, process in openAPI
     if (innerResponse.ok) {

@@ -4,6 +4,8 @@
  * in their own file, but do whatever makes sense.
  */
 
+import { NextApiRequest } from "next";
+
 export type DocumentResponseData = {
   url: string;
   title: string;
@@ -25,6 +27,16 @@ export type ErrorMessage = {
   message: string;
   code: number;
 };
+
+export type RequestBody = {
+  url: string;
+  text?: string;
+  type: ContentType;
+  wordLimit: number;
+};
+export interface CustomRequest<T> extends NextApiRequest {
+  body: T;
+}
 
 export enum InputType {
   WEBSITE = "Website",
