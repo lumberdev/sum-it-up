@@ -1,14 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { InputType } from '~/types';
+import { ContentType, InputType, RequestBody } from '~/types';
 import WebsiteInputField from './InputField/WebsiteInputField';
 import SongInputField from './InputField/SongInputField';
 import TextInputField from './InputField/TextInputField';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchSummaryData } from '~/query/fetch-summary-data';
 import Container from '../utility-components/Container';
 import { mockResponse, DataType } from '~/mock-response';
 import { postUrl } from '~/query/post-url';
+
+export type handleFormSubmitType = (
+	event: React.SyntheticEvent,
+	type: ContentType,
+	inputUrl?: string,
+	text?: string
+) => Promise<void>;
+
 const Input = ({
 	handleSummarize,
 }: {
@@ -19,6 +28,36 @@ const Input = ({
 	);
 	const [summaryLength, setSummaryLength] = useState('200');
 
+	// const handleFormSubmit: handleFormSubmitType = async (
+	// 	event,
+	// 	type,
+	// 	inputUrl,
+	// 	text
+	// ) => {
+	// 	event.preventDefault();
+	// 	try {
+	// 		const request: RequestBody = {
+	// 			url: inputUrl ?? '',
+	// 			wordLimit: parseInt(summaryLength),
+	// 			type,
+	// 			text,
+	// 		};
+	// 		const res = await fetchSummaryData(request);
+
+	// 		const existingData = localStorage.getItem('summaries');
+	// 		if (existingData) {
+	// 			const existingDataArr: { [key: string]: string }[] =
+	// 				JSON.parse(existingData);
+	// 			existingDataArr.push(res);
+	// 			localStorage.setItem('summaries', JSON.stringify(existingDataArr));
+	// 		} else {
+	// 			localStorage.setItem('summaries', JSON.stringify([res]));
+	// 		}
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// };
+
 	const queryClient = useQueryClient();
 	const { isLoading, mutate, error, isError } = useMutation({
 		mutationFn: postUrl,
@@ -28,14 +67,16 @@ const Input = ({
 		},
 	});
 
-	const handleFormSubmit = async (
-		event: React.SyntheticEvent,
-		inputText: string
+	const handleFormSubmit: handleFormSubmitType = async (
+		event,
+		type,
+		inputUrl,
+		text
 	) => {
 		event.preventDefault();
 		mutate({
-			inputType: inputTypeSelected,
-			inputText,
+			inputType: type,
+			inputText: inputUrl,
 			summaryLength,
 		});
 	};

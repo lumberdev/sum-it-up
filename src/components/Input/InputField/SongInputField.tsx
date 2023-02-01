@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { InputType } from '~/types';
+import { ContentType } from '~/types';
+import { handleFormSubmitType } from '../Input';
 
 const SongInputField = ({
 	handleFormSubmit,
 }: {
-	handleFormSubmit: (event: React.SyntheticEvent, inputUrl: string) => void;
+	handleFormSubmit: handleFormSubmitType;
 }) => {
 	const [songTitle, setSongTitle] = useState<string>('');
 	const [artistName, setArtistName] = useState<string>('');
-
+	const type = 'song';
 	return (
 		<form
 			className='flex w-full flex-col rounded-md'
@@ -16,7 +17,7 @@ const SongInputField = ({
 				const inputUrl = `https://www.google.com/search?q=lyrics+to+${artistName
 					.split(' ')
 					.join('-')}+${songTitle.split(' ').join('-')}`;
-				handleFormSubmit(event, inputUrl);
+				handleFormSubmit(event, type, inputUrl);
 			}}>
 			<label className='mb-3 font-semibold' htmlFor='song-name'>
 				Enter Song Title

@@ -1,17 +1,19 @@
 import { useState } from 'react';
+import { ContentType } from '~/types';
+import { handleFormSubmitType } from '../Input';
 
 const WebsiteInputField = ({
 	handleFormSubmit,
 }: {
-	handleFormSubmit: (event: React.SyntheticEvent, inputUrl: string) => void;
+	handleFormSubmit: handleFormSubmitType;
 }) => {
 	const [inputUrl, setInputUrl] = useState<string>('');
-
+	const type = 'article';
 	return (
 		<form
 			className='flex h-11 w-full justify-center overflow-hidden rounded-full md:h-12'
 			onSubmit={(event: React.SyntheticEvent) =>
-				handleFormSubmit(event, inputUrl)
+				handleFormSubmit(event, type, inputUrl)
 			}>
 			<input
 				className='flex w-3/4 items-center justify-center px-4 pl-6'

@@ -1,17 +1,19 @@
 import { useState } from 'react';
+import { ContentType } from '~/types';
+import { handleFormSubmitType } from '../Input';
 
 const TextInputField = ({
 	handleFormSubmit,
 }: {
-	handleFormSubmit: (event: React.SyntheticEvent, inputUrl: string) => void;
+	handleFormSubmit: handleFormSubmitType;
 }) => {
 	const [inputValue, setInputValue] = useState<string>('');
-
+	const type = 'text';
 	return (
 		<form
 			className='flex w-full flex-col rounded-md'
 			onSubmit={(event: React.SyntheticEvent) =>
-				handleFormSubmit(event, inputValue)
+				handleFormSubmit(event, type, '', inputValue)
 			}>
 			<textarea
 				className='block h-[16rem] w-full rounded-md p-2.5'
