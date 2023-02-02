@@ -6,8 +6,7 @@ import { getResponseBasedOnContentType } from "~/utils/get-response-based-on-con
 
 const userAgent =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36";
-const googleWebcachePrefix =
-  "https://webcache.googleusercontent.com/search?q=cache:";
+const googleWebcachePrefix = "https://webcache.googleusercontent.com/search?q=cache:";
 
 const getHTML = async (url: string): Promise<string> => {
   let res: Response;

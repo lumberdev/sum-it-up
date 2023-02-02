@@ -22,7 +22,7 @@ export type ErrorMessage = {
 };
 
 export enum InputType {
-	WEBSITE = 'Website',
-	TEXT = 'Text',
-	SONG = 'Song',
+  WEBSITE = "Website",
+  TEXT = "Text",
+  SONG = "Song",
 }
