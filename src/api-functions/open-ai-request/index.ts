@@ -70,18 +70,18 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
     };
     try {
       // parsedResponseData = await JSON.parse(completion.data.choices[0].text);
-      parsedResponseData = await (async () => {
+      parsedResponseData = (await (async () => {
         const response = () =>
           new Promise((resolve, reject) => {
             setTimeout(() => {
               resolve(mockData);
-            }, 20000);
+            }, 25000);
           });
         const result = response()
           .then((res) => res)
           .catch((error) => error);
         return result;
-      })();
+      })()) as any;
     } catch (error) {
       throw new Error("Invalid JSON response from OpenAi");
     }
