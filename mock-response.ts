@@ -15,4 +15,8 @@ export const mockData = {
   summary:
     "Mercedes-Benz announced that it has received government approval for the first Level 3 driving feature in the US. The company's Drive Pilot feature allows the car to do all the driving but the driver needs to be able to take control at a moment's notice. The technology meets Nevada's 'minimal risk condition' requirement for Level 3 or higher fully autonomous vehicles to be able to stop if there is a malfunction in the system. The system is similar to hands-free highway driving systems from other companies, but with some differences in terms of driver monitoring. Mercedes plans to receive approval to begin offering its Level 3 system to drivers in California later this year.",
   trust: 8,
+  meaning:
+    "The song is about a man who is attracted to a woman and wants to take things slow with her. He expresses his desire to get to know her better and to explore her body and her mind. He alsc expresses his willingness to take things slow and to make sure that she is comfortable with the pace. The song has a romantic and passionate tone, with a hint of playfulness.",
+  mood: "Energetic",
+  moodColor: "#fd5634",
 };

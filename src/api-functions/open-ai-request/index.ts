@@ -1,10 +1,7 @@
 import { Configuration, OpenAIApi } from "openai";
-import {
-  generatePromptArticle,
-  generatePromptSong,
-  generatePromptText,
-} from "~/utlis/generatePrompt";
+import { generatePromptArticle, generatePromptSong, generatePromptText } from "~/utlis/generatePrompt";
 import { ContentType, DataType, SongType } from "~/types";
+import { mockData } from "../../../mock-response";
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -17,27 +14,21 @@ type OpenAiRequestProps = {
   wordLimit: number;
   type: ContentType;
 };
-export async function openAIRequest(
-  props: OpenAiRequestProps
-): Promise<DataType | SongType> {
+export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType | SongType> {
   if (!configuration.apiKey) {
-    throw new Error(
-      "OpenAI API key not configured, please follow instructions in README.md"
-    );
+    throw new Error("OpenAI API key not configured, please follow instructions in README.md");
   }
   let textContent = "";
   const wordLimit = props.wordLimit || 100;
 
   switch (props.type) {
     case "text":
-      if (!props.text || !props.text.length)
-        throw new Error("no data provided");
+      if (!props.text || !props.text.length) throw new Error("no data provided");
       textContent = props.text ?? "";
       break;
     case "song":
     case "article":
-      if (!props.chunkedTextContent || !props.chunkedTextContent.length)
-        throw new Error("no data provided");
+      if (!props.chunkedTextContent || !props.chunkedTextContent.length) throw new Error("no data provided");
       textContent = props.chunkedTextContent?.[0];
       break;
     default:
@@ -57,15 +48,15 @@ export async function openAIRequest(
 
   try {
     // Using Mockdata for testing
-    const completion = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: promptText,
-      max_tokens: 1000,
-      temperature: 0,
-    });
-    console.log(typeof completion.data, completion.data, textContent);
-    if (!completion.data.choices?.[0].text)
-      throw new Error("OpenAI did not produce a response");
+    // const completion = await openai.createCompletion({
+    //   model: "text-davinci-003",
+    //   prompt: promptText,
+    //   max_tokens: 1000,
+    //   temperature: 0,
+    // });
+    // console.log(typeof completion.data, completion.data, textContent);
+    // if (!completion.data.choices?.[0].text)
+    //   throw new Error("OpenAI did not produce a response");
 
     let parsedResponseData = {
       meaning: "",
@@ -78,7 +69,19 @@ export async function openAIRequest(
       trust: undefined,
     };
     try {
-      parsedResponseData = await JSON.parse(completion.data.choices[0].text);
+      // parsedResponseData = await JSON.parse(completion.data.choices[0].text);
+      parsedResponseData = await (async () => {
+        const response = () =>
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve(mockData);
+            }, 20000);
+          });
+        const result = response()
+          .then((res) => res)
+          .catch((error) => error);
+        return result;
+      })();
     } catch (error) {
       throw new Error("Invalid JSON response from OpenAi");
     }
