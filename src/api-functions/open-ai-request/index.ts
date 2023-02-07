@@ -3,7 +3,7 @@ import {
   generatePromptArticle,
   generatePromptSong,
   generatePromptText,
-} from "~/utlis/generatePrompt";
+} from "~/utils/generatePrompt";
 import { ContentType, DataType, SongType } from "~/types";
 
 const configuration = new Configuration({
