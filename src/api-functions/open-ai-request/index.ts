@@ -110,3 +110,7 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
     throw new Error("An error occurred during your request.");
   }
 }
+
+export const config = {
+  type: "experimental-background",
+};
