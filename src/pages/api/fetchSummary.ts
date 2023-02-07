@@ -9,7 +9,8 @@ import {
   SongType,
 } from "~/types";
 import { openAIRequest } from "~/api-functions/open-ai-request";
-import os from "os";
+import EventEmitter from "events";
+
 import readability from "~/api-functions/readability";
 /**
  * Make a POST request:
