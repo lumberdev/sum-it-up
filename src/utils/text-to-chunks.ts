@@ -1,7 +1,4 @@
-export function textToChunks(
-  longString: string,
-  wordsPerChunk: number
-): Array<string> {
+export function textToChunks(longString: string, wordsPerChunk: number): Array<string> {
   const chunkedText = [];
   const longStringArray = longString.split(/\s+/);
   let wordBuilder = [];

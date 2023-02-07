@@ -1,13 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import {
-  ContentType,
-  CustomRequest,
-  DataType,
-  ErrorMessage,
-  RequestBody,
-  SongType,
-} from "~/types";
+import { ContentType, CustomRequest, DataType, ErrorMessage, RequestBody, SongType } from "~/types";
 import { openAIRequest } from "~/api-functions/open-ai-request";
 
 /**
@@ -33,7 +26,7 @@ export type ResponseData = {
 
 export default async function handler(
   req: CustomRequest<RequestBody>,
-  res: NextApiResponse<ErrorMessage | ResponseData>
+  res: NextApiResponse<ErrorMessage | ResponseData>,
 ) {
   const { body, method } = req;
   if (method !== "POST")
@@ -59,20 +52,14 @@ export default async function handler(
   }
   let openAiResponse = null;
   try {
-    if (type === "text" && typeof text === "string")
-      openAiResponse = await callWithText(text, wordLimit, type);
-    if (type === "song" || type === "article")
-      openAiResponse = await callWithUrl(url, wordLimit, type);
+    if (type === "text" && typeof text === "string") openAiResponse = await callWithText(text, wordLimit, type);
+    if (type === "song" || type === "article") openAiResponse = await callWithUrl(url, wordLimit, type);
     return res.status(200).json({ openAiResponse });
   } catch (error) {
     res.status(500).json({ message: "Request errored out", code: 500 });
   }
 }
-async function callWithText(
-  text: string,
-  wordLimit: number,
-  type: ContentType
-) {
+async function callWithText(text: string, wordLimit: number, type: ContentType) {
   try {
     const response = await openAIRequest({
       text,
@@ -84,16 +71,12 @@ async function callWithText(
     throw error;
   }
 }
-async function callWithUrl(
-  url: string,
-  wordLimit: number,
-  type: "song" | "article" | "text"
-) {
+async function callWithUrl(url: string, wordLimit: number, type: "song" | "article" | "text") {
   try {
     const CHUNK_LENGTH = 500;
     // await fetchRetry(`/readability?url_resource=${url}`, 100, 3)
     const innerResponse = await fetch(
-      `${process.env.HOST_URL}/api/readability?url_resource="${url}"&chunk_length=${CHUNK_LENGTH}`
+      `${process.env.HOST_URL}/api/readability?url_resource="${url}"&chunk_length=${CHUNK_LENGTH}`,
     );
     // if res is good, process in openAPI
     if (innerResponse.ok) {
@@ -126,11 +109,7 @@ async function wait(delay: number) {
 }
 
 // If we have failures with the URL parsing, use this
-function fetchRetry(
-  url: string,
-  delay: number,
-  tries: number
-): Promise<Response | Error> {
+function fetchRetry(url: string, delay: number, tries: number): Promise<Response | Error> {
   function onError(error: Error) {
     let triesLeft = tries - 1;
     if (!triesLeft) throw error;

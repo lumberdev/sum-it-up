@@ -1,9 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
-import {
-  generatePromptArticle,
-  generatePromptSong,
-  generatePromptText,
-} from "~/utlis/generatePrompt";
+import { generatePromptArticle, generatePromptSong, generatePromptText } from "~/utlis/generatePrompt";
 import { ContentType, DataType, SongType } from "~/types";
 
 const configuration = new Configuration({
@@ -17,27 +13,21 @@ type OpenAiRequestProps = {
   wordLimit: number;
   type: ContentType;
 };
-export async function openAIRequest(
-  props: OpenAiRequestProps
-): Promise<DataType | SongType> {
+export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType | SongType> {
   if (!configuration.apiKey) {
-    throw new Error(
-      "OpenAI API key not configured, please follow instructions in README.md"
-    );
+    throw new Error("OpenAI API key not configured, please follow instructions in README.md");
   }
   let textContent = "";
   const wordLimit = props.wordLimit || 100;
 
   switch (props.type) {
     case "text":
-      if (!props.text || !props.text.length)
-        throw new Error("no data provided");
+      if (!props.text || !props.text.length) throw new Error("no data provided");
       textContent = props.text ?? "";
       break;
     case "song":
     case "article":
-      if (!props.chunkedTextContent || !props.chunkedTextContent.length)
-        throw new Error("no data provided");
+      if (!props.chunkedTextContent || !props.chunkedTextContent.length) throw new Error("no data provided");
       textContent = props.chunkedTextContent?.[0];
       break;
     default:
@@ -64,8 +54,7 @@ export async function openAIRequest(
       temperature: 0,
     });
     console.log(typeof completion.data, completion.data, textContent);
-    if (!completion.data.choices?.[0].text)
-      throw new Error("OpenAI did not produce a response");
+    if (!completion.data.choices?.[0].text) throw new Error("OpenAI did not produce a response");
 
     let parsedResponseData = {
       meaning: "",

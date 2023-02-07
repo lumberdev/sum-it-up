@@ -1,7 +1,4 @@
-export function generatePromptArticle(
-  article: string | string[],
-  wordLimit: number
-) {
+export function generatePromptArticle(article: string | string[], wordLimit: number) {
   return `{${article}}
 
   a summary of the text above as a JSON object that looks like this
@@ -14,10 +11,7 @@ export function generatePromptArticle(
   }"`;
 }
 
-export function generatePromptSong(
-  songLyrics: string | string[],
-  wordLimit: number
-) {
+export function generatePromptSong(songLyrics: string | string[], wordLimit: number) {
   return `{${songLyrics}}
 
   a summary of the lyrics above as a JSON object that looks like this

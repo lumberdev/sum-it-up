@@ -60,7 +60,6 @@ export type SongType = {
   moodColor: string;
 };
 
-
 export type TextSummaryResponseType = {
   bias: string;
   byline: string | null;
@@ -72,7 +71,7 @@ export type TextSummaryResponseType = {
   trust?: number;
   url: string;
   type: string;
-}
+};
 export type SongMeaningResponseType = {
   byline: string | null;
   dir: any; // not sure what this would be
@@ -82,6 +81,6 @@ export type SongMeaningResponseType = {
   title: string;
   url: string;
   type: string;
-}
+};
 
 export type ResponseType = TextSummaryResponseType | SongMeaningResponseType;
