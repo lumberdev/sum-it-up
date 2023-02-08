@@ -67,7 +67,7 @@ async function callWithText(text: string, wordLimit: number, type: ContentType) 
       wordLimit,
       type,
     });
-    return response;
+    return { ...response, type };
   } catch (error) {
     throw error;
   }
@@ -93,9 +93,9 @@ async function callWithUrl(url: string, wordLimit: number, type: ContentType) {
       title: json.title,
       dir: json.dir,
       url: json.url,
+      type,
     };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }

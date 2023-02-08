@@ -1,9 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
-import {
-  generatePromptArticle,
-  generatePromptSong,
-  generatePromptText,
-} from "~/utils/generatePrompt";
+import { generatePromptArticle, generatePromptSong, generatePromptText } from "~/utils/generatePrompt";
 import { ContentType, DataType, SongType } from "~/types";
 
 const configuration = new Configuration({
@@ -57,7 +53,7 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
       max_tokens: 1000,
       temperature: 0,
     });
-    console.log(typeof completion.data, completion.data, textContent);
+
     if (!completion.data.choices?.[0].text) throw new Error("OpenAI did not produce a response");
 
     let parsedResponseData = {
@@ -81,7 +77,7 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
         mood: parsedResponseData?.mood,
         moodColor: parsedResponseData?.moodColor,
       };
-      // console.log(completion.data);
+
       return responseObject;
     }
     const responseObject = {
@@ -91,7 +87,7 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
       summary: parsedResponseData?.summary,
       trust: parsedResponseData?.trust,
     };
-    // console.log(completion.data);
+
     return responseObject;
   } catch (error) {
     if (error) {
