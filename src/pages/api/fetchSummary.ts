@@ -100,6 +100,7 @@ async function callWithUrl(url: string, wordLimit: number, type: ContentType) {
   }
 }
 
-export const config = {
-  type: "experimental-background",
-};
+// Disable for now.
+// export const config = {
+//   type: "experimental-background",
+// };
