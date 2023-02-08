@@ -20,25 +20,25 @@ const SongInputField = ({ handleFormSubmit }: { handleFormSubmit: handleFormSubm
         Enter Song Title
       </label>
       <input
-        className="mb-6 h-12 rounded-full px-4 text-center"
+        className="mb-6 h-12 rounded-full border-2 border-primary px-4 text-center"
         type="text"
         name="song-name"
         value={songTitle}
         required
         onChange={(e) => setSongTitle(e.target.value)}
       />
-      <label className="mb-3 font-semibold" htmlFor="artist-name">
+      <label className="mb-3 font-semibold" htmlFor="artist-name border-primary border-2 rounded-l-full">
         Enter Artist
       </label>
       <input
-        className="mb-6 h-12 rounded-full px-4 text-center"
+        className="mb-6 h-12 rounded-full border-2 border-primary px-4 text-center"
         type="text"
         name="artist-name"
         value={artistName}
         onChange={(e) => setArtistName(e.target.value)}
       />
       <button
-        className="mx-auto mt-4 flex h-11 w-[10rem] items-center justify-center rounded-full bg-primaryDark text-heading4 font-semibold text-white md:h-12"
+        className="mx-auto mt-4 flex h-11 w-[10rem] items-center justify-center rounded-full bg-primary text-heading4 font-semibold text-white md:h-12"
         type="submit"
       >
         Summarize
