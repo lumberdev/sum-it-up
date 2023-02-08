@@ -36,24 +36,26 @@ const TextResult = ({ textSummaryResponse, handNewSearchBtnClick }: ResultProp) 
     <Container>
       <div className="mx-auto max-w-3xl flex-1 py-8 text-center md:flex">
         <div className="hidden basis-1/6 md:block"></div>
-        <div className="mx-auto inline-flex h-12 w-full max-w-[21.5rem] items-center justify-center rounded-full bg-dark p-1 text-white">
+        <div className="mx-auto inline-flex h-12 w-full max-w-[21.5rem] items-center justify-center rounded-full bg-primary p-1 text-white">
           <button
             key="summary"
-            className={`h-full flex-1 rounded-full transition${resultType === "summary" && " bg-white text-dark"}`}
+            className={`h-full flex-1 rounded-full transition${resultType === "summary" && " bg-white text-primary"}`}
             onClick={() => setResultType("summary")}
           >
             Summary
           </button>
           <button
             key="key-points"
-            className={`h-full flex-1 rounded-full transition${resultType === "key-points" && " bg-white text-dark"}`}
+            className={`h-full flex-1 rounded-full transition${
+              resultType === "key-points" && " bg-white text-primary"
+            }`}
             onClick={() => setResultType("key-points")}
           >
             Key Points
           </button>
           <button
             key="analysis"
-            className={`h-full flex-1 rounded-full transition${resultType === "analysis" && " bg-white text-dark"}`}
+            className={`h-full flex-1 rounded-full transition${resultType === "analysis" && " bg-white text-primary"}`}
             onClick={() => setResultType("analysis")}
           >
             Analysis
@@ -76,7 +78,7 @@ const TextResult = ({ textSummaryResponse, handNewSearchBtnClick }: ResultProp) 
                 onClick={() => {
                   copyToClipboard(textSummaryResponse.summary);
                 }}
-                className="mt-6 ml-auto block rounded-md bg-darkest px-4 py-1 text-white"
+                className="mt-6 ml-auto block rounded-md bg-dark px-4 py-1 text-white"
               >
                 {didCopy ? "Copied" : "Copy"}
               </button>

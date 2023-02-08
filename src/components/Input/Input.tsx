@@ -89,7 +89,7 @@ const Input = ({ handleSummarize }: { handleSummarize: (newResult: ResponseType)
           </label>
           <input
             type="range"
-            className="range-sm mb-6 flex h-1 w-full cursor-pointer appearance-none items-center rounded-lg bg-medium p-0 focus:shadow-none dark:bg-gray-700 md:max-w-[30rem]"
+            className="range-sm mb-6 flex h-1 w-full cursor-pointer appearance-none items-center rounded-lg bg-medium p-0 focus:shadow-none dark:bg-primary md:max-w-[30rem]"
             min="100"
             max="300"
             step="100"

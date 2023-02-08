@@ -11,7 +11,7 @@ const TextInputField = ({ handleFormSubmit }: { handleFormSubmit: handleFormSubm
       onSubmit={(event: React.SyntheticEvent) => handleFormSubmit(event, type, "", inputValue)}
     >
       <textarea
-        className="block h-[16rem] w-full rounded-md p-2.5"
+        className="block h-[16rem] w-full rounded-md border-2 border-primary p-2.5"
         name="text-input"
         value={inputValue}
         placeholder="Enter some text"
@@ -19,7 +19,7 @@ const TextInputField = ({ handleFormSubmit }: { handleFormSubmit: handleFormSubm
         onChange={(e) => setInputValue(e.target.value)}
       />
       <button
-        className="mx-auto mt-4 flex h-11 w-[10rem] items-center justify-center rounded-full bg-primaryDark text-heading4 font-semibold text-white md:h-12"
+        className="mx-auto mt-4 flex h-11 w-[10rem] items-center justify-center rounded-full bg-primary text-heading4 font-semibold text-white md:h-12"
         type="submit"
       >
         Summarize
