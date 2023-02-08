@@ -84,3 +84,11 @@ export type SongMeaningResponseType = {
 };
 
 export type ResponseType = TextSummaryResponseType | SongMeaningResponseType;
+
+export type InputFormSubmissionType = (
+  event: React.SyntheticEvent,
+  type: ContentType,
+  summaryLength: string,
+  inputUrl?: string,
+  text?: string,
+) => Promise<void>;
