@@ -2,7 +2,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ContentType, CustomRequest, DataType, ErrorMessage, RequestBody, SongType } from "~/types";
 import { openAIRequest } from "~/api-functions/open-ai-request";
-
+import os from "os";
+import readability from "~/api-functions/readability";
 /**
  * Make a POST request:
  * {
@@ -71,49 +72,34 @@ async function callWithText(text: string, wordLimit: number, type: ContentType) 
     throw error;
   }
 }
-async function callWithUrl(url: string, wordLimit: number, type: "song" | "article" | "text") {
+async function callWithUrl(url: string, wordLimit: number, type: ContentType) {
   try {
     const CHUNK_LENGTH = 500;
     // await fetchRetry(`/readability?url_resource=${url}`, 100, 3)
-    const innerResponse = await fetch(
-      `${process.env.HOST_URL}/api/readability?url_resource="${url}"&chunk_length=${CHUNK_LENGTH}`,
-    );
+    const json = await readability(url, CHUNK_LENGTH);
     // if res is good, process in openAPI
-    if (innerResponse.ok) {
-      const json = await innerResponse.json();
-      const body = {
-        type,
-        chunkedTextContent: json.chunkedTextContent ?? [""],
-        wordLimit,
-      };
-      const response = await openAIRequest(body);
 
-      return {
-        ...response,
-        byline: json.byline,
-        title: json.title,
-        dir: json.dir,
-        url: json.url,
-        type,
-      };
-    }
+    if (!json) throw Error("Readability failed.");
+    const body = {
+      type,
+      chunkedTextContent: json.chunkedTextContent ?? [""],
+      wordLimit,
+    };
+    const response = await openAIRequest(body);
+
+    return {
+      ...response,
+      byline: json.byline,
+      title: json.title,
+      dir: json.dir,
+      url: json.url,
+    };
   } catch (error) {
     console.log(error);
     throw error;
   }
-  throw new Error("Something went wrong");
 }
 
-async function wait(delay: number) {
-  return new Promise((resolve) => setTimeout(resolve, delay));
-}
-
-// If we have failures with the URL parsing, use this
-function fetchRetry(url: string, delay: number, tries: number): Promise<Response | Error> {
-  function onError(error: Error) {
-    let triesLeft = tries - 1;
-    if (!triesLeft) throw error;
-    return wait(delay).then(() => fetchRetry(url, delay, triesLeft));
-  }
-  return fetch(url).catch((error: Error) => onError(error));
-}
+export const config = {
+  type: "experimental-background",
+};

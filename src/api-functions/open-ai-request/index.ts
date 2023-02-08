@@ -1,5 +1,9 @@
 import { Configuration, OpenAIApi } from "openai";
-import { generatePromptArticle, generatePromptSong, generatePromptText } from "~/utlis/generatePrompt";
+import {
+  generatePromptArticle,
+  generatePromptSong,
+  generatePromptText,
+} from "~/utils/generatePrompt";
 import { ContentType, DataType, SongType } from "~/types";
 
 const configuration = new Configuration({
