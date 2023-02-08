@@ -2,7 +2,7 @@ import Container from "./utility-components/Container";
 
 const About = () => {
   return (
-    <Container className="border-t-2 border-lightest text-paragraph text-dark">
+    <Container className="border-t-2 border-light text-paragraph text-dark">
       <h4 className="my-8 text-center text-heading4 font-bold">About</h4>
       <p className="mb-4">
         Sum It Up is the ultimate AI tool for summarizing any text, website, or song. With its advanced algorithms and

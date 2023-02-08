@@ -42,7 +42,7 @@ const SongResult = ({ songMeaningResponse, handNewSearchBtnClick }: ResultProp) 
               onClick={() => {
                 copyToClipboard(songMeaningResponse.meaning);
               }}
-              className="mt-6 ml-auto block rounded-md bg-darkest px-4 py-1 text-white"
+              className="mt-6 ml-auto block rounded-md bg-primary px-4 py-1 text-white"
             >
               {didCopy ? "Copied" : "Copy"}
             </button>

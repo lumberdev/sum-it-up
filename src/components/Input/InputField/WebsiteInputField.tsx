@@ -11,7 +11,7 @@ const WebsiteInputField = ({ handleFormSubmit }: { handleFormSubmit: handleFormS
       onSubmit={(event: React.SyntheticEvent) => handleFormSubmit(event, type, inputUrl)}
     >
       <input
-        className="flex w-3/4 items-center justify-center px-4 pl-6"
+        className="flex w-3/4 items-center justify-center rounded-l-full border-2 border-primary px-4 pl-6"
         type="text"
         name="website-url"
         value={inputUrl}
@@ -21,7 +21,7 @@ const WebsiteInputField = ({ handleFormSubmit }: { handleFormSubmit: handleFormS
       />
       <button
         type="submit"
-        className="flex min-w-[8rem] items-center justify-center bg-primaryDark font-semibold text-white md:min-w-[10rem] md:text-heading4"
+        className="flex min-w-[8rem] items-center justify-center bg-primary font-semibold text-white md:min-w-[10rem] md:text-heading4"
       >
         Summarize
       </button>
