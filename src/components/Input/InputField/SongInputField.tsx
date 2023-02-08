@@ -1,13 +1,11 @@
 import { useState } from "react";
+import { ContentType } from "~/types";
+import { handleFormSubmitType } from "../Input";
 
-const SongInputField = ({
-  handleFormSubmit,
-}: {
-  handleFormSubmit: (event: React.SyntheticEvent, inputUrl: string) => void;
-}) => {
+const SongInputField = ({ handleFormSubmit }: { handleFormSubmit: handleFormSubmitType }) => {
   const [songTitle, setSongTitle] = useState<string>("");
   const [artistName, setArtistName] = useState<string>("");
-
+  const type = "song";
   return (
     <form
       className="flex w-full flex-col rounded-md"
@@ -15,7 +13,7 @@ const SongInputField = ({
         const inputUrl = `https://www.google.com/search?q=lyrics+to+${artistName.split(" ").join("-")}+${songTitle
           .split(" ")
           .join("-")}`;
-        handleFormSubmit(event, inputUrl);
+        handleFormSubmit(event, type, inputUrl);
       }}
     >
       <label className="mb-3 font-semibold" htmlFor="song-name">
@@ -26,6 +24,7 @@ const SongInputField = ({
         type="text"
         name="song-name"
         value={songTitle}
+        required
         onChange={(e) => setSongTitle(e.target.value)}
       />
       <label className="mb-3 font-semibold" htmlFor="artist-name">
@@ -39,7 +38,7 @@ const SongInputField = ({
         onChange={(e) => setArtistName(e.target.value)}
       />
       <button
-        className="mx-auto mt-4 flex h-11 w-[10rem] items-center justify-center rounded-full bg-darkest text-heading4 font-semibold text-white md:h-12"
+        className="mx-auto mt-4 flex h-11 w-[10rem] items-center justify-center rounded-full bg-primaryDark text-heading4 font-semibold text-white md:h-12"
         type="submit"
       >
         Summarize

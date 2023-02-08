@@ -13,7 +13,7 @@ const TestComponent = () => {
   console.log(data);
   return (
     <div>
-      <button onClick={handleFetchData} className="m-10 rounded-lg bg-red-300 p-10">
+      <button onClick={handleFetchData} className="m-10 p-10 rounded-lg bg-red-300">
         button
       </button>
       <div>{`${data?.textContent}`}</div>

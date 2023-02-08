@@ -1,39 +1,76 @@
 "use client";
 
 import { useState } from "react";
-import { InputType } from "~/types";
+import { ContentType, InputType, RequestBody } from "~/types";
 import WebsiteInputField from "./InputField/WebsiteInputField";
 import SongInputField from "./InputField/SongInputField";
 import TextInputField from "./InputField/TextInputField";
-import { fetchArticleData } from "~/query/fetch-article-data";
+import { useMutation } from "@tanstack/react-query";
 import Container from "../utility-components/Container";
+import { ResponseType } from "~/types";
+import { fetchSummaryData } from "~/query/fetch-summary-data";
+import Image from "next/image";
+import loaderGif from "../../assets/loader.gif";
+import errorIcon from "../../assets/error.png";
+export type handleFormSubmitType = (
+  event: React.SyntheticEvent,
+  type: ContentType,
+  inputUrl?: string,
+  text?: string,
+) => Promise<void>;
 
-const Input = () => {
+const Input = ({ handleSummarize }: { handleSummarize: (newResult: ResponseType) => void }) => {
   const [inputTypeSelected, setInputTypeSelected] = useState<InputType>(InputType.WEBSITE);
   const [summaryLength, setSummaryLength] = useState("200");
 
-  const handleFormSubmit = async (event: React.SyntheticEvent, inputUrl: string) => {
-    event.preventDefault();
-    try {
-      const res = await fetchArticleData(inputUrl);
+  const { isLoading, mutate, error, isError } = useMutation({
+    mutationFn: fetchSummaryData,
+    onSuccess: (res) => {
+      console.log(res);
+      handleSummarize(res.openAiResponse);
+    },
+  });
 
-      const existingData = localStorage.getItem("summaries");
-      if (existingData) {
-        const existingDataArr: { [key: string]: string }[] = JSON.parse(existingData);
-        existingDataArr.push(res);
-        localStorage.setItem("summaries", JSON.stringify(existingDataArr));
-      } else {
-        localStorage.setItem("summaries", JSON.stringify([res]));
-      }
-    } catch (error) {
-      console.error(error);
-    }
+  const handleFormSubmit: handleFormSubmitType = async (event, type, inputUrl, text) => {
+    event.preventDefault();
+    mutate({
+      url: inputUrl ?? "",
+      wordLimit: parseInt(summaryLength),
+      type,
+      text,
+    });
   };
+
+  // TODO: Refactor loading and error states
+  if (isLoading)
+    return (
+      <Container>
+        <div className="flex min-h-[30rem] items-center justify-center pb-10 text-center">
+          <div>
+            <Image src={loaderGif} alt="my gif" height={200} width={200} />
+          </div>
+        </div>
+      </Container>
+    );
+
+  if (isError)
+    return (
+      <Container>
+        <div className="flex min-h-[30rem] flex-col items-center justify-center text-center">
+          <div>
+            <Image src={errorIcon} alt="error" height={200} width={200} />
+          </div>
+          <h2 onClick={() => window.location.reload()} className="top-10 cursor-pointer text-heading3 font-bold">
+            Try Again!
+          </h2>
+        </div>
+      </Container>
+    );
 
   return (
     <Container>
       <div className="mx-auto max-w-[31.875rem] py-8 text-center">
-        <div className="mx-auto inline-flex h-12 w-full max-w-[21.5rem] items-center justify-center rounded-full bg-dark p-1 text-white">
+        <div className="mx-auto inline-flex h-12 w-full max-w-[21.5rem] items-center justify-center rounded-full bg-primary p-1 text-white">
           {(Object.keys(InputType) as Array<keyof typeof InputType>).map((key) => (
             <button
               key={key}
@@ -52,7 +89,7 @@ const Input = () => {
           </label>
           <input
             type="range"
-            className="flex w-full cursor-pointer items-center bg-medium p-0 focus:shadow-none md:max-w-[30rem]"
+            className="range-sm mb-6 flex h-1 w-full cursor-pointer appearance-none items-center rounded-lg bg-medium p-0 focus:shadow-none dark:bg-gray-700 md:max-w-[30rem]"
             min="100"
             max="300"
             step="100"
@@ -64,11 +101,11 @@ const Input = () => {
             }}
           />
 
-          <datalist id="markers" className="flex w-full justify-between pt-4">
-            <option value="100" label="Shortest"></option>
-            <option value="200" label="Short"></option>
-            <option value="300" label="Short-ish"></option>
-          </datalist>
+          <div className="flex w-full justify-between">
+            <div>Shortest</div>
+            <div>Short</div>
+            <div>Short-ish</div>
+          </div>
         </div>
         {inputTypeSelected === InputType.WEBSITE && <WebsiteInputField handleFormSubmit={handleFormSubmit} />}
         {inputTypeSelected === InputType.SONG && <SongInputField handleFormSubmit={handleFormSubmit} />}
