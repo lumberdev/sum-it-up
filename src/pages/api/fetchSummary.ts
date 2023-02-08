@@ -1,13 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import {
-  ContentType,
-  CustomRequest,
-  DataType,
-  ErrorMessage,
-  RequestBody,
-  SongType,
-} from "~/types";
+import { ContentType, CustomRequest, DataType, ErrorMessage, RequestBody, SongType } from "~/types";
 import { openAIRequest } from "~/api-functions/open-ai-request";
 import os from "os";
 import readability from "~/api-functions/readability";
@@ -34,7 +27,7 @@ export type ResponseData = {
 
 export default async function handler(
   req: CustomRequest<RequestBody>,
-  res: NextApiResponse<ErrorMessage | ResponseData>
+  res: NextApiResponse<ErrorMessage | ResponseData>,
 ) {
   const { body, method } = req;
   if (method !== "POST")
@@ -60,20 +53,14 @@ export default async function handler(
   }
   let openAiResponse = null;
   try {
-    if (type === "text" && typeof text === "string")
-      openAiResponse = await callWithText(text, wordLimit, type);
-    if (type === "song" || type === "article")
-      openAiResponse = await callWithUrl(url, wordLimit, type);
+    if (type === "text" && typeof text === "string") openAiResponse = await callWithText(text, wordLimit, type);
+    if (type === "song" || type === "article") openAiResponse = await callWithUrl(url, wordLimit, type);
     return res.status(200).json({ openAiResponse });
   } catch (error) {
     res.status(500).json({ message: "Request errored out", code: 500 });
   }
 }
-async function callWithText(
-  text: string,
-  wordLimit: number,
-  type: ContentType
-) {
+async function callWithText(text: string, wordLimit: number, type: ContentType) {
   try {
     const response = await openAIRequest({
       text,
