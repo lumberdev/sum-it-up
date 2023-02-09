@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import InputComponent from "~/components/Input/Input";
-import About from "~/components/About";
 import SongResult from "~/components/Result/SongResult";
 import TextResult from "~/components/Result/TextResult";
 import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
