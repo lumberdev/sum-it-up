@@ -1,19 +1,37 @@
 "use client";
 import { useState } from "react";
 import InputComponent from "~/components/Input/Input";
-import About from "~/components/About";
 import SongResult from "~/components/Result/SongResult";
 import TextResult from "~/components/Result/TextResult";
-import { ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
+import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
+import { useMutation } from "@tanstack/react-query";
+import { fetchSummaryData } from "~/query/fetch-summary-data";
+import Image from "next/image";
+import loaderGif from "../assets/loader.gif";
+import errorIcon from "../assets/error.png";
+import Container from "~/components/utility-components/Container";
 
 export default function Home() {
   const [displayResult, setDisplayResult] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
 
-  const handleSummarize = (newResult: ResponseType) => {
-    setLocalStorage(newResult);
-    setDisplayResult(true);
-    setCurrentResult(newResult);
+  const { isLoading, mutate, isError } = useMutation({
+    mutationFn: fetchSummaryData,
+    onSuccess: (res) => {
+      setLocalStorage(res.openAiResponse);
+      setCurrentResult(res.openAiResponse);
+      setDisplayResult(true);
+    },
+  });
+
+  const handleFormSubmit: InputFormSubmissionType = async (event, type, summaryLength, inputUrl, text) => {
+    event.preventDefault();
+    mutate({
+      url: inputUrl ?? "",
+      wordLimit: parseInt(summaryLength),
+      type,
+      text,
+    });
   };
   const handNewSearchBtnClick = () => {
     setDisplayResult(false);
@@ -30,6 +48,32 @@ export default function Home() {
     }
   };
 
+  // TODO: Refactor loading and error states
+  if (isLoading)
+    return (
+      <Container>
+        <div className="flex min-h-[30rem] items-center justify-center pb-10 text-center">
+          <div>
+            <Image src={loaderGif} alt="my gif" height={200} width={200} />
+          </div>
+        </div>
+      </Container>
+    );
+
+  if (isError)
+    return (
+      <Container>
+        <div className="flex min-h-[30rem] flex-col items-center justify-center text-center">
+          <div>
+            <Image src={errorIcon} alt="error" height={200} width={200} />
+          </div>
+          <h2 onClick={() => window.location.reload()} className="top-10 cursor-pointer text-heading3 font-bold">
+            Try Again!
+          </h2>
+        </div>
+      </Container>
+    );
+
   return (
     <>
       {displayResult ? (
@@ -45,10 +89,7 @@ export default function Home() {
           />
         )
       ) : (
-        <>
-          <InputComponent handleSummarize={handleSummarize} />
-          <About />
-        </>
+        <InputComponent handleFormSubmit={handleFormSubmit} />
       )}
     </>
   );
