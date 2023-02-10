@@ -1,26 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputComponent from "~/components/Input/Input";
 import About from "~/components/About";
 import SongResult from "~/components/Result/SongResult";
 import TextResult from "~/components/Result/TextResult";
-import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
+import {
+  InputFormSubmissionType,
+  RequestBody,
+  ResponseType,
+  SongMeaningResponseType,
+  TextSummaryResponseType,
+} from "~/types";
 import { useMutation } from "@tanstack/react-query";
-import { fetchSummaryData } from "~/query/fetch-summary-data";
 import Image from "next/image";
 import loaderGif from "../assets/loader.gif";
 import errorIcon from "../assets/error.png";
 import Container from "~/components/utility-components/Container";
+import { summaryClientFE } from "~/abstractions/open-ai-class/client";
 
 export default function Home() {
   const [displayResult, setDisplayResult] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
-
+  const clientfetcher = (props: RequestBody) => {
+    return summaryClientFE.fetchSummary(props);
+  };
   const { isLoading, mutate, isError } = useMutation({
-    mutationFn: fetchSummaryData,
+    mutationFn: clientfetcher,
     onSuccess: (res) => {
-      setLocalStorage(res.openAiResponse);
-      setCurrentResult(res.openAiResponse);
+      setLocalStorage(res);
+      setCurrentResult(res);
       setDisplayResult(true);
     },
   });

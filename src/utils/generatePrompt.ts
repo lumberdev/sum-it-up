@@ -45,3 +45,9 @@ export function generatePromptText(text: string | string[], wordLimit: number) {
   "trust": "number from 1 through 10, 10 is most trustworthy"
   }"`;
 }
+
+export function generateCondensedSummaryPrompt(text: string) {
+  return `{${text}}
+
+  generate an extremely short summary of up to 20 words`;
+}
