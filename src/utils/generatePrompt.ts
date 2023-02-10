@@ -46,8 +46,23 @@ export function generatePromptText(text: string | string[], wordLimit: number) {
   }"`;
 }
 
-export function generateCondensedSummaryPrompt(text: string) {
+export function generateCondensedSummaryPrompt(text: string, wordLimit: number) {
   return `{${text}}
 
-  generate an extremely short summary of up to 20 words`;
+  generate an extremely short summary of up to ${wordLimit} words`;
 }
+
+export function generatePromptTextSSE(text: string | string[], wordLimit: number) {
+  return `{${text}}
+  A summary of the text above formatted as a csv with "%%" as the delimiter. Formatted like this:
+  summary%%bias%%keypoints%%trust
+  ${wordLimit} word length summary%%1 - 2 word string%%"Array of Key Points Separated by '|'"%%number from 1 through 10, 10 is most trustworthy`;
+}
+// `{${text}}
+
+//   a summary of the text above as a JSON object that looks like this
+//   "summary__": "${wordLimit} word string",
+//   "keyPoints__": "[Array of Key Points]",
+//   "bias__": "1 - 2 word string",
+//   "tone__": "String",
+//   "trust__": "number from 1 through 10, 10 is most trustworthy"`;

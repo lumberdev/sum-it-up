@@ -39,7 +39,14 @@ export type RequestBody = {
 };
 
 export type OpenAiRequestProps = {
+  textContent?: string;
+  wordLimit: number;
+  type: ContentType;
+};
+
+export type OpenAiSummarizeProps = {
   text?: string;
+  maxToken?: number;
   chunkedTextContent?: Array<string>;
   wordLimit: number;
   type: ContentType;

@@ -18,5 +18,9 @@ const fetchServerSent = (
     if (typeof onError === "function") onError(err);
   });
   source.stream();
+  const cleanup = () => {
+    source.close();
+  };
+  return cleanup;
 };
 export { fetchServerSent };

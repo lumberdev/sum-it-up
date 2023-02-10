@@ -5,7 +5,7 @@ import {
   generatePromptSong,
   generatePromptText,
 } from "~/utils/generatePrompt";
-import { ContentType, DataType, OpenAiRequestProps, SongType } from "~/types";
+import { ContentType, DataType, OpenAiRequestProps, OpenAiSummarizeProps, SongType } from "~/types";
 
 function getValidProps(type: ContentType, chunkedTextContent: Array<string>, text: string) {
   switch (type) {
@@ -41,25 +41,30 @@ const openAICompletion = async (promptText: string, max_tokens: number) => {
   return completion.data.choices?.[0].text;
 };
 
+export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
+  const content = getValidProps(props.type, props.chunkedTextContent ?? [], props.text ?? "");
+  let textContent = "";
+  if (content.length > 1) {
+    const promises = content.map(
+      async (string) =>
+        await openAICompletion(generateCondensedSummaryPrompt(string, props.wordLimit), props.maxToken ?? 50),
+    );
+    const results = await Promise.allSettled(promises);
+    results.forEach((res) => (textContent += res.status === "fulfilled" ? res.value : ""));
+  } else {
+    textContent = content[0];
+  }
+  return textContent;
+}
+
 export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType | SongType> {
   if (!configuration.apiKey) {
     throw new Error("OpenAI API key not configured, please follow instructions in README.md");
   }
 
   const wordLimit = props.wordLimit || 100;
-
-  const content = getValidProps(props.type, props.chunkedTextContent ?? [], props.text ?? "");
-  let textContent = "";
-
-  if (content.length > 1) {
-    const promises = content.map(async (string) => await openAICompletion(generateCondensedSummaryPrompt(string), 50));
-    const results = await Promise.allSettled(promises);
-    results.forEach((res) => (textContent += res.status === "fulfilled" ? res.value : ""));
-  } else {
-    textContent = content[0];
-  }
-  console.log(textContent);
-
+  const textContent = props.textContent;
+  if (!textContent) throw new Error("No content provided");
   const promptText =
     props.type === "text"
       ? generatePromptText(textContent, wordLimit)
