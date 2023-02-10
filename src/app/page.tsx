@@ -32,7 +32,7 @@ export default function Home() {
       setDisplayResult(true);
     },
   });
-
+  console.log(isError);
   const handleFormSubmit: InputFormSubmissionType = async (event, type, summaryLength, inputUrl, text) => {
     event.preventDefault();
     mutate({
