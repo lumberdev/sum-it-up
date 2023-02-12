@@ -1,20 +1,20 @@
 import { useState } from "react";
-import SummaryLengthSlider from "./SummaryLengthSlider";
+import SummaryLengthSlider from "../../utility-components/input/SummaryLengthSlider";
 import { InputFormSubmissionType } from "~/types";
+import SummarizeButton from "../../utility-components/input/SummarizeButton";
 
 const WebsiteInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType }) => {
   const [inputUrl, setInputUrl] = useState<string>("");
   const [summaryLength, setSummaryLength] = useState("200");
   const type = "article";
   return (
-    <>
-      <SummaryLengthSlider summaryLength={summaryLength} setSummaryLength={setSummaryLength} />
+    <div className="mx-auto max-w-[54rem]">
       <form
-        className="flex h-11 w-full justify-center overflow-hidden rounded-full md:h-12"
+        className="mx-auto flex w-full flex-col justify-center md:flex-row"
         onSubmit={(event: React.SyntheticEvent) => handleFormSubmit(event, type, summaryLength, inputUrl)}
       >
         <input
-          className="flex w-3/4 items-center justify-center rounded-l-full border-2 border-primary px-4 pl-6"
+          className="mb-8 flex h-20 items-center justify-center rounded-full border-2 border-primary px-4 pl-6 placeholder:text-dark md:mb-0 md:h-[5.7rem] md:flex-1 md:rounded-r-none"
           type="text"
           name="website-url"
           value={inputUrl}
@@ -22,14 +22,10 @@ const WebsiteInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSu
           required
           onChange={(e) => setInputUrl(e.target.value)}
         />
-        <button
-          type="submit"
-          className="flex min-w-[8rem] items-center justify-center bg-primary font-semibold text-white md:min-w-[10rem] md:text-heading4"
-        >
-          Summarize
-        </button>
+        <SummarizeButton className="md:!h-[5.7rem] md:rounded-l-none ">Summarize</SummarizeButton>
       </form>
-    </>
+      <SummaryLengthSlider summaryLength={summaryLength} setSummaryLength={setSummaryLength} />
+    </div>
   );
 };
 

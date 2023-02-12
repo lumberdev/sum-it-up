@@ -2,7 +2,7 @@ import Link from "next/link";
 import Container from "./utility-components/Container";
 const Footer = () => {
   return (
-    <footer className="bg-dark pt-3 pb-7 text-white">
+    <footer className="bg-dark pt-8 pb-10 text-white">
       <Container className="min-h-[9.75rem] md:flex">
         <div className="mb-8 flex flex-1 flex-col items-center justify-between md:mb-0 md:items-start">
           <div className="text-heading3">Sum It Up</div>
