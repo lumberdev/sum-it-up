@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
-const Container = ({ children, className }: Props) => {
-  return <div className={`mx-auto max-w-7xl p-5 sm:p-10 ${className}`}>{children}</div>;
+const Container = ({ children, className = "" }: Props) => {
+  return <div className={`mx-auto w-full max-w-[144rem] px-8 sm:px-20 ${className}`}>{children}</div>;
 };
 
 type Props = {
