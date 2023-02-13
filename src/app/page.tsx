@@ -10,6 +10,7 @@ import Image from "next/image";
 import loaderGif from "../assets/loader.gif";
 import errorIcon from "../assets/error.png";
 import Container from "~/components/utility-components/Container";
+import InputPageHeader from "~/components/Input/InputPageHeader";
 
 export default function Home() {
   const [displayResult, setDisplayResult] = useState(false);
@@ -89,7 +90,10 @@ export default function Home() {
           />
         )
       ) : (
-        <InputComponent handleFormSubmit={handleFormSubmit} />
+        <>
+          <InputPageHeader />
+          <InputComponent handleFormSubmit={handleFormSubmit} />
+        </>
       )}
     </>
   );

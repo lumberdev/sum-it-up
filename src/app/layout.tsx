@@ -1,5 +1,4 @@
 import "./globals.css";
-import Header from "~/components/Header";
 import Footer from "~/components/Footer";
 import ReactQueryWrapper from "~/components/utility-components/ReactQueryWrapper";
 
@@ -13,7 +12,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body className="flex flex-col justify-between text-base font-splineSans" >
         <ReactQueryWrapper>
-          <Header />
           <main className="flex-1">{children}</main>
           <Footer />
         </ReactQueryWrapper>
