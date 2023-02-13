@@ -1,130 +1,154 @@
-import { useEffect, useState } from "react";
-import { openAiGetUseableTextContent } from "~/api-functions/open-ai-request";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import { fetchArticleData } from "~/query/fetch-article-data";
 import {
+  ContentType,
   openAiModelRequest,
-  OpenAiRequestProps,
-  OpenAiSummarizeProps,
   RequestBody,
   ResponseType,
+  SongMeaningResponseType,
   TextSummaryResponseType,
 } from "~/types";
-import {
-  generatePromptArticle,
-  generatePromptSong,
-  generatePromptText,
-  generatePromptTextSSE,
-} from "~/utils/generatePrompt";
-import { callWithText, callWithUrl, getSummaryFromUrl } from "~/utils/open-ai-fetch";
+import { generatePromptSongSSE, generatePromptTextSSE } from "~/utils/generatePrompt";
+import { getSummaryFromUrl } from "~/utils/open-ai-fetch";
 import { fetchServerSent } from "~/utils/sse-fetch";
 
 /**
  * A hook that returns streamed text response from openAI
  */
-const useOpenAiSSEResponse = () => {
+const useOpenAiSSEResponse = ({
+  onSuccess,
+  onStream,
+}: {
+  onSuccess?: (res: ResponseType) => unknown;
+  onStream?: (res: ResponseType) => unknown;
+}) => {
   const [streamedResult, setStreamedResult] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] = useState<RequestBody>();
-  const initMappedPoints = {
+  const [isLoadingSSE, setIsLoadingSSE] = useState<boolean>(true);
+
+  const readabilityData = {
+    title: "",
+    dir: "",
+    type: "article" as ContentType,
+    byline: "",
+    url: "",
+  };
+
+  const initTextMappedPoints = {
     keyPoints: [""],
     bias: "",
     summary: "",
     tone: "",
     trust: 0,
-    type: data?.type ?? "article",
-    byline: "",
-    title: "",
-    dir: "",
-    url: "",
-  };
-  const [mappedPoints, setMappedPoints] = useState<TextSummaryResponseType>({ ...initMappedPoints });
-  const [error, setError] = useState<boolean>();
-
-  const mutate = (props: RequestBody) => {
-    setData(props);
+    ...readabilityData,
   };
 
-  // get URL readability
+  const initSongMappedPoints = {
+    mood: "",
+    moodColor: "",
+    meaning: "",
+    ...readabilityData,
+  };
+  // useRef to get most updated result without rerender
+  const mappedResult = useRef<TextSummaryResponseType | SongMeaningResponseType>(initTextMappedPoints);
 
-  useEffect(() => {
-    console.log(data);
+  const fetchRef = useRef<() => unknown>();
+
+  const [isError, setIsError] = useState<boolean>();
+
+  const streamContent = async (data: RequestBody) => {
+    const { wordLimit, type, url, text } = data;
+    setIsLoadingSSE(true);
+    mappedResult.current = type === "song" ? { ...initSongMappedPoints, type } : { ...initTextMappedPoints, type };
+    const buildContentToStream = async () => {
+      let textContent = "";
+      if (type === "article" || type === "song") {
+        const json = await fetchArticleData(url, 500);
+        mappedResult.current = { ...mappedResult.current, byline: json.byline, title: json.title, dir: json.dir, url };
+        const body = await getSummaryFromUrl(type, json.chunkedTextContent);
+        textContent = body;
+      } else {
+        textContent = text ?? "";
+      }
+      return textContent;
+    };
+    const textContent = await buildContentToStream();
     setStreamedResult("");
     if (!data || !Object.keys(data).length) return;
-    const { wordLimit, type, url, text } = data;
-    const streamContent = async () => {
-      const buildContentToStream = async () => {
-        let textContent = "";
-        if (type === "article" || type === "song") {
-          const json = await fetchArticleData(url, 500);
-          const body = await getSummaryFromUrl(type, json.chunkedTextContent);
-          textContent = body;
-        } else {
-          textContent = text ?? "";
-        }
-        return textContent;
-      };
-      const textContent = await buildContentToStream();
-      console.log(textContent);
-      const promptText =
-        type === "text"
-          ? generatePromptTextSSE(textContent, wordLimit)
-          : type === "article"
-          ? generatePromptTextSSE(textContent, wordLimit)
-          : type === "song"
-          ? generatePromptText(textContent, wordLimit)
-          : "";
 
-      const openAiPayload: openAiModelRequest = {
-        model: "text-davinci-003",
-        prompt: promptText,
-        max_tokens: 1000,
-        temperature: 0,
-      };
-      fetchServerSent(
-        "https://api.openai.com/v1/completions",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-          },
-          method: "POST",
-          payload: JSON.stringify({
-            ...openAiPayload,
-            stream: true,
-          }),
-        },
-        (payload: string) => {
-          if ((payload as string) === "[DONE]") {
-            setIsLoading(false);
-            return;
-          }
-          const text = JSON.parse(payload).choices?.[0]?.text;
+    const promptText =
+      type === "text"
+        ? generatePromptTextSSE(textContent, wordLimit)
+        : type === "article"
+        ? generatePromptTextSSE(textContent, wordLimit)
+        : type === "song"
+        ? generatePromptSongSSE(textContent, wordLimit)
+        : "";
 
-          console.log(payload);
-
-          setStreamedResult((state) => {
-            const array = `${state}${text}`.split("%%");
-            setMappedPoints((state) => {
-              state.summary = array?.[0];
-              state.bias = array?.[1];
-              state.keyPoints = array?.[2]?.split("|");
-              state.trust = parseInt(array?.[3]);
-              return state;
-            });
-
-            return `${state}${text}`;
-          });
-        },
-        (err) => {
-          setError(true);
-        },
-      );
+    const openAiPayload: openAiModelRequest = {
+      model: "text-davinci-003",
+      prompt: promptText,
+      max_tokens: 1000,
+      temperature: 0,
     };
+    fetchRef.current = fetchServerSent(
+      "https://api.openai.com/v1/completions",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+        },
+        method: "POST",
+        payload: JSON.stringify({
+          ...openAiPayload,
+          stream: true,
+        }),
+      },
+      (payload: string) => {
+        if ((payload as string) === "[DONE]") {
+          setIsLoadingSSE(false);
+          onSuccess && onSuccess(mappedResult.current);
+          return;
+        }
+        const text = JSON.parse(payload).choices?.[0]?.text;
 
-    streamContent();
-  }, [data]);
+        setStreamedResult((state) => {
+          const array = `${state}${text}`.split("%%");
+          if (type === "article" || type === "text")
+            mappedResult.current = {
+              ...mappedResult.current,
+              summary: array?.[0],
+              keyPoints: array?.[1]?.split("|"),
+              bias: array?.[2],
+              tone: array?.[3],
+              trust: Number(array?.[4]),
+            };
+          else
+            mappedResult.current = {
+              ...mappedResult.current,
+              meaning: array?.[0],
+              mood: array?.[1],
+              moodColor: array?.[2],
+            };
+          onStream && onStream(mappedResult.current);
+          return `${state}${text}`;
+        });
+      },
+      (err) => {
+        setIsError(true);
+      },
+    );
+  };
 
-  return { streamedResult, mutate, mappedPoints, isLoading, error };
+  useEffect(() => {
+    !isLoadingSSE && fetchRef.current && fetchRef.current();
+  }, [isLoadingSSE]);
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: streamContent,
+  });
+
+  return { streamedResult, mutate, isLoading, isLoadingSSE, isError };
 };
 
 export default useOpenAiSSEResponse;

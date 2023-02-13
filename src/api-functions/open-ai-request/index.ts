@@ -79,7 +79,6 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
   }
 
   try {
-    console.log(promptText);
     const completionText = await openAICompletion(promptText, 1000);
     let parsedResponseData = {
       meaning: "",
@@ -91,7 +90,6 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
       summary: "",
       trust: undefined,
     };
-    console.log(completionText);
     try {
       parsedResponseData = await JSON.parse(completionText);
     } catch (error) {
@@ -113,8 +111,6 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
       summary: parsedResponseData?.summary,
       trust: parsedResponseData?.trust,
     };
-
-    console.log(responseObject);
 
     return responseObject;
   } catch (error) {

@@ -55,8 +55,15 @@ export function generateCondensedSummaryPrompt(text: string, wordLimit: number) 
 export function generatePromptTextSSE(text: string | string[], wordLimit: number) {
   return `{${text}}
   A summary of the text above formatted as a csv with "%%" as the delimiter. Formatted like this:
-  summary%%bias%%keypoints%%trust
-  ${wordLimit} word length summary%%1 - 2 word string%%"Array of Key Points Separated by '|'"%%number from 1 through 10, 10 is most trustworthy`;
+  summary%%keypoints%%bias%%tone%%trust
+  ${wordLimit} word length summary%%"Array of Key Points Separated by '|'"%%1 - 2 word string%%String%%number from 1 through 10, 10 is most trustworthy`;
+}
+
+export function generatePromptSongSSE(text: string | string[], wordLimit: number) {
+  return `{${text}}
+  a summary of the lyrics above formatted as a csv with "%%" as the delimiter. Formatted like this:
+  meaning%%mood%%moodColor
+  ${wordLimit} word length summary meaning%%1 - 2 word string%%valid Hexcode string`;
 }
 // `{${text}}
 

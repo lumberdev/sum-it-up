@@ -89,7 +89,7 @@ const TextResult = ({ textSummaryResponse, handNewSearchBtnClick }: ResultProp) 
           <>
             <h3 className="my-4 text-heading3">The Key Points</h3>
             <ul className="list-disc">
-              {textSummaryResponse.keyPoints.map((keyPoint, id) => (
+              {textSummaryResponse.keyPoints?.map((keyPoint, id) => (
                 <li key={id}>{keyPoint}</li>
               ))}
             </ul>
