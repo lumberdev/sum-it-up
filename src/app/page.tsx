@@ -52,7 +52,6 @@ export default function Home() {
   if (isLoading)
     return (
       <Container>
-        <div>{JSON.stringify(mappedPoints)}</div>
         <div className="flex min-h-[30rem] items-center justify-center pb-10 text-center">
           <div>
             <Image src={loaderGif} alt="my gif" height={200} width={200} />
@@ -64,7 +63,6 @@ export default function Home() {
   if (isError)
     return (
       <Container>
-        <div>{JSON.stringify(mappedPoints)}</div>
         <div className="flex min-h-[30rem] flex-col items-center justify-center text-center">
           <div>
             <Image src={errorIcon} alt="error" height={200} width={200} />
