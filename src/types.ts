@@ -44,6 +44,8 @@ export enum InputType {
   SONG = "Song",
 }
 
+export type ResultPageContentType = "summary" | "original";
+
 export type ContentType = "article" | "song" | "text";
 
 export type DataType = {
