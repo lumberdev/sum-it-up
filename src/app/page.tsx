@@ -1,8 +1,6 @@
 "use client";
 import { useState } from "react";
 import InputComponent from "~/components/Input/Input";
-import SongResult from "~/components/Result/ResultContent/SongResult";
-import TextResult from "~/components/Result/ResultContent/TextResult";
 import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
 import { useMutation } from "@tanstack/react-query";
 import { fetchSummaryData } from "~/query/fetch-summary-data";
