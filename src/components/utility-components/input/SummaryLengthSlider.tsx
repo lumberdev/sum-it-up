@@ -23,7 +23,7 @@ const SummaryLengthSlider = ({
     { name: "Custom", align: "self-end" },
   ];
   return (
-    <div className="mt-[7rem] flex flex-col items-center justify-center">
+    <div className="mt-[7rem] mb-[5rem] flex flex-col items-center justify-center">
       <label htmlFor="summary-length" className="mb-[3rem] font-bold text-primary">
         <div className="block sm:hidden">LENGTH OF SUMMARY</div>
         <div className="block xl:hidden">LENGTH OF SUMMARY IN WORDS:</div>
@@ -59,7 +59,7 @@ const SummaryLengthSlider = ({
         <input
           type="text"
           className={`w-100 mt-[6.25rem] h-20 w-80 rounded-full border-[1px] border-solid border-primary p-[.625rem] text-center font-[.875rem] text-primary ${
-            Number(summaryLength) > 300 ? "block" : "hidden"
+            Number(summaryLength) > 300 ? "visible" : "invisible"
           }`}
           value={customLength}
           placeholder="Enter number here"
