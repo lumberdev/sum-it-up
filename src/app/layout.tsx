@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className="flex flex-col justify-between text-base font-splineSans" >
+      <body className="flex flex-col justify-between font-splineSans text-base">
         <ReactQueryWrapper>
           <main className="flex-1">{children}</main>
           <Footer />

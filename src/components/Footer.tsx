@@ -2,24 +2,25 @@ import Link from "next/link";
 import Container from "./utility-components/Container";
 const Footer = () => {
   return (
-    <footer className="bg-dark pt-8 pb-10 text-white">
-      <Container className="min-h-[9.75rem] md:flex">
-        <div className="mb-8 flex flex-1 flex-col items-center justify-between md:mb-0 md:items-start">
-          <div className="text-heading3">Sum It Up</div>
-          <div className="hidden text-paragraph md:block">© Lumber LLC. All rights reserved</div>
+    <footer className="fixed left-0 bottom-0 w-full bg-dark text-white">
+      <Container className="flex h-[7.9rem] flex-col items-center justify-center gap-[1rem] px-[2.7rem] md:h-[5rem] md:flex-row md:justify-between">
+        <div className="flex items-center">
+          Made by
+          <span className="relative bottom-0.5 mr-1 ml-2 inline-block h-[1.4rem] w-[1.4rem] rounded-full bg-[#FFCC08]"></span>
+          <span className="font-[Roboto] font-bold"> Lumber</span>
         </div>
-        <div className="flex flex-1 flex-col items-center justify-between text-paragraph md:items-end">
-          <div className="flex items-center">
-            Made by
-            <span className="relative bottom-0.5 mr-1 ml-2 inline-block h-4 w-4 rounded-full bg-[#FFCC08]"></span>
-            <span className="font-bold"> Lumber</span>
+        <div className="my-[-1rem] text-[1rem] min-[350px]:hidden md:mr-[5rem] md:text-paragraph">
+          © Lumber LLC. All rights reserved
+        </div>
+        <div className="flex items-center justify-end">
+          <div className="mr-[3rem] hidden text-[1rem] min-[350px]:block md:mr-[5rem] md:text-paragraph">
+            © Lumber LLC. All rights reserved
           </div>
-          <div className="flex justify-end gap-10 py-4 md:py-0">
+          <div className="flex justify-end gap-[1rem] text-[1rem] underline md:gap-[3rem] md:text-paragraph">
             <Link href="/">Privacy</Link>
             <Link href="/">Terms</Link>
             <Link href="/">Accessibility</Link>
           </div>
-          <div className="text-paragraph text-dark md:hidden">© Lumber LLC. All rights reserved</div>
         </div>
       </Container>
     </footer>
