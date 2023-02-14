@@ -1,9 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
-import { ContentType, CustomRequest, DataType, ErrorMessage, RequestBody, SongType } from "~/types";
-import { openAIRequest } from "~/api-functions/open-ai-request";
-import os from "os";
-import readability from "~/api-functions/readability";
+import type { NextApiResponse } from "next";
+import { summaryClientSE } from "~/abstractions/open-ai-class/server";
+import { CustomRequest, ErrorMessage, RequestBody, ResponseType } from "~/types";
 /**
  * Make a POST request:
  * {
@@ -21,13 +19,10 @@ import readability from "~/api-functions/readability";
 // meaning: string;
 // mood: string;
 // moodColor: string;
-export type ResponseData = {
-  openAiResponse: DataType | SongType | null;
-};
 
 export default async function handler(
   req: CustomRequest<RequestBody>,
-  res: NextApiResponse<ErrorMessage | ResponseData>,
+  res: NextApiResponse<ErrorMessage | ResponseType>,
 ) {
   const { body, method } = req;
   if (method !== "POST")
@@ -51,52 +46,13 @@ export default async function handler(
   if (!type || !["song", "text", "article"].includes(type)) {
     return res.status(400).json({ message: "Invalid type", code: 400 });
   }
-  let openAiResponse = null;
+
   try {
-    if (type === "text" && typeof text === "string") openAiResponse = await callWithText(text, wordLimit, type);
-    if (type === "song" || type === "article") openAiResponse = await callWithUrl(url, wordLimit, type);
-    return res.status(200).json({ openAiResponse });
+    const openAiResponse = await summaryClientSE.fetchSummary({ text, url, wordLimit, type });
+    return res.status(200).json({ ...openAiResponse });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Request errored out", code: 500 });
-  }
-}
-async function callWithText(text: string, wordLimit: number, type: ContentType) {
-  try {
-    const response = await openAIRequest({
-      text,
-      wordLimit,
-      type,
-    });
-    return { ...response, type };
-  } catch (error) {
-    throw error;
-  }
-}
-async function callWithUrl(url: string, wordLimit: number, type: ContentType) {
-  try {
-    const CHUNK_LENGTH = 500;
-    // await fetchRetry(`/readability?url_resource=${url}`, 100, 3)
-    const json = await readability(url, CHUNK_LENGTH);
-    // if res is good, process in openAPI
-
-    if (!json) throw Error("Readability failed.");
-    const body = {
-      type,
-      chunkedTextContent: json.chunkedTextContent ?? [""],
-      wordLimit,
-    };
-    const response = await openAIRequest(body);
-
-    return {
-      ...response,
-      byline: json.byline,
-      title: json.title,
-      dir: json.dir,
-      url: json.url,
-      type,
-    };
-  } catch (error) {
-    throw error;
   }
 }
 
