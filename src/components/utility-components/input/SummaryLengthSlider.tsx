@@ -5,13 +5,13 @@ type SummaryLengthSliderPropType = {
 
 const SummaryLengthSlider = ({ summaryLength, setSummaryLength }: SummaryLengthSliderPropType) => {
   return (
-    <div className="my-12 flex flex-col items-center justify-center">
+    <div className="mt-[7rem] flex flex-col items-center justify-center">
       <label htmlFor="summary-length" className="mb-6 font-bold text-dark">
         Length of the summary in words:
       </label>
       <input
         type="range"
-        className="range-sm mb-6 flex h-1 w-full cursor-pointer appearance-none items-center rounded-lg bg-medium p-0 focus:shadow-none dark:bg-primary md:max-w-[30rem]"
+        className="range-sm mb-6 flex h-1 w-full cursor-pointer appearance-none items-center rounded-lg bg-medium p-0 focus:shadow-none dark:bg-primary"
         min="100"
         max="300"
         step="100"

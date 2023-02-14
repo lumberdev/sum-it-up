@@ -1,6 +1,7 @@
 import { useState } from "react";
-import SummaryLengthSlider from "./SummaryLengthSlider";
+import SummaryLengthSlider from "../../utility-components/input/SummaryLengthSlider";
 import { InputFormSubmissionType } from "~/types";
+import SummarizeButton from "../../utility-components/input/SummarizeButton";
 
 const SongInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType }) => {
   const [songTitle, setSongTitle] = useState<string>("");
@@ -8,8 +9,7 @@ const SongInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmi
   const [summaryLength, setSummaryLength] = useState("200");
   const type = "song";
   return (
-    <>
-      <SummaryLengthSlider summaryLength={summaryLength} setSummaryLength={setSummaryLength} />
+    <div className="mx-auto max-w-[54rem]">
       <form
         className="flex w-full flex-col rounded-md"
         onSubmit={(event: React.SyntheticEvent) => {
@@ -19,35 +19,27 @@ const SongInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmi
           handleFormSubmit(event, type, summaryLength, inputUrl);
         }}
       >
-        <label className="mb-3 font-semibold" htmlFor="song-name">
-          Enter Song Title
-        </label>
         <input
-          className="mb-6 h-12 rounded-full border-2 border-primary px-4 text-center"
+          className="mb-4 h-20 rounded-full border-2 border-primary px-4 text-center text-base placeholder:text-dark md:mb-6 md:h-[5.7rem]"
           type="text"
           name="song-name"
           value={songTitle}
           required
+          placeholder="Enter song title"
           onChange={(e) => setSongTitle(e.target.value)}
         />
-        <label className="mb-3 font-semibold" htmlFor="artist-name border-primary border-2 rounded-l-full">
-          Enter Artist
-        </label>
         <input
-          className="mb-6 h-12 rounded-full border-2 border-primary px-4 text-center"
+          className="mb-12 h-20 rounded-full border-2 border-primary px-4 text-center text-base placeholder:text-dark md:h-[5.7rem]"
           type="text"
           name="artist-name"
           value={artistName}
+          placeholder="Enter artist"
           onChange={(e) => setArtistName(e.target.value)}
         />
-        <button
-          className="mx-auto mt-4 flex h-11 w-[10rem] items-center justify-center rounded-full bg-primary text-heading4 font-semibold text-white md:h-12"
-          type="submit"
-        >
-          Summarize
-        </button>
+        <SummarizeButton>Summarize</SummarizeButton>
       </form>
-    </>
+      <SummaryLengthSlider summaryLength={summaryLength} setSummaryLength={setSummaryLength} />
+    </div>
   );
 };
 

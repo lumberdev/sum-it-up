@@ -6,16 +6,26 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontSize: {
+      xs: "1rem",
+      sm: "1.2rem",
+      base: ["1.4rem", "2.1rem"],
+      lg: "1.6rem",
+      xl: "1.8rem",
+      "2xl": "3.6rem",
+      "3xl": "5.4rem",
+    },
     extend: {
       fontSize: {
-        heading1: `2.75rem`,
-        heading2: `2rem`,
-        heading3: `1.5rem`,
-        heading4: `1rem`,
-        paragraph: `0.875rem`,
+        heading1: `4.4rem`,
+        heading2: `3.2rem`,
+        heading3: `2.4rem`,
+        heading4: `1.6rem`,
+        paragraph: `1.4rem`,
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
+        splineSans: ["Spline Sans", "sans-serif"],
       },
       colors: {
         dark: `#161613`,

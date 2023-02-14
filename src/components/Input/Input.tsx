@@ -12,13 +12,13 @@ const Input = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType
 
   return (
     <Container>
-      <div className="mx-auto max-w-[31.875rem] py-8 text-center">
-        <div className="mx-auto inline-flex h-12 w-full max-w-[21.5rem] items-center justify-center rounded-full bg-primary p-1 text-white">
+      <div className="mx-auto w-full py-20 text-center">
+        <div className="mx-auto mb-[7rem] inline-flex h-[4.5rem] w-full max-w-[28rem] md:max-w-[33rem] items-center justify-center rounded-full bg-primary p-2 text-white">
           {(Object.keys(InputType) as Array<keyof typeof InputType>).map((key) => (
             <button
               key={key}
-              className={`h-full flex-1 rounded-full transition${
-                InputType[key] === inputTypeSelected && " bg-white text-dark"
+              className={`h-full flex-1 rounded-full text-sm font-bold uppercase transition${
+                InputType[key] === inputTypeSelected && " bg-white text-primary"
               }`}
               onClick={() => setInputTypeSelected(InputType[key])}
             >

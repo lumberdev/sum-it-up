@@ -2,14 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&display=swap');
 
 @layer base {
   html {
-    font-family: Poppin, sans-serif;
+    font-family: 'Spline Sans', Poppin, sans-serif;
     width: 100%;
     height: auto;
     min-height: 100vh;
     box-sizing: border-box;
+    font-size: 62.5%;
   }
 
   *,
@@ -22,7 +24,11 @@
     width: 100%;
     min-height: 100vh;
     height: auto;
-    background-color: #F5F5ED;
+    background-color: #f5f5ed;
     color: #161613;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: antialiased;
   }
 }

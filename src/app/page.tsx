@@ -1,16 +1,17 @@
 "use client";
 import { useState } from "react";
 import InputComponent from "~/components/Input/Input";
-import SongResult from "~/components/Result/SongResult";
-import TextResult from "~/components/Result/TextResult";
 import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
 import Image from "next/image";
 import loaderGif from "../assets/loader.gif";
 import errorIcon from "../assets/error.png";
 import Container from "~/components/utility-components/Container";
+import InputPageHeader from "~/components/Input/InputPageHeader";
+import Result from "~/components/Result/Result";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 
 export default function Home() {
+  const [originalContent, setOriginalContent] = useState("");
   const [displayResult, setDisplayResult] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
 
@@ -26,6 +27,11 @@ export default function Home() {
   console.log(isError);
   const handleFormSubmit: InputFormSubmissionType = async (event, type, summaryLength, inputUrl, text) => {
     event.preventDefault();
+    if (type === "text") {
+      text?.length && setOriginalContent(text);
+    } else {
+      inputUrl?.length && setOriginalContent(inputUrl);
+    }
     mutate({
       url: inputUrl ?? "",
       wordLimit: parseInt(summaryLength),
@@ -33,7 +39,7 @@ export default function Home() {
       text,
     });
   };
-  const handNewSearchBtnClick = () => {
+  const handleNewSearchBtnClick = () => {
     setDisplayResult(false);
   };
 
@@ -77,19 +83,16 @@ export default function Home() {
   return (
     <>
       {displayResult ? (
-        currentResult?.type == "song" ? (
-          <SongResult
-            songMeaningResponse={currentResult as SongMeaningResponseType}
-            handNewSearchBtnClick={handNewSearchBtnClick}
-          />
-        ) : (
-          <TextResult
-            textSummaryResponse={currentResult as TextSummaryResponseType}
-            handNewSearchBtnClick={handNewSearchBtnClick}
-          />
-        )
+        <Result
+          summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
+          handleNewSearchBtnClick={handleNewSearchBtnClick}
+          originalContent={originalContent}
+        />
       ) : (
-        <InputComponent handleFormSubmit={handleFormSubmit} />
+        <>
+          <InputPageHeader />
+          <InputComponent handleFormSubmit={handleFormSubmit} />
+        </>
       )}
     </>
   );
