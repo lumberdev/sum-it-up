@@ -2,29 +2,29 @@
 import { useState } from "react";
 import InputComponent from "~/components/Input/Input";
 import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
-import { useMutation } from "@tanstack/react-query";
-import { fetchSummaryData } from "~/query/fetch-summary-data";
 import Image from "next/image";
 import loaderGif from "../assets/loader.gif";
 import errorIcon from "../assets/error.png";
 import Container from "~/components/utility-components/Container";
 import InputPageHeader from "~/components/Input/InputPageHeader";
 import Result from "~/components/Result/Result";
+import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 
 export default function Home() {
   const [originalContent, setOriginalContent] = useState("");
   const [displayResult, setDisplayResult] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
 
-  const { isLoading, mutate, isError } = useMutation({
-    mutationFn: fetchSummaryData,
-    onSuccess: (res) => {
-      setLocalStorage(res.openAiResponse);
-      setCurrentResult(res.openAiResponse);
+  const { mutate, isLoading, isError } = useOpenAiSSEResponse({
+    onSuccess: (res: ResponseType) => {
+      setLocalStorage(res);
+    },
+    onStream: (res) => {
       setDisplayResult(true);
+      setCurrentResult(res);
     },
   });
-
+  console.log(isError);
   const handleFormSubmit: InputFormSubmissionType = async (event, type, summaryLength, inputUrl, text) => {
     event.preventDefault();
     if (type === "text") {

@@ -19,9 +19,12 @@ export type DocumentResponseData = {
   chunkedTextContent: Array<string>;
 };
 
-// export type ErrorMessage = {
-//   message: string;
-// };
+export type openAiModelRequest = {
+  model: string;
+  prompt: string;
+  temperature: number;
+  max_tokens: number;
+};
 
 export type ErrorMessage = {
   message: string;
@@ -33,6 +36,20 @@ export type RequestBody = {
   text?: string;
   type: ContentType;
   wordLimit: number;
+};
+
+export type OpenAiRequestProps = {
+  textContent?: string;
+  wordLimit: number;
+  type: ContentType;
+};
+
+export type OpenAiSummarizeProps = {
+  text?: string;
+  maxToken?: number;
+  chunkedTextContent?: Array<string>;
+  wordLimit: number;
+  type: ContentType;
 };
 export interface CustomRequest<T> extends NextApiRequest {
   body: T;
@@ -61,19 +78,22 @@ export type SongType = {
   mood: string;
   moodColor: string;
 };
-
-export type TextSummaryResponseType = {
-  bias: string;
-  byline: string | null;
-  dir: any; // not sure what this would be
+export interface TextResponse {
   keyPoints: string[];
   summary: string;
-  title: string;
   tone: string;
-  trust?: number;
+  bias: string;
+  trust: number;
+  type: ContentType;
+}
+
+export interface TextSummaryResponseType extends TextResponse {
+  bias: string;
+  title: string;
+  byline: string | null;
+  dir: any; // not sure what this would be
   url: string;
-  type: string;
-};
+}
 export type SongMeaningResponseType = {
   byline: string | null;
   dir: any; // not sure what this would be
@@ -82,10 +102,10 @@ export type SongMeaningResponseType = {
   moodColor: string;
   title: string;
   url: string;
-  type: string;
+  type: ContentType;
 };
 
-export type ResponseType = TextSummaryResponseType | SongMeaningResponseType;
+export type ResponseType = TextSummaryResponseType | SongMeaningResponseType | TextResponse;
 
 export type InputFormSubmissionType = (
   event: React.SyntheticEvent,
@@ -94,3 +114,9 @@ export type InputFormSubmissionType = (
   inputUrl?: string,
   text?: string,
 ) => Promise<void>;
+
+export type SSEOptionTypes = {
+  headers: Object;
+  method: string;
+  payload: string;
+};
