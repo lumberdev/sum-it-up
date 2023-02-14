@@ -1,4 +1,4 @@
-import { useCopyToClipboard } from "~/utils/hooks/useCopyToClipboard";
+import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
 
 const CopyButton = ({ textToCopy }: { textToCopy: string }) => {
   const { copyToClipboard, didCopy } = useCopyToClipboard();
