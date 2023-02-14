@@ -3,9 +3,20 @@ import SummaryLengthSlider from "../../utility-components/input/SummaryLengthSli
 import { InputFormSubmissionType } from "~/types";
 import SummarizeButton from "../../utility-components/input/SummarizeButton";
 
-const WebsiteInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType }) => {
+const WebsiteInputField = ({
+  handleFormSubmit,
+  summaryLength,
+  setSummaryLength,
+  customLength,
+  setCustomLength,
+}: {
+  handleFormSubmit: InputFormSubmissionType;
+  summaryLength: string;
+  setSummaryLength: (length: string) => void;
+  customLength: string;
+  setCustomLength: (length: string) => void;
+}) => {
   const [inputUrl, setInputUrl] = useState<string>("");
-  const [summaryLength, setSummaryLength] = useState("200");
   const type = "article";
   return (
     <div className="mx-auto max-w-[54rem]">
@@ -24,7 +35,12 @@ const WebsiteInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSu
         />
         <SummarizeButton className="md:!h-[5.7rem] md:rounded-l-none ">Summarize</SummarizeButton>
       </form>
-      <SummaryLengthSlider summaryLength={summaryLength} setSummaryLength={setSummaryLength} />
+      <SummaryLengthSlider
+        summaryLength={summaryLength}
+        setSummaryLength={setSummaryLength}
+        customLength={customLength}
+        setCustomLength={setCustomLength}
+      />
     </div>
   );
 };

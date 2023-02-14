@@ -1,32 +1,73 @@
+import { useState } from "react";
+
 type SummaryLengthSliderPropType = {
   summaryLength: string;
   setSummaryLength: (length: string) => void;
 };
 
-const SummaryLengthSlider = ({ summaryLength, setSummaryLength }: SummaryLengthSliderPropType) => {
+const SummaryLengthSlider = ({
+  summaryLength,
+  setSummaryLength,
+  customLength,
+  setCustomLength,
+}: {
+  summaryLength: string;
+  setSummaryLength: (length: string) => void;
+  customLength: string;
+  setCustomLength: (length: string) => void;
+}) => {
+  const options = [
+    { name: "Shortest", align: "self-start" },
+    { name: "Short", align: "self-center" },
+    { name: "Short-ish", align: "self-center" },
+    { name: "Custom", align: "self-end" },
+  ];
   return (
     <div className="mt-[7rem] flex flex-col items-center justify-center">
-      <label htmlFor="summary-length" className="mb-6 font-bold text-dark">
-        Length of the summary in words:
+      <label htmlFor="summary-length" className="mb-[3rem] font-bold text-primary">
+        <div className="block sm:hidden">LENGTH OF SUMMARY</div>
+        <div className="block xl:hidden">LENGTH OF SUMMARY IN WORDS:</div>
       </label>
-      <input
-        type="range"
-        className="range-sm mb-6 flex h-1 w-full cursor-pointer appearance-none items-center rounded-lg bg-medium p-0 focus:shadow-none dark:bg-primary"
-        min="100"
-        max="300"
-        step="100"
-        list="markers"
-        value={summaryLength}
-        id="summary-length"
-        onChange={(event) => {
-          setSummaryLength(event.target.value);
-        }}
-      />
-
-      <div className="flex w-full justify-between">
-        <div>Shortest</div>
-        <div>Short</div>
-        <div>Short-ish</div>
+      <div className="relative w-full max-w-[42rem]">
+        <input
+          type="range"
+          className="range-sm z-1 mb-6 flex h-[.3rem] w-full cursor-pointer appearance-none items-center rounded-lg bg-medium p-0 focus:shadow-none dark:bg-primary"
+          min="100"
+          max="400"
+          step="100"
+          list="markers"
+          value={summaryLength}
+          id="summary-length"
+          onChange={(event) => {
+            setSummaryLength(event.target.value);
+            setCustomLength("");
+          }}
+        />
+        <div className="absolute -top-[.8rem] -z-10 flex w-full justify-between text-sm font-semibold text-primary md:text-base">
+          {options.map((option) => (
+            <div
+              className={`flex flex-col ${option.name === "Short-ish" ? "ml-[1.8rem]" : ""}`}
+              key={`idx-${option.name}`}
+            >
+              <div className={`h-7 w-7 ${option.align} rounded-full bg-primary`}></div>
+              <div className="mt-[2rem] md:mt-[1rem]">{option.name}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div>
+        <input
+          type="text"
+          className={`w-100 mt-[6.25rem] h-20 w-80 rounded-full border-[1px] border-solid border-primary p-[.625rem] text-center font-[.875rem] text-primary ${
+            Number(summaryLength) > 300 ? "block" : "hidden"
+          }`}
+          value={customLength}
+          placeholder="Enter number here"
+          id="custom-summary-length"
+          onChange={(event) => {
+            setCustomLength(event.target.value);
+          }}
+        />
       </div>
     </div>
   );

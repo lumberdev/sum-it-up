@@ -25,7 +25,14 @@ export default function Home() {
     },
   });
 
-  const handleFormSubmit: InputFormSubmissionType = async (event, type, summaryLength, inputUrl, text) => {
+  const handleFormSubmit: InputFormSubmissionType = async (
+    event,
+    type,
+    summaryLength,
+    customLength,
+    inputUrl,
+    text,
+  ) => {
     event.preventDefault();
     if (type === "text") {
       text?.length && setOriginalContent(text);
@@ -34,7 +41,7 @@ export default function Home() {
     }
     mutate({
       url: inputUrl ?? "",
-      wordLimit: parseInt(summaryLength),
+      wordLimit: parseInt(customLength || summaryLength),
       type,
       text,
     });

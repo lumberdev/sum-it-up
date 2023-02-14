@@ -3,10 +3,22 @@ import SummaryLengthSlider from "../../utility-components/input/SummaryLengthSli
 import { InputFormSubmissionType } from "~/types";
 import SummarizeButton from "../../utility-components/input/SummarizeButton";
 
-const SongInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType }) => {
+const SongInputField = ({
+  handleFormSubmit,
+  summaryLength,
+  setSummaryLength,
+  customLength,
+  setCustomLength,
+}: {
+  handleFormSubmit: InputFormSubmissionType;
+  summaryLength: string;
+  setSummaryLength: (length: string) => void;
+  customLength: string;
+  setCustomLength: (length: string) => void;
+}) => {
   const [songTitle, setSongTitle] = useState<string>("");
   const [artistName, setArtistName] = useState<string>("");
-  const [summaryLength, setSummaryLength] = useState("200");
+
   const type = "song";
   return (
     <div className="mx-auto max-w-[54rem]">
@@ -16,7 +28,7 @@ const SongInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmi
           const inputUrl = `https://www.google.com/search?q=lyrics+to+${artistName.split(" ").join("-")}+${songTitle
             .split(" ")
             .join("-")}`;
-          handleFormSubmit(event, type, summaryLength, inputUrl);
+          handleFormSubmit(event, type, summaryLength, customLength, inputUrl);
         }}
       >
         <input
@@ -38,7 +50,12 @@ const SongInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmi
         />
         <SummarizeButton>Summarize</SummarizeButton>
       </form>
-      <SummaryLengthSlider summaryLength={summaryLength} setSummaryLength={setSummaryLength} />
+      <SummaryLengthSlider
+        summaryLength={summaryLength}
+        setSummaryLength={setSummaryLength}
+        customLength={customLength}
+        setCustomLength={setCustomLength}
+      />
     </div>
   );
 };

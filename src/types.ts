@@ -91,6 +91,7 @@ export type InputFormSubmissionType = (
   event: React.SyntheticEvent,
   type: ContentType,
   summaryLength: string,
+  customLength?: string,
   inputUrl?: string,
   text?: string,
 ) => Promise<void>;

@@ -1,12 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&display=swap');
 
 @layer base {
   html {
-    font-family: 'Spline Sans', Poppin, sans-serif;
+    font-family: "Spline Sans", Poppin, sans-serif;
     width: 100%;
     height: auto;
     min-height: 100vh;
@@ -30,5 +30,22 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-smooth: antialiased;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    background-color: #f9d907;
+    height: 29px;
+    width: 29px;
+    border-radius: 14px;
+    border: 7px solid #3a2adc;
+  }
+  input[type="text"]:focus {
+    outline: none;
+    outline-width: 0;
+  }
+  input[type="text"]::-webkit-input-placeholder {
+    color: #3a2adc;
   }
 }
