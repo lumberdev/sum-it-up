@@ -42,6 +42,17 @@
     border-radius: 14px;
     border: 7px solid #3a2adc;
   }
+
+  input[type="range"]::-moz-range-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    background-color: #f9d907;
+    height: 16px;
+    width: 16px;
+    border-radius: 20px;
+    border: 7px solid #3a2adc;
+  }
+
   input[type="text"]:focus {
     outline: none;
     outline-width: 0;
