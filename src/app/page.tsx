@@ -2,8 +2,6 @@
 import { useState } from "react";
 import InputComponent from "~/components/Input/Input";
 import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
-import { useMutation } from "@tanstack/react-query";
-import { fetchSummaryData } from "~/query/fetch-summary-data";
 import InputPageHeader from "~/components/Input/InputPageHeader";
 import Result from "~/components/Result/Result";
 import Loading from "~/components/Loading/Loading";
@@ -16,7 +14,7 @@ export default function Home() {
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
   const [songDetails, setSongDetails] = useState("");
 
-  const { mutate, isLoading, isError, reset } = useOpenAiSSEResponse({
+  const { mutate, isLoading, isLoadingSSE, isError, reset } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
     },
@@ -25,7 +23,6 @@ export default function Home() {
       setCurrentResult(res);
     },
   });
-
   const handleFormSubmit: InputFormSubmissionType = async (
     event,
     type,
@@ -65,7 +62,8 @@ export default function Home() {
     }
   };
   // TODO: Refactor loading and error states
-  if (isLoading) return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
+  if (isLoading || (!displayResult && isLoadingSSE))
+    return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
 
   if (isError) return <Error />;
 

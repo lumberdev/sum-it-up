@@ -24,7 +24,7 @@ const useOpenAiSSEResponse = ({
   onStream?: (res: ResponseType) => unknown;
 }) => {
   const [streamedResult, setStreamedResult] = useState<string>("");
-  const [isLoadingSSE, setIsLoadingSSE] = useState<boolean>(true);
+  const [isLoadingSSE, setIsLoadingSSE] = useState<boolean>(false);
 
   const readabilityData = {
     title: "",
@@ -144,11 +144,11 @@ const useOpenAiSSEResponse = ({
     !isLoadingSSE && fetchRef.current && fetchRef.current();
   }, [isLoadingSSE]);
 
-  const { isLoading, mutate } = useMutation({
+  const { isLoading, mutate, reset } = useMutation({
     mutationFn: streamContent,
   });
 
-  return { streamedResult, mutate, isLoading, isLoadingSSE, isError };
+  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, reset };
 };
 
 export default useOpenAiSSEResponse;
