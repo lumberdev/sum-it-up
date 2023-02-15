@@ -49,6 +49,7 @@ const Loading = ({
             src={songDetails ? songLoaderGif : loaderGif}
             alt="my gif"
             className="-mt-[6rem] h-[32rem] w-[32rem] md:h-[40rem] md:w-[40rem]"
+            unoptimized={true}
           />
         </div>
         <div className="w-full px-[2rem] text-center md:hidden">
