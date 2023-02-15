@@ -11,9 +11,10 @@ type ResultProp = {
   originalContent: string;
   summaryResponse?: TextSummaryResponseType | SongMeaningResponseType | null;
   handleNewSearchBtnClick: () => void;
+  songDetails: string;
 };
 
-const Result = ({ originalContent, summaryResponse, handleNewSearchBtnClick }: ResultProp) => {
+const Result = ({ originalContent, summaryResponse, handleNewSearchBtnClick, songDetails }: ResultProp) => {
   const [resultPageContent, setResultPageContent] = useState<ResultPageContentType>("summary");
 
   return (
@@ -35,7 +36,7 @@ const Result = ({ originalContent, summaryResponse, handleNewSearchBtnClick }: R
       {resultPageContent === "summary" && summaryResponse?.type === "text" && (
         <TextResult textSummaryResponse={summaryResponse as TextSummaryResponseType} />
       )}
-      {resultPageContent === "original" && <OriginalContent content={originalContent} />}
+      {resultPageContent === "original" && <OriginalContent content={originalContent} songDetails={songDetails} />}
       <div className="text-center">
         <button
           className="mb-12 inline-flex h-20 items-center justify-center  rounded-full border-2 border-primary bg-transparent px-16 text-base font-bold uppercase text-primary md:hidden"

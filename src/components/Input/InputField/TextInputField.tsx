@@ -3,15 +3,28 @@ import { InputFormSubmissionType } from "~/types";
 import SummaryLengthSlider from "../../utility-components/input/SummaryLengthSlider";
 import SummarizeButton from "../../utility-components/input/SummarizeButton";
 
-const TextInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType }) => {
+const TextInputField = ({
+  handleFormSubmit,
+  summaryLength,
+  setSummaryLength,
+  customLength,
+  setCustomLength,
+}: {
+  handleFormSubmit: InputFormSubmissionType;
+  summaryLength: string;
+  setSummaryLength: (length: string) => void;
+  customLength: string;
+  setCustomLength: (length: string) => void;
+}) => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [summaryLength, setSummaryLength] = useState("200");
   const type = "text";
   return (
     <div className="mx-auto max-w-[86rem]">
       <form
         className="flex w-full flex-col rounded-md"
-        onSubmit={(event: React.SyntheticEvent) => handleFormSubmit(event, type, summaryLength, "", inputValue)}
+        onSubmit={(event: React.SyntheticEvent) =>
+          handleFormSubmit(event, type, summaryLength, customLength, "", inputValue)
+        }
       >
         <div className="mb-12 block min-h-[26rem] w-full resize-none overflow-hidden rounded-[20px] border-2 border-primary bg-white md:rounded-[30px]">
           <textarea
@@ -25,7 +38,12 @@ const TextInputField = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmi
         </div>
         <SummarizeButton>Summarize</SummarizeButton>
       </form>
-      <SummaryLengthSlider summaryLength={summaryLength} setSummaryLength={setSummaryLength} />
+      <SummaryLengthSlider
+        summaryLength={summaryLength}
+        setSummaryLength={setSummaryLength}
+        customLength={customLength}
+        setCustomLength={setCustomLength}
+      />
     </div>
   );
 };
