@@ -34,7 +34,7 @@ const Loading = ({
                 New Summary
               </button>
               <div className="mx-auto hidden h-[4.5rem] max-w-[43rem] items-center rounded-full border-2 border-white bg-transparent px-[1rem] py-[1.4rem] text-sm font-bold uppercase text-primary  md:flex md:border-primary">
-                Summerizing:
+                Summarizing:
                 <div className="ml-[1rem] min-w-0 truncate font-normal capitalize text-dark">{summaryInput}</div>
               </div>
             </div>
@@ -53,7 +53,7 @@ const Loading = ({
           />
         </div>
         <div className="w-full px-[2rem] text-center md:hidden">
-          <div className="mb-[1rem] font-bold uppercase text-primary">Summerizing</div>
+          <div className="mb-[1rem] font-bold uppercase text-primary">Summarizing</div>
           <div className="... flex h-[3.4rem] items-center rounded-full border-2 border-primary bg-transparent p-[2rem] text-sm text-dark">
             <div className="min-w-0 truncate capitalize">{summaryInput}</div>
           </div>

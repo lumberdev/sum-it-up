@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 type SummaryLengthSliderPropType = {
   summaryLength: string;
   setSummaryLength: (length: string) => void;
