@@ -31,7 +31,7 @@ const SummaryLengthSlider = ({
       <div className="relative w-full max-w-[42rem]">
         <input
           type="range"
-          className="range-sm z-1 mb-6 flex h-[.3rem] w-full cursor-pointer appearance-none items-center rounded-lg bg-medium p-0 focus:shadow-none dark:bg-primary"
+          className="range-sm z-1 mb-6 flex h-[.3rem] w-full cursor-pointer appearance-none items-center rounded-lg bg-primary p-0 focus:shadow-none"
           min="100"
           max="400"
           step="100"
