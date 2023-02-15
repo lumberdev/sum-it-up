@@ -8,6 +8,7 @@ import InputPageHeader from "~/components/Input/InputPageHeader";
 import Result from "~/components/Result/Result";
 import Loading from "~/components/Loading/Loading";
 import Error from "~/components/Error/Error";
+import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 
 export default function Home() {
   const [originalContent, setOriginalContent] = useState("");
@@ -15,12 +16,13 @@ export default function Home() {
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
   const [songDetails, setSongDetails] = useState("");
 
-  const { isLoading, mutate, isError, reset, status } = useMutation({
-    mutationFn: fetchSummaryData,
-    onSuccess: (res) => {
-      setLocalStorage(res.openAiResponse);
-      setCurrentResult(res.openAiResponse);
+  const { mutate, isLoading, isError, reset } = useOpenAiSSEResponse({
+    onSuccess: (res: ResponseType) => {
+      setLocalStorage(res);
+    },
+    onStream: (res) => {
       setDisplayResult(true);
+      setCurrentResult(res);
     },
   });
 

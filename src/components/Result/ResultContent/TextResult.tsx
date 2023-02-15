@@ -23,11 +23,11 @@ const TextResult = ({ textSummaryResponse }: TextResultPropType) => {
         <div className="mt-16 flex items-center justify-between">
           <h3 className="text-xl font-bold">Key Points & Analysis</h3>
           <div className="hidden md:block">
-            <CopyButton textToCopy={textSummaryResponse?.keyPoints.join("\n")} />
+            <CopyButton textToCopy={textSummaryResponse?.keyPoints?.join("\n")} />
           </div>
         </div>
         <ul className="my-8 list-disc px-6 text-base leading-6 md:leading-8">
-          {textSummaryResponse.keyPoints.map((keyPoint, id) => (
+          {textSummaryResponse.keyPoints?.map((keyPoint, id) => (
             <li key={id}>{keyPoint}</li>
           ))}
         </ul>
@@ -35,7 +35,7 @@ const TextResult = ({ textSummaryResponse }: TextResultPropType) => {
           This articles has a {textSummaryResponse.bias} bias and {textSummaryResponse.tone} tone
         </div>
         <div className="block md:hidden">
-          <CopyButton textToCopy={textSummaryResponse?.keyPoints.join("\n")} />
+          <CopyButton textToCopy={textSummaryResponse?.keyPoints?.join("\n")} />
         </div>
       </div>
     </Container>
