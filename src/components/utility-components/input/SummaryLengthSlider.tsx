@@ -25,8 +25,8 @@ const SummaryLengthSlider = ({
   return (
     <div className="mt-[7rem] mb-[5rem] flex flex-col items-center justify-center">
       <label htmlFor="summary-length" className="mb-[3rem] font-bold text-primary">
-        <div className="block sm:hidden">LENGTH OF SUMMARY</div>
-        <div className="block xl:hidden">LENGTH OF SUMMARY IN WORDS:</div>
+        <div className="block md:hidden">LENGTH OF SUMMARY</div>
+        <div className="hidden md:block">LENGTH OF SUMMARY IN WORDS:</div>
       </label>
       <div className="relative w-full max-w-[42rem]">
         <input
