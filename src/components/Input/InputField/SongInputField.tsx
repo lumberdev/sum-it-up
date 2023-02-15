@@ -20,6 +20,7 @@ const SongInputField = ({
   const [artistName, setArtistName] = useState<string>("");
 
   const type = "song";
+  const songInfo = `${songTitle} - ${artistName}`;
   return (
     <div className="mx-auto max-w-[54rem]">
       <form
@@ -28,7 +29,7 @@ const SongInputField = ({
           const inputUrl = `https://www.google.com/search?q=lyrics+to+${artistName.split(" ").join("-")}+${songTitle
             .split(" ")
             .join("-")}`;
-          handleFormSubmit(event, type, summaryLength, customLength, inputUrl);
+          handleFormSubmit(event, type, summaryLength, customLength, inputUrl, "", songInfo);
         }}
       >
         <input

@@ -22,7 +22,7 @@ const WebsiteInputField = ({
     <div className="mx-auto max-w-[54rem]">
       <form
         className="mx-auto flex w-full flex-col justify-center md:flex-row"
-        onSubmit={(event: React.SyntheticEvent) => handleFormSubmit(event, type, summaryLength, inputUrl)}
+        onSubmit={(event: React.SyntheticEvent) => handleFormSubmit(event, type, summaryLength, customLength, inputUrl)}
       >
         <input
           className="mb-8 flex h-20 items-center justify-center rounded-full border-2 border-primary px-4 pl-6 placeholder:text-dark md:mb-0 md:h-[5.7rem] md:flex-1 md:rounded-r-none"

@@ -94,4 +94,5 @@ export type InputFormSubmissionType = (
   customLength?: string,
   inputUrl?: string,
   text?: string,
+  songInfo?: string,
 ) => Promise<void>;
