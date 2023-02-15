@@ -7,12 +7,15 @@ import Result from "~/components/Result/Result";
 import Loading from "~/components/Loading/Loading";
 import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
+import useAnalytics from "~/hooks/use-analytics";
 
 export default function Home() {
   const [originalContent, setOriginalContent] = useState("");
   const [displayResult, setDisplayResult] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
   const [songDetails, setSongDetails] = useState("");
+
+  const { trackInputSelection, trackLengthSelection, trackSubmit, trackNewSummary } = useAnalytics();
 
   const { mutate, isLoading, isLoadingSSE, isError, reset } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
@@ -40,15 +43,17 @@ export default function Home() {
     } else {
       inputUrl?.length && setOriginalContent(inputUrl);
     }
+    trackSubmit({ type: type, length: customLength || summaryLength, input: inputUrl || text || "" });
     mutate({
       url: inputUrl ?? "",
-      wordLimit: parseInt(customLength || summaryLength),
+      wordLimit: Number(customLength || summaryLength),
       type,
       text,
     });
   };
   const handleNewSearchBtnClick = () => {
     setDisplayResult(false);
+    trackNewSummary();
   };
 
   const setLocalStorage = (newData: ResponseType) => {
@@ -79,7 +84,11 @@ export default function Home() {
       ) : (
         <>
           <InputPageHeader />
-          <InputComponent handleFormSubmit={handleFormSubmit} />
+          <InputComponent
+            handleFormSubmit={handleFormSubmit}
+            onInputChange={trackInputSelection}
+            onLengthChange={trackLengthSelection}
+          />
         </>
       )}
     </>
