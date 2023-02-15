@@ -2,20 +2,19 @@
 import { useState } from "react";
 import InputComponent from "~/components/Input/Input";
 import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
-import Image from "next/image";
-import loaderGif from "../assets/loader.gif";
-import errorIcon from "../assets/error.png";
-import Container from "~/components/utility-components/Container";
 import InputPageHeader from "~/components/Input/InputPageHeader";
 import Result from "~/components/Result/Result";
+import Loading from "~/components/Loading/Loading";
+import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 
 export default function Home() {
   const [originalContent, setOriginalContent] = useState("");
   const [displayResult, setDisplayResult] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
+  const [songDetails, setSongDetails] = useState("");
 
-  const { mutate, isLoading, isError } = useOpenAiSSEResponse({
+  const { mutate, isLoading, isLoadingSSE, isError, reset } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
     },
@@ -24,17 +23,26 @@ export default function Home() {
       setCurrentResult(res);
     },
   });
-  console.log(isError);
-  const handleFormSubmit: InputFormSubmissionType = async (event, type, summaryLength, inputUrl, text) => {
+  const handleFormSubmit: InputFormSubmissionType = async (
+    event,
+    type,
+    summaryLength,
+    customLength,
+    inputUrl,
+    text,
+    songInfo = "",
+  ) => {
     event.preventDefault();
+    setSongDetails(songInfo);
     if (type === "text") {
+      setSongDetails("");
       text?.length && setOriginalContent(text);
     } else {
       inputUrl?.length && setOriginalContent(inputUrl);
     }
     mutate({
       url: inputUrl ?? "",
-      wordLimit: parseInt(summaryLength),
+      wordLimit: parseInt(customLength || summaryLength),
       type,
       text,
     });
@@ -53,32 +61,11 @@ export default function Home() {
       localStorage.setItem("summaries", JSON.stringify([newData]));
     }
   };
-
   // TODO: Refactor loading and error states
-  if (isLoading)
-    return (
-      <Container>
-        <div className="flex min-h-[30rem] items-center justify-center pb-10 text-center">
-          <div>
-            <Image src={loaderGif} alt="my gif" height={200} width={200} />
-          </div>
-        </div>
-      </Container>
-    );
+  if (isLoading || (!displayResult && isLoadingSSE))
+    return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
 
-  if (isError)
-    return (
-      <Container>
-        <div className="flex min-h-[30rem] flex-col items-center justify-center text-center">
-          <div>
-            <Image src={errorIcon} alt="error" height={200} width={200} />
-          </div>
-          <h2 onClick={() => window.location.reload()} className="top-10 cursor-pointer text-heading3 font-bold">
-            Try Again!
-          </h2>
-        </div>
-      </Container>
-    );
+  if (isError) return <Error />;
 
   return (
     <>
@@ -87,6 +74,7 @@ export default function Home() {
           summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
           handleNewSearchBtnClick={handleNewSearchBtnClick}
           originalContent={originalContent}
+          songDetails={songDetails}
         />
       ) : (
         <>

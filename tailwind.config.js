@@ -24,6 +24,7 @@ module.exports = {
         paragraph: `1.4rem`,
       },
       fontFamily: {
+        Spline: ["Spline Sans", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
         splineSans: ["Spline Sans", "sans-serif"],
       },
