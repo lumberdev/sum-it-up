@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body className="flex flex-col justify-between font-splineSans text-base">
         <ReactQueryWrapper>
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pb-[5rem]">{children}</main>
           <Footer />
         </ReactQueryWrapper>
       </body>
