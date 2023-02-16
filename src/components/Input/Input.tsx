@@ -7,11 +7,28 @@ import SongInputField from "./InputField/SongInputField";
 import TextInputField from "./InputField/TextInputField";
 import Container from "../utility-components/Container";
 
-const Input = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType }) => {
+const Input = ({
+  handleFormSubmit,
+  onInputChange,
+  onLengthChange,
+}: {
+  handleFormSubmit: InputFormSubmissionType;
+  onInputChange: (properties: { type: string }) => any;
+  onLengthChange: (properties: { length: number }) => any;
+}) => {
   const [inputTypeSelected, setInputTypeSelected] = useState<InputType>(InputType.WEBSITE);
   const [summaryLength, setSummaryLength] = useState("200");
   const [customLength, setCustomLength] = useState("");
 
+  const handleSummaryLengthChange = (length: string) => {
+    onLengthChange({ length: Number(length) });
+    setSummaryLength(length);
+  };
+
+  const handleInputTypeChange = (type: InputType) => {
+    onInputChange({ type });
+    setInputTypeSelected(type);
+  };
   return (
     <Container>
       <div className="mx-auto w-full py-20 text-center">
@@ -22,7 +39,7 @@ const Input = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType
               className={`h-full flex-1 rounded-full text-sm font-bold uppercase transition${
                 InputType[key] === inputTypeSelected && " bg-white text-primary"
               }`}
-              onClick={() => setInputTypeSelected(InputType[key])}
+              onClick={() => handleInputTypeChange(InputType[key])}
             >
               {InputType[key]}
             </button>
@@ -32,7 +49,7 @@ const Input = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType
           <WebsiteInputField
             handleFormSubmit={handleFormSubmit}
             summaryLength={summaryLength}
-            setSummaryLength={setSummaryLength}
+            setSummaryLength={handleSummaryLengthChange}
             customLength={customLength}
             setCustomLength={setCustomLength}
           />
@@ -41,7 +58,7 @@ const Input = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType
           <SongInputField
             handleFormSubmit={handleFormSubmit}
             summaryLength={summaryLength}
-            setSummaryLength={setSummaryLength}
+            setSummaryLength={handleSummaryLengthChange}
             customLength={customLength}
             setCustomLength={setCustomLength}
           />
@@ -50,7 +67,7 @@ const Input = ({ handleFormSubmit }: { handleFormSubmit: InputFormSubmissionType
           <TextInputField
             handleFormSubmit={handleFormSubmit}
             summaryLength={summaryLength}
-            setSummaryLength={setSummaryLength}
+            setSummaryLength={handleSummaryLengthChange}
             customLength={customLength}
             setCustomLength={setCustomLength}
           />

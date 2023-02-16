@@ -28,7 +28,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const openAICompletion = async (promptText: string, max_tokens: number) => {
+const openAICompletion = async (promptText: string, max_tokens: number): Promise<string> => {
   const completion = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: promptText,
@@ -50,7 +50,12 @@ export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
         await openAICompletion(generateCondensedSummaryPrompt(string, props.wordLimit), props.maxToken ?? 50),
     );
     const results = await Promise.allSettled(promises);
-    results.forEach((res) => (textContent += res.status === "fulfilled" ? res.value : ""));
+    const filteredRejection = results.filter((res) => res.status !== "rejected");
+
+    filteredRejection.forEach((res) => (textContent += res.status === "fulfilled" ? res.value : ""));
+
+    // @ts-ignore
+    if (textContent === "") throw new Error(results?.[0]?.reason?.message);
   } else {
     textContent = content[0];
   }
@@ -91,7 +96,7 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
       trust: undefined,
     };
     try {
-      parsedResponseData = await JSON.parse(completionText);
+      parsedResponseData = await JSON.parse(completionText as string);
     } catch (error) {
       throw new Error("Invalid JSON response from OpenAi");
     }
