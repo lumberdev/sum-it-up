@@ -15,15 +15,26 @@ export default function Home() {
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
   const [songDetails, setSongDetails] = useState("");
 
-  const { trackInputSelection, trackLengthSelection, trackSubmit, trackNewSummary } = useAnalytics();
+  const {
+    trackInputSelection,
+    trackLengthSelection,
+    trackSubmit,
+    trackNewSummary,
+    trackRequestError,
+    trackRequestCompleted,
+  } = useAnalytics();
 
-  const { mutate, isLoading, isLoadingSSE, isError, reset } = useOpenAiSSEResponse({
+  const { mutate, isLoading, isLoadingSSE, streamedResult, isError, reset } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
+      trackRequestCompleted({ type: res.type, output: streamedResult });
     },
     onStream: (res) => {
       setDisplayResult(true);
       setCurrentResult(res);
+    },
+    onError: (err, data) => {
+      trackRequestError({ ...data, error: (err?.message as string) ?? "" });
     },
   });
   const handleFormSubmit: InputFormSubmissionType = async (
@@ -66,11 +77,11 @@ export default function Home() {
       localStorage.setItem("summaries", JSON.stringify([newData]));
     }
   };
+
+  if (isError) return <Error />;
   // TODO: Refactor loading and error states
   if (isLoading || (!displayResult && isLoadingSSE))
     return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
-
-  if (isError) return <Error />;
 
   return (
     <>

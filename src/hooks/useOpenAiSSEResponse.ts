@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
+import { setEmitFlags } from "typescript";
 import { fetchArticleData } from "~/query/fetch-article-data";
 import {
   ContentType,
@@ -19,12 +20,15 @@ import { fetchServerSent } from "~/utils/sse-fetch";
 const useOpenAiSSEResponse = ({
   onSuccess,
   onStream,
+  onError,
 }: {
   onSuccess?: (res: ResponseType) => unknown;
   onStream?: (res: ResponseType) => unknown;
+  onError?: (error: { message: string }, data: RequestBody) => unknown;
 }) => {
   const [streamedResult, setStreamedResult] = useState<string>("");
   const [isLoadingSSE, setIsLoadingSSE] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
 
   const readabilityData = {
     title: "",
@@ -54,8 +58,6 @@ const useOpenAiSSEResponse = ({
 
   const fetchRef = useRef<() => unknown>();
 
-  const [isError, setIsError] = useState<boolean>();
-
   const streamContent = async (data: RequestBody) => {
     const { wordLimit, type, url, text } = data;
     setIsLoadingSSE(true);
@@ -72,7 +74,14 @@ const useOpenAiSSEResponse = ({
       }
       return textContent;
     };
-    const textContent = await buildContentToStream();
+    let textContent = "";
+    try {
+      textContent = await buildContentToStream();
+    } catch (err) {
+      setIsError(true);
+      onError && onError(err as { message: string }, data);
+      return;
+    }
     setStreamedResult("");
     if (!data || !Object.keys(data).length) return;
 
@@ -135,6 +144,7 @@ const useOpenAiSSEResponse = ({
         });
       },
       (err) => {
+        onError && onError(err as { message: string }, data);
         setIsError(true);
       },
     );

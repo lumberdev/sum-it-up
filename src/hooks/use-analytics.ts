@@ -1,5 +1,6 @@
 import { EVENT_NAMES } from "analytics/events";
 import { useEffect, useState } from "react";
+import { RequestBody } from "~/types";
 
 const useAnalytics = () => {
   const [analytics, setAnalytics] = useState<{
@@ -46,8 +47,24 @@ const useAnalytics = () => {
   function trackNewSummary() {
     track(EVENT_NAMES.NEW_SUMMARY, {});
   }
+  function trackRequestCompleted(properties: { type: string; output: string }) {
+    track(EVENT_NAMES.REQUEST_COMPLETED, properties);
+  }
+  function trackRequestError(properties: RequestBody & { error: string }) {
+    track(EVENT_NAMES.REQUEST_ERROR, properties);
+  }
 
-  return { trackShare, trackSubmit, trackLengthSelection, trackInputSelection, trackNewSummary, track, identify };
+  return {
+    trackShare,
+    trackSubmit,
+    trackLengthSelection,
+    trackInputSelection,
+    trackNewSummary,
+    trackRequestCompleted,
+    trackRequestError,
+    track,
+    identify,
+  };
 };
 
 export default useAnalytics;
