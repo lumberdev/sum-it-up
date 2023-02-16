@@ -28,13 +28,22 @@ const Result = ({ originalContent, summaryResponse, handleNewSearchBtnClick, son
         <ResultPageContentToggler resultPageContent={resultPageContent} setResultPageContent={setResultPageContent} />
       </div>
       {resultPageContent === "summary" && summaryResponse?.type === "song" && (
-        <SongResult songMeaningResponse={summaryResponse as SongMeaningResponseType} />
+        <SongResult
+          songMeaningResponse={summaryResponse as SongMeaningResponseType}
+          originalContent={originalContent} songDetails={songDetails}
+        />
       )}
       {resultPageContent === "summary" && summaryResponse?.type === "article" && (
-        <TextResult textSummaryResponse={summaryResponse as TextSummaryResponseType} />
+        <TextResult
+          textSummaryResponse={summaryResponse as TextSummaryResponseType}
+          originalContent={originalContent}
+        />
       )}
       {resultPageContent === "summary" && summaryResponse?.type === "text" && (
-        <TextResult textSummaryResponse={summaryResponse as TextSummaryResponseType} />
+        <TextResult
+          textSummaryResponse={summaryResponse as TextSummaryResponseType}
+          originalContent={originalContent}
+        />
       )}
       {resultPageContent === "original" && <OriginalContent content={originalContent} songDetails={songDetails} />}
       <div className="text-center">
