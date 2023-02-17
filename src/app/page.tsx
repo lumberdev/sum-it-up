@@ -7,6 +7,7 @@ import Result from "~/components/Result/Result";
 import Loading from "~/components/Loading/Loading";
 import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
+import useAnalytics from "~/hooks/use-analytics";
 
 export default function Home() {
   const [originalContent, setOriginalContent] = useState("");
@@ -15,14 +16,27 @@ export default function Home() {
   const [songDetails, setSongDetails] = useState("");
   const [isStreaming, setIsStreaming] = useState(true);
 
-  const { mutate, isLoading, isLoadingSSE, isError, reset } = useOpenAiSSEResponse({
+  const {
+    trackInputSelection,
+    trackLengthSelection,
+    trackSubmit,
+    trackNewSummary,
+    trackRequestError,
+    trackRequestCompleted,
+  } = useAnalytics();
+
+  const { mutate, isLoading, isLoadingSSE, streamedResult, isError, reset } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
       setIsStreaming(false);
+      trackRequestCompleted({ type: res.type, output: streamedResult });
     },
     onStream: (res) => {
       setDisplayResult(true);
       setCurrentResult(res);
+    },
+    onError: (err, data) => {
+      trackRequestError({ ...data, error: (err?.message as string) ?? "" });
     },
   });
   const handleFormSubmit: InputFormSubmissionType = async (
@@ -42,15 +56,17 @@ export default function Home() {
     } else {
       inputUrl?.length && setOriginalContent(inputUrl);
     }
+    trackSubmit({ type: type, length: customLength || summaryLength, input: inputUrl || text || "" });
     mutate({
       url: inputUrl ?? "",
-      wordLimit: parseInt(customLength || summaryLength),
+      wordLimit: Number(customLength || summaryLength),
       type,
       text,
     });
   };
   const handleNewSearchBtnClick = () => {
     setDisplayResult(false);
+    trackNewSummary();
   };
 
   const setLocalStorage = (newData: ResponseType) => {
@@ -63,11 +79,11 @@ export default function Home() {
       localStorage.setItem("summaries", JSON.stringify([newData]));
     }
   };
+
+  if (isError) return <Error />;
   // TODO: Refactor loading and error states
   if (isLoading || (!displayResult && isLoadingSSE))
     return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
-
-  if (isError) return <Error />;
 
   return (
     <>
@@ -82,7 +98,11 @@ export default function Home() {
       ) : (
         <>
           <InputPageHeader />
-          <InputComponent handleFormSubmit={handleFormSubmit} />
+          <InputComponent
+            handleFormSubmit={handleFormSubmit}
+            onInputChange={trackInputSelection}
+            onLengthChange={trackLengthSelection}
+          />
         </>
       )}
     </>
