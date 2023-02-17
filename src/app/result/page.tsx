@@ -32,6 +32,7 @@ export default function ResultPage() {
       handleNewSearchBtnClick={handleNewSearchBtnClick}
       originalContent={originalContent}
       songDetails={originalContent}
+      isStreaming={false}
     />
   );
 }

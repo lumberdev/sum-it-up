@@ -18,7 +18,7 @@ const ResultPageHeader = ({
       <Container className="text-center">
         <div className="mx-auto flex w-full items-center justify-between rounded-full bg-primary p-[1.4rem] md:rounded-none md:bg-transparent md:p-0">
           <div className="relative flex-1">
-            <SumItUpLogo className="w-[5.2rem] md:w-[8.2rem] [&_path]:fill-white [&_path]:md:fill-primary" />
+            <SumItUpLogo className="w-[5.2rem] md:w-[8.2rem] [&_path]:fill-white md:[&_path]:fill-primary" />
           </div>
           <div className="hidden flex-1 md:block">
             <ResultPageContentToggler

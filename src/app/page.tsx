@@ -13,10 +13,12 @@ export default function Home() {
   const [displayResult, setDisplayResult] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
   const [songDetails, setSongDetails] = useState("");
+  const [isStreaming, setIsStreaming] = useState(true);
 
   const { mutate, isLoading, isLoadingSSE, isError, reset } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
+      setIsStreaming(false);
     },
     onStream: (res) => {
       setDisplayResult(true);
@@ -75,6 +77,7 @@ export default function Home() {
           handleNewSearchBtnClick={handleNewSearchBtnClick}
           originalContent={originalContent}
           songDetails={songDetails}
+          isStreaming={isStreaming}
         />
       ) : (
         <>
