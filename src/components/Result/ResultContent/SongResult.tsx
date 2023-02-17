@@ -23,10 +23,15 @@ const SongResult = ({ originalContent, songMeaningResponse, songDetails, isStrea
             />
           </div>
         </div>
-        <p className="mt-8 mb-10 text-base leading-6 md:leading-8">{songMeaningResponse.meaning}</p>
-      <div className="block md:hidden">
-        <ShareLinkButton responseObject={songMeaningResponse} originalContent={songDetails} disabled={isStreaming} />
-      </div>
+        <p className="mt-8  text-base leading-6 md:leading-8">{songMeaningResponse.meaning}</p>
+        {!isStreaming && (
+          <div className="block md:hidden mt-10">
+            <ShareLinkButton
+              responseObject={songMeaningResponse}
+              originalContent={songDetails}
+            />
+          </div>
+        )}
       </div>
     </Container>
   );

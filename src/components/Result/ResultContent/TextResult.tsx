@@ -15,24 +15,41 @@ const TextResult = ({ originalContent, textSummaryResponse, isStreaming }: TextR
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-bold">Summary</h3>
           <div className="hidden md:block">
-            <ShareLinkButton responseObject={textSummaryResponse} originalContent={originalContent} disabled={isStreaming}/>
+            <ShareLinkButton
+              responseObject={textSummaryResponse}
+              originalContent={originalContent}
+              disabled={isStreaming}
+            />
           </div>
         </div>
         <p className="my-8 text-base leading-6 md:leading-8">{textSummaryResponse?.summary}</p>
-        <div className="mt-16 flex items-center justify-between">
-          <h3 className="text-xl font-bold">Key Points & Analysis</h3>
-        </div>
-        <ul className="my-8 list-disc px-6 text-base leading-6 md:leading-8">
-          {textSummaryResponse.keyPoints?.map((keyPoint, id) => (
-            <li key={id}>{keyPoint}</li>
-          ))}
-        </ul>
-        <div className="mt-8 mb-10 text-base leading-6 md:leading-8">
-          This articles has a {textSummaryResponse.bias} bias and {textSummaryResponse.tone} tone
-        </div>
-        <div className="block md:hidden">
-          <ShareLinkButton responseObject={textSummaryResponse} originalContent={originalContent} disabled={isStreaming}/>
-        </div>
+        {textSummaryResponse.keyPoints?.length > 0 && (
+          <>
+            <div className="mt-16 flex items-center justify-between">
+              <h3 className="text-xl font-bold">Key Points & Analysis</h3>
+            </div>
+            <ul className="my-8 list-disc px-6 text-base leading-6 md:leading-8">
+              {textSummaryResponse.keyPoints?.map((keyPoint, id) => (
+                <li key={id}>{keyPoint}</li>
+              ))}
+            </ul>
+          </>
+        )}
+        {textSummaryResponse.bias && textSummaryResponse.tone && (
+          <>
+            <div className="mt-8 text-base leading-6 md:leading-8">
+              This content has a {textSummaryResponse.bias} bias and {textSummaryResponse.tone} tone
+            </div>
+            {!isStreaming && (
+              <div className="block md:hidden mt-10">
+                <ShareLinkButton
+                  responseObject={textSummaryResponse}
+                  originalContent={originalContent}
+                />
+              </div>
+            )}
+          </>
+        )}
       </div>
     </Container>
   );

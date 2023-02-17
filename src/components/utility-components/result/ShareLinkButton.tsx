@@ -10,7 +10,7 @@ const ShareLinkButton = ({
 }: {
   originalContent: string;
   responseObject: ResponseType;
-  disabled: boolean;
+  disabled?: boolean;
 }) => {
   const { copyToClipboard, didCopy } = useCopyToClipboard();
   return (
