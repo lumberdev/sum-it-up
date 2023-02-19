@@ -9,10 +9,17 @@ import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
 
-export default function Home() {
-  const [originalContent, setOriginalContent] = useState("");
-  const [displayResult, setDisplayResult] = useState(false);
-  const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
+export default function Home({ searchParams }: { searchParams?: { [key: string]: string | undefined } }) {
+  const [originalContent, setOriginalContent] = useState(searchParams?.original ?? "");
+  const [displayResult, setDisplayResult] = useState(
+    searchParams?.original &&
+      searchParams?.result &&
+      searchParams?.original?.length &&
+      searchParams?.result?.length > 0,
+  );
+  const [currentResult, setCurrentResult] = useState<ResponseType | null>(
+    searchParams?.result && JSON.parse((searchParams.result as string) ?? null),
+  );
   const [songDetails, setSongDetails] = useState("");
 
   const {
@@ -64,6 +71,10 @@ export default function Home() {
   };
   const handleNewSearchBtnClick = () => {
     setDisplayResult(false);
+    setOriginalContent("");
+    setCurrentResult(null);
+    setSongDetails("");
+    window.history.replaceState(null, "", window.location.origin);
     trackNewSummary();
   };
 
