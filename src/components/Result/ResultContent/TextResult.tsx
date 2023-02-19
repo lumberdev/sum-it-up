@@ -9,6 +9,10 @@ type TextResultPropType = {
 };
 
 const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE }: TextResultPropType) => {
+  const isFirstCharVowel = (str: string): boolean => {
+    return /^[aeiou]/i.test(str);
+  };
+
   return (
     <Container>
       <div className="mx-auto mb-8 max-w-[75rem] rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
@@ -38,14 +42,12 @@ const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE }: Text
         {textSummaryResponse.bias && textSummaryResponse.tone && (
           <>
             <div className="mt-8 text-base leading-6 md:leading-8">
-              This content has a {textSummaryResponse.bias} bias and {textSummaryResponse.tone} tone
+              This content has {isFirstCharVowel(textSummaryResponse.bias) ? "an" : "a"} {textSummaryResponse.bias.toLowerCase()} bias
+              and {isFirstCharVowel(textSummaryResponse.tone) ? "an" : "a"} {textSummaryResponse.tone.toLowerCase()} tone.
             </div>
             {!isLoadingSSE && (
-              <div className="block md:hidden mt-10">
-                <ShareLinkButton
-                  responseObject={textSummaryResponse}
-                  originalContent={originalContent}
-                />
+              <div className="mt-10 block md:hidden">
+                <ShareLinkButton responseObject={textSummaryResponse} originalContent={originalContent} />
               </div>
             )}
           </>
