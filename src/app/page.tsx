@@ -14,7 +14,6 @@ export default function Home() {
   const [displayResult, setDisplayResult] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
   const [songDetails, setSongDetails] = useState("");
-  const [isStreaming, setIsStreaming] = useState(true);
 
   const {
     trackInputSelection,
@@ -28,7 +27,6 @@ export default function Home() {
   const { mutate, isLoading, isLoadingSSE, streamedResult, isError, reset } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
-      setIsStreaming(false);
       trackRequestCompleted({ type: res.type, output: streamedResult });
     },
     onStream: (res) => {
@@ -93,7 +91,7 @@ export default function Home() {
           handleNewSearchBtnClick={handleNewSearchBtnClick}
           originalContent={originalContent}
           songDetails={songDetails}
-          isStreaming={isStreaming}
+          isLoadingSSE={isLoadingSSE}
         />
       ) : (
         <>

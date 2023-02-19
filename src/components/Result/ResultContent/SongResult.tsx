@@ -3,13 +3,12 @@ import { SongMeaningResponseType } from "~/types";
 import ShareLinkButton from "../../utility-components/result/ShareLinkButton";
 
 type SongResultPropType = {
-  originalContent: string;
   songMeaningResponse: SongMeaningResponseType;
   songDetails: string;
-  isStreaming: boolean;
+  isLoadingSSE: boolean;
 };
 
-const SongResult = ({ originalContent, songMeaningResponse, songDetails, isStreaming }: SongResultPropType) => {
+const SongResult = ({ songMeaningResponse, songDetails, isLoadingSSE }: SongResultPropType) => {
   return (
     <Container>
       <div className="mx-auto mb-12 max-w-[75rem] rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
@@ -19,12 +18,12 @@ const SongResult = ({ originalContent, songMeaningResponse, songDetails, isStrea
             <ShareLinkButton
               responseObject={songMeaningResponse}
               originalContent={songDetails}
-              disabled={isStreaming}
+              disabled={isLoadingSSE}
             />
           </div>
         </div>
         <p className="mt-8  text-base leading-6 md:leading-8">{songMeaningResponse.meaning}</p>
-        {!isStreaming && (
+        {!isLoadingSSE && (
           <div className="block md:hidden mt-10">
             <ShareLinkButton
               responseObject={songMeaningResponse}

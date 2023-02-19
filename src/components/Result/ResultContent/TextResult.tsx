@@ -5,10 +5,10 @@ import ShareLinkButton from "../../utility-components/result/ShareLinkButton";
 type TextResultPropType = {
   originalContent: string;
   textSummaryResponse: TextSummaryResponseType | TextResponse;
-  isStreaming: boolean;
+  isLoadingSSE: boolean;
 };
 
-const TextResult = ({ originalContent, textSummaryResponse, isStreaming }: TextResultPropType) => {
+const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE }: TextResultPropType) => {
   return (
     <Container>
       <div className="mx-auto mb-8 max-w-[75rem] rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
@@ -18,7 +18,7 @@ const TextResult = ({ originalContent, textSummaryResponse, isStreaming }: TextR
             <ShareLinkButton
               responseObject={textSummaryResponse}
               originalContent={originalContent}
-              disabled={isStreaming}
+              disabled={isLoadingSSE}
             />
           </div>
         </div>
@@ -40,7 +40,7 @@ const TextResult = ({ originalContent, textSummaryResponse, isStreaming }: TextR
             <div className="mt-8 text-base leading-6 md:leading-8">
               This content has a {textSummaryResponse.bias} bias and {textSummaryResponse.tone} tone
             </div>
-            {!isStreaming && (
+            {!isLoadingSSE && (
               <div className="block md:hidden mt-10">
                 <ShareLinkButton
                   responseObject={textSummaryResponse}

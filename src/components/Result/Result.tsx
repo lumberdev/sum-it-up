@@ -12,7 +12,7 @@ type ResultProp = {
   summaryResponse?: TextSummaryResponseType | SongMeaningResponseType | null;
   handleNewSearchBtnClick: () => void;
   songDetails: string;
-  isStreaming: boolean;
+  isLoadingSSE: boolean;
 };
 
 const Result = ({
@@ -20,7 +20,7 @@ const Result = ({
   summaryResponse,
   handleNewSearchBtnClick,
   songDetails,
-  isStreaming,
+  isLoadingSSE,
 }: ResultProp) => {
   const [resultPageContent, setResultPageContent] = useState<ResultPageContentType>("summary");
 
@@ -37,23 +37,22 @@ const Result = ({
       {resultPageContent === "summary" && summaryResponse?.type === "song" && (
         <SongResult
           songMeaningResponse={summaryResponse as SongMeaningResponseType}
-          originalContent={originalContent}
           songDetails={songDetails}
-          isStreaming={isStreaming}
+          isLoadingSSE={isLoadingSSE}
         />
       )}
       {resultPageContent === "summary" && summaryResponse?.type === "article" && (
         <TextResult
           textSummaryResponse={summaryResponse as TextSummaryResponseType}
           originalContent={originalContent}
-          isStreaming={isStreaming}
+          isLoadingSSE={isLoadingSSE}
         />
       )}
       {resultPageContent === "summary" && summaryResponse?.type === "text" && (
         <TextResult
           textSummaryResponse={summaryResponse as TextSummaryResponseType}
           originalContent={originalContent}
-          isStreaming={isStreaming}
+          isLoadingSSE={isLoadingSSE}
         />
       )}
       {resultPageContent === "original" && <OriginalContent content={originalContent} songDetails={songDetails} />}
