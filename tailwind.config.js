@@ -35,6 +35,14 @@ module.exports = {
         primary: `#3A2ADC`,
         background: `#F5F5ED`,
       },
+      animation: {
+        shine: "shine 1s",
+      },
+      keyframes: {
+        shine: {
+          "100%": { left: "125%" },
+        },
+      },
     },
   },
   plugins: [],

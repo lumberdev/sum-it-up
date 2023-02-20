@@ -8,13 +8,20 @@ import ResultPageContentToggler from "../utility-components/result/ResultPageCon
 import OriginalContent from "./ResultContent/OriginalContent";
 
 type ResultProp = {
-  originalContent: string;
+  originalContent: string | string[];
   summaryResponse?: TextSummaryResponseType | SongMeaningResponseType | null;
   handleNewSearchBtnClick: () => void;
   songDetails: string;
+  isLoadingSSE: boolean;
 };
 
-const Result = ({ originalContent, summaryResponse, handleNewSearchBtnClick, songDetails }: ResultProp) => {
+const Result = ({
+  originalContent,
+  summaryResponse,
+  handleNewSearchBtnClick,
+  songDetails,
+  isLoadingSSE,
+}: ResultProp) => {
   const [resultPageContent, setResultPageContent] = useState<ResultPageContentType>("summary");
 
   return (
@@ -28,18 +35,30 @@ const Result = ({ originalContent, summaryResponse, handleNewSearchBtnClick, son
         <ResultPageContentToggler resultPageContent={resultPageContent} setResultPageContent={setResultPageContent} />
       </div>
       {resultPageContent === "summary" && summaryResponse?.type === "song" && (
-        <SongResult songMeaningResponse={summaryResponse as SongMeaningResponseType} />
+        <SongResult
+          songMeaningResponse={summaryResponse as SongMeaningResponseType}
+          songDetails={songDetails}
+          isLoadingSSE={isLoadingSSE}
+        />
       )}
       {resultPageContent === "summary" && summaryResponse?.type === "article" && (
-        <TextResult textSummaryResponse={summaryResponse as TextSummaryResponseType} />
+        <TextResult
+          textSummaryResponse={summaryResponse as TextSummaryResponseType}
+          originalContent={originalContent}
+          isLoadingSSE={isLoadingSSE}
+        />
       )}
       {resultPageContent === "summary" && summaryResponse?.type === "text" && (
-        <TextResult textSummaryResponse={summaryResponse as TextSummaryResponseType} />
+        <TextResult
+          textSummaryResponse={summaryResponse as TextSummaryResponseType}
+          originalContent={originalContent}
+          isLoadingSSE={isLoadingSSE}
+        />
       )}
       {resultPageContent === "original" && <OriginalContent content={originalContent} songDetails={songDetails} />}
       <div className="text-center">
         <button
-          className="mb-12 inline-flex h-20 items-center justify-center  rounded-full border-2 border-primary bg-transparent px-16 text-base font-bold uppercase text-primary md:hidden"
+          className="mb-[6rem] inline-flex h-20 items-center justify-center  rounded-full border-2 border-primary bg-transparent px-16 text-base font-bold uppercase text-primary md:hidden"
           type="button"
           onClick={() => handleNewSearchBtnClick()}
         >
