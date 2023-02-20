@@ -23,11 +23,11 @@ const Loading = ({
         <Container className="text-center">
           <div className="mx-auto flex w-full items-center justify-between rounded-full bg-primary p-[1.4rem] md:rounded-none md:bg-transparent md:p-0">
             <div className="relative flex-1">
-              <SumItUpLogo className="w-[5.2rem] md:w-[8.2rem] [&_path]:fill-white md:[&_path]:fill-primary" />
+              <SumItUpLogo className="main-logo w-[5.2rem] md:w-[8.2rem]" />
             </div>
             <div className="relative flex-1 text-right">
               <button
-                className="mx-auto block inline-flex h-[3.4rem] min-w-[11.1rem] items-center justify-center rounded-full border-2 border-white bg-transparent text-sm font-bold uppercase text-white md:hidden md:h-20 md:min-w-[18rem] md:border-primary md:text-lg md:text-primary"
+                className="mx-auto inline-flex h-[3.4rem] min-w-[11.1rem] items-center justify-center rounded-full border-2 border-white bg-transparent text-sm font-bold uppercase text-white md:hidden md:h-20 md:min-w-[18rem] md:border-primary md:text-lg md:text-primary"
                 type="button"
                 onClick={() => reset()}
               >

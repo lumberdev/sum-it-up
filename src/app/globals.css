@@ -49,4 +49,13 @@
   input[type="text"]::-webkit-input-placeholder {
     color: #3a2adc;
   }
+
+  .main-logo path {
+    fill: #ffffff;
+  }
+  @media screen and (min-width: 768px) {
+    .main-logo path {
+      fill: #3a2adc;
+    }
+  }
 }
