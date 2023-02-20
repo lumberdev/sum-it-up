@@ -35,6 +35,7 @@ const useOpenAiSSEResponse = ({
     dir: "",
     type: "article" as ContentType,
     byline: "",
+    // content: "",
     url: "",
   };
 
@@ -66,7 +67,14 @@ const useOpenAiSSEResponse = ({
       let textContent = "";
       if (type === "article" || type === "song") {
         const json = await fetchArticleData(url, 500);
-        mappedResult.current = { ...mappedResult.current, byline: json.byline, title: json.title, dir: json.dir, url };
+        mappedResult.current = {
+          ...mappedResult.current,
+          byline: json.byline,
+          title: json.title,
+          dir: json.dir,
+          url,
+          // content: json.content,
+        };
         const body = await getSummaryFromUrl(type, json.chunkedTextContent);
         textContent = body;
       } else {

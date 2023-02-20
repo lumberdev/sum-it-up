@@ -9,9 +9,10 @@ type TextResultPropType = {
   originalContent: string | string[];
   textSummaryResponse: TextSummaryResponseType | TextResponse;
   isLoadingSSE: boolean;
+  trackShare: (properties: { shareURL: string }) => void;
 };
 
-const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE }: TextResultPropType) => {
+const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE, trackShare }: TextResultPropType) => {
   useEffect(() => {
     if (!isLoadingSSE) {
       const originalContentString = getStringOrFirst(originalContent);
@@ -31,6 +32,7 @@ const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE }: Text
           <h3 className="text-xl font-bold">Summary</h3>
           <div className="hidden md:block">
             <ShareLinkButton
+              trackShare={trackShare}
               responseObject={textSummaryResponse}
               originalContent={originalContent}
               disabled={isLoadingSSE}
@@ -59,7 +61,11 @@ const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE }: Text
             </div>
             {!isLoadingSSE && (
               <div className="mt-10 block md:hidden">
-                <ShareLinkButton responseObject={textSummaryResponse} originalContent={originalContent} />
+                <ShareLinkButton
+                  trackShare={trackShare}
+                  responseObject={textSummaryResponse}
+                  originalContent={originalContent}
+                />
               </div>
             )}
           </>

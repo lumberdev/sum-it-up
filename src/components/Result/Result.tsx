@@ -13,12 +13,14 @@ type ResultProp = {
   handleNewSearchBtnClick: () => void;
   songDetails: string;
   isLoadingSSE: boolean;
+  trackShare: (properties: { shareURL: string }) => void;
 };
 
 const Result = ({
   originalContent,
   summaryResponse,
   handleNewSearchBtnClick,
+  trackShare,
   songDetails,
   isLoadingSSE,
 }: ResultProp) => {
@@ -36,6 +38,7 @@ const Result = ({
       </div>
       {resultPageContent === "summary" && summaryResponse?.type === "song" && (
         <SongResult
+          trackShare={trackShare}
           songMeaningResponse={summaryResponse as SongMeaningResponseType}
           songDetails={songDetails}
           isLoadingSSE={isLoadingSSE}
@@ -43,6 +46,7 @@ const Result = ({
       )}
       {resultPageContent === "summary" && summaryResponse?.type === "article" && (
         <TextResult
+          trackShare={trackShare}
           textSummaryResponse={summaryResponse as TextSummaryResponseType}
           originalContent={originalContent}
           isLoadingSSE={isLoadingSSE}
@@ -50,6 +54,7 @@ const Result = ({
       )}
       {resultPageContent === "summary" && summaryResponse?.type === "text" && (
         <TextResult
+          trackShare={trackShare}
           textSummaryResponse={summaryResponse as TextSummaryResponseType}
           originalContent={originalContent}
           isLoadingSSE={isLoadingSSE}

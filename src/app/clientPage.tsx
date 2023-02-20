@@ -27,6 +27,7 @@ export default function ClientPage({ searchParams }: { searchParams?: { [key: st
     trackNewSummary,
     trackRequestError,
     trackRequestCompleted,
+    trackShare,
   } = useAnalytics();
 
   const { mutate, isLoading, isLoadingSSE, streamedResult, isError, reset } = useOpenAiSSEResponse({
@@ -95,6 +96,7 @@ export default function ClientPage({ searchParams }: { searchParams?: { [key: st
     <>
       {displayResult ? (
         <Result
+          trackShare={trackShare}
           summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
           handleNewSearchBtnClick={handleNewSearchBtnClick}
           originalContent={originalContent}
