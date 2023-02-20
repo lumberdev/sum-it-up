@@ -1,6 +1,8 @@
 import Container from "../../utility-components/Container";
 import { TextSummaryResponseType, TextResponse } from "~/types";
 import ShareLinkButton from "../../utility-components/result/ShareLinkButton";
+import { useEffect } from "react";
+import { encodeStateToUrl } from "~/utils/generateLinkToShare";
 
 type TextResultPropType = {
   originalContent: string;
@@ -9,6 +11,13 @@ type TextResultPropType = {
 };
 
 const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE }: TextResultPropType) => {
+  useEffect(() => {
+    if (!isLoadingSSE) {
+      const encodedUrl = encodeStateToUrl(originalContent, textSummaryResponse);
+      history.replaceState({}, "", encodedUrl);
+    }
+  }, [isLoadingSSE]);
+
   const isFirstCharVowel = (str: string): boolean => {
     return /^[aeiou]/i.test(str);
   };
@@ -42,8 +51,9 @@ const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE }: Text
         {textSummaryResponse.bias && textSummaryResponse.tone && (
           <>
             <div className="mt-8 text-base leading-6 md:leading-8">
-              This content has {isFirstCharVowel(textSummaryResponse.bias) ? "an" : "a"} {textSummaryResponse.bias.toLowerCase()} bias
-              and {isFirstCharVowel(textSummaryResponse.tone) ? "an" : "a"} {textSummaryResponse.tone.toLowerCase()} tone.
+              This content has {isFirstCharVowel(textSummaryResponse.bias) ? "an" : "a"}{" "}
+              {textSummaryResponse.bias.toLowerCase()} bias and{" "}
+              {isFirstCharVowel(textSummaryResponse.tone) ? "an" : "a"} {textSummaryResponse.tone.toLowerCase()} tone.
             </div>
             {!isLoadingSSE && (
               <div className="mt-10 block md:hidden">

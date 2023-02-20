@@ -14,7 +14,7 @@ export default function ClientPage({ searchParams }: { searchParams?: { [key: st
   const [displayResult, setDisplayResult] = useState(
     searchParams?.original &&
       searchParams?.result &&
-      searchParams?.original?.length &&
+      searchParams?.original?.length > 0 &&
       searchParams?.result?.length > 0,
   );
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(
