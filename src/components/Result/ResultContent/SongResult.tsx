@@ -16,7 +16,7 @@ const SongResult = ({ songMeaningResponse, songDetails, isLoadingSSE }: SongResu
       const encodedUrl = encodeStateToUrl(songDetails, songMeaningResponse);
       history.replaceState({}, "", encodedUrl);
     }
-  }, [isLoadingSSE]);
+  }, [isLoadingSSE, songDetails, songMeaningResponse]);
   return (
     <Container>
       <div className="mx-auto mb-12 max-w-[75rem] rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">

@@ -3,9 +3,10 @@ import { TextSummaryResponseType, TextResponse } from "~/types";
 import ShareLinkButton from "../../utility-components/result/ShareLinkButton";
 import { useEffect } from "react";
 import { encodeStateToUrl } from "~/utils/generateLinkToShare";
+import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 
 type TextResultPropType = {
-  originalContent: string;
+  originalContent: string | string[];
   textSummaryResponse: TextSummaryResponseType | TextResponse;
   isLoadingSSE: boolean;
 };
@@ -13,10 +14,11 @@ type TextResultPropType = {
 const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE }: TextResultPropType) => {
   useEffect(() => {
     if (!isLoadingSSE) {
-      const encodedUrl = encodeStateToUrl(originalContent, textSummaryResponse);
+      const originalContentString = getStringOrFirst(originalContent);
+      const encodedUrl = encodeStateToUrl(originalContentString, textSummaryResponse);
       history.replaceState({}, "", encodedUrl);
     }
-  }, [isLoadingSSE]);
+  }, [isLoadingSSE, originalContent, textSummaryResponse]);
 
   const isFirstCharVowel = (str: string): boolean => {
     return /^[aeiou]/i.test(str);

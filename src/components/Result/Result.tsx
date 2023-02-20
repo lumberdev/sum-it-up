@@ -8,7 +8,7 @@ import ResultPageContentToggler from "../utility-components/result/ResultPageCon
 import OriginalContent from "./ResultContent/OriginalContent";
 
 type ResultProp = {
-  originalContent: string;
+  originalContent: string | string[];
   summaryResponse?: TextSummaryResponseType | SongMeaningResponseType | null;
   handleNewSearchBtnClick: () => void;
   songDetails: string;

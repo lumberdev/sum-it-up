@@ -3,6 +3,6 @@ export const dynamic='force-dynamic';
 
 import ClientPage from "./clientPage";
 
-export default function Page({ searchParams }: { searchParams?: { [key: string]: string | undefined } }) {
+export default function Page({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
   return <ClientPage searchParams={searchParams} />;
 }

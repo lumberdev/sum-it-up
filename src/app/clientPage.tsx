@@ -8,17 +8,15 @@ import Loading from "~/components/Loading/Loading";
 import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
+import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 
-export default function ClientPage({ searchParams }: { searchParams?: { [key: string]: string | undefined } }) {
+export default function ClientPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
   const [originalContent, setOriginalContent] = useState(searchParams?.original ?? "");
-  const [displayResult, setDisplayResult] = useState(
-    searchParams?.original &&
-      searchParams?.result &&
-      searchParams?.original?.length > 0 &&
-      searchParams?.result?.length > 0,
+  const [displayResult, setDisplayResult] = useState<boolean>(
+    getStringOrFirst(searchParams?.original).length > 0 && getStringOrFirst(searchParams?.result).length > 0,
   );
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(
-    searchParams?.result && JSON.parse((searchParams.result as string) ?? null),
+    searchParams?.result && JSON.parse(getStringOrFirst(searchParams.result)),
   );
   const [songDetails, setSongDetails] = useState("");
 

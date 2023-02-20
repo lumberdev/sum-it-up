@@ -12,7 +12,7 @@ const Loading = ({
   songDetails,
   reset,
 }: {
-  summaryContent: string;
+  summaryContent: string | string[];
   songDetails: string;
   reset: () => void;
 }) => {
