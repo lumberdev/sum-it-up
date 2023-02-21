@@ -45,6 +45,7 @@ const SongInputField = ({
           className="mb-12 h-20 rounded-full border-2 border-primary px-4 text-center text-base placeholder:text-dark md:h-[5.7rem]"
           type="text"
           name="artist-name"
+          required
           value={artistName}
           placeholder="Enter artist"
           onChange={(e) => setArtistName(e.target.value)}

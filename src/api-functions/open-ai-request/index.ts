@@ -7,12 +7,9 @@ import {
 } from "~/utils/generatePrompt";
 import { ContentType, DataType, OpenAiRequestProps, OpenAiSummarizeProps, SongType } from "~/types";
 
-function getValidProps(type: ContentType, chunkedTextContent: Array<string>, text: string) {
+function getValidProps(type: ContentType, chunkedTextContent: Array<string>) {
   switch (type) {
     case "text":
-      if (!text || !text.length) throw new Error("no data provided");
-      return [text];
-
     case "song":
     case "article":
       if (!chunkedTextContent || !chunkedTextContent.length) throw new Error("no data provided");
@@ -42,7 +39,7 @@ const openAICompletion = async (promptText: string, max_tokens: number): Promise
 };
 
 export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
-  const content = getValidProps(props.type, props.chunkedTextContent ?? [], props.text ?? "");
+  const content = getValidProps(props.type, props.chunkedTextContent ?? []);
   let textContent = "";
   if (content.length > 1) {
     const promises = content.map(
