@@ -90,6 +90,7 @@ export interface TextResponse {
 export interface TextSummaryResponseType extends TextResponse {
   bias: string;
   title: string;
+  // content: string;
   byline: string | null;
   dir: any; // not sure what this would be
   url: string;
@@ -98,6 +99,7 @@ export type SongMeaningResponseType = {
   byline: string | null;
   dir: any; // not sure what this would be
   meaning: string;
+  // content: string;
   mood: string;
   moodColor: string;
   title: string;

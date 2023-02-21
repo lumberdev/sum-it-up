@@ -8,9 +8,10 @@ type SongResultPropType = {
   songMeaningResponse: SongMeaningResponseType;
   songDetails: string;
   isLoadingSSE: boolean;
+  trackShare: (properties: { shareURL: string }) => void;
 };
 
-const SongResult = ({ songMeaningResponse, songDetails, isLoadingSSE }: SongResultPropType) => {
+const SongResult = ({ songMeaningResponse, songDetails, isLoadingSSE, trackShare }: SongResultPropType) => {
   useEffect(() => {
     if (!isLoadingSSE) {
       const encodedUrl = encodeStateToUrl(songDetails, songMeaningResponse);
@@ -24,6 +25,7 @@ const SongResult = ({ songMeaningResponse, songDetails, isLoadingSSE }: SongResu
           <h3 className="text-xl font-bold">Summary</h3>
           <div className="hidden md:block">
             <ShareLinkButton
+              trackShare={trackShare}
               responseObject={songMeaningResponse}
               originalContent={songDetails}
               disabled={isLoadingSSE}
@@ -33,7 +35,11 @@ const SongResult = ({ songMeaningResponse, songDetails, isLoadingSSE }: SongResu
         <p className="mt-8  text-base leading-6 md:leading-8">{songMeaningResponse.meaning}</p>
         {!isLoadingSSE && (
           <div className="mt-10 block md:hidden">
-            <ShareLinkButton responseObject={songMeaningResponse} originalContent={songDetails} />
+            <ShareLinkButton
+              trackShare={trackShare}
+              responseObject={songMeaningResponse}
+              originalContent={songDetails}
+            />
           </div>
         )}
       </div>

@@ -8,8 +8,10 @@ const ShareLinkButton = ({
   originalContent,
   responseObject,
   disabled,
+  trackShare,
 }: {
   originalContent: string | string[];
+  trackShare: (properties: { shareURL: string }) => void;
   responseObject: ResponseType;
   disabled?: boolean;
 }) => {
@@ -20,6 +22,7 @@ const ShareLinkButton = ({
         const originalContentString = getStringOrFirst(originalContent);
         const encodedUrl = encodeStateToUrl(originalContentString, responseObject);
         copyToClipboard(encodedUrl);
+        trackShare({ shareURL: encodedUrl });
       }}
       className={`group relative mx-auto flex h-12 min-w-[10rem] items-center justify-center overflow-hidden rounded-full bg-primary pl-8 pr-9 text-white transition-all duration-500 hover:opacity-90 ${
         didCopy ? "disabled:opacity-90" : "disabled:opacity-60"
