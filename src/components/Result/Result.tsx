@@ -6,6 +6,7 @@ import SongResult from "./ResultContent/SongResult";
 import TextResult from "./ResultContent/TextResult";
 import ResultPageContentToggler from "../utility-components/result/ResultPageContentToggler";
 import OriginalContent from "./ResultContent/OriginalContent";
+import { ContentType } from "~/types";
 
 type ResultProp = {
   originalContent: string | string[];
@@ -60,7 +61,13 @@ const Result = ({
           isLoadingSSE={isLoadingSSE}
         />
       )}
-      {resultPageContent === "original" && <OriginalContent content={originalContent} songDetails={songDetails} />}
+      {resultPageContent === "original" && (
+        <OriginalContent
+          content={originalContent}
+          songDetails={songDetails}
+          contentType={summaryResponse?.type || null}
+        />
+      )}
       <div className="text-center">
         <button
           className="mb-[6rem] inline-flex h-20 items-center justify-center  rounded-full border-2 border-primary bg-transparent px-16 text-base font-bold uppercase text-primary md:hidden"
