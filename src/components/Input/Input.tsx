@@ -36,9 +36,9 @@ const Input = ({
           {(Object.keys(InputType) as Array<keyof typeof InputType>).map((key) => (
             <button
               key={key}
-              className={`h-full flex-1 rounded-full text-sm font-bold uppercase transition${
+              className={`h-full flex-1 rounded-full text-sm font-bold uppercase transition ${
                 InputType[key] === inputTypeSelected && " bg-white text-primary"
-              }`}
+              } ${InputType[key] !== inputTypeSelected && "hover:bg-white/10"}`}
               onClick={() => handleInputTypeChange(InputType[key])}
             >
               {InputType[key]}
