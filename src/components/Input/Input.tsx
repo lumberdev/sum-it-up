@@ -32,18 +32,23 @@ const Input = ({
   return (
     <Container>
       <div className="mx-auto w-full py-20 text-center">
-        <div className="mx-auto mb-[7rem] inline-flex h-[4.5rem] w-full max-w-[28rem] items-center justify-center rounded-full bg-primary p-2 text-white md:max-w-[33rem]">
+        <div className="relative mx-auto mb-[7rem] inline-flex h-[4.5rem] w-full max-w-[28rem] items-center justify-center rounded-full bg-primary p-2 text-white md:max-w-[33rem]">
           {(Object.keys(InputType) as Array<keyof typeof InputType>).map((key) => (
             <button
               key={key}
-              className={`h-full flex-1 rounded-full text-sm font-bold uppercase transition${
-                InputType[key] === inputTypeSelected && " bg-white text-primary"
-              }`}
+              className={`z-10 h-full flex-1 rounded-full text-sm font-bold uppercase transition ${
+                InputType[key] === inputTypeSelected && " text-primary"
+              } ${InputType[key] !== inputTypeSelected && "hover:bg-white/10"}`}
               onClick={() => handleInputTypeChange(InputType[key])}
             >
               {InputType[key]}
             </button>
           ))}
+          <span
+            className={`z-1 absolute left-2 right-auto h-[calc(100%-1rem)] w-[calc(33.33%-0.5rem)] rounded-full bg-white transition-all duration-200 ease-in-out ${
+              inputTypeSelected === InputType.TEXT && "left-1/2 -translate-x-1/2"
+            } ${inputTypeSelected === InputType.SONG && "left-2/3 right-2"}`}
+          ></span>
         </div>
         {inputTypeSelected === InputType.WEBSITE && (
           <WebsiteInputField

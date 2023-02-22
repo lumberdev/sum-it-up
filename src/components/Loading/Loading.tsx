@@ -41,7 +41,7 @@ const Loading = ({
           </div>
         </Container>
       </header>
-      <div className="flex min-h-[80vh] flex-col items-center justify-center pb-10 text-center">
+      <div className="flex min-h-[80vh] animate-fadeIn flex-col items-center justify-center pb-10 text-center">
         <div className="flex min-h-[50vh] flex-col items-center justify-center">
           <OnIt className="h-[3rem] w-[14.8rem] md:hidden" viewBox="80 0 50 50" />
           <OnIt className="hidden h-[4.5rem] w-[21.7rem] md:block" viewBox="80 0 50 50" />
