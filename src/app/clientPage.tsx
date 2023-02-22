@@ -9,14 +9,19 @@ import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
 import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
+import { isValidJSON, isValidUrlWithEncodedState } from "~/utils/isValidUrlWithEncodedState";
 
-export default function ClientPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+export default function ClientPage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const [originalContent, setOriginalContent] = useState(searchParams?.original ?? "");
-  const [displayResult, setDisplayResult] = useState<boolean>(
-    getStringOrFirst(searchParams?.original).length > 0 && getStringOrFirst(searchParams?.result).length > 0,
-  );
+  const [displayResult, setDisplayResult] = useState<boolean>(isValidUrlWithEncodedState(searchParams));
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(
-    searchParams?.result && JSON.parse(getStringOrFirst(searchParams.result)),
+    searchParams?.result &&
+      isValidJSON(getStringOrFirst(searchParams.result)) &&
+      JSON.parse(getStringOrFirst(searchParams.result)),
   );
   const [songDetails, setSongDetails] = useState("");
 
@@ -93,7 +98,8 @@ export default function ClientPage({ searchParams }: { searchParams?: { [key: st
     return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
 
   return (
-    <>
+    // Subtracting footer height from 100vh
+    <div className="min-h-[calc(100vh-7.9rem)] md:min-h-[calc(100vh-5rem)]">
       {displayResult ? (
         <Result
           trackShare={trackShare}
@@ -113,6 +119,6 @@ export default function ClientPage({ searchParams }: { searchParams?: { [key: st
           />
         </>
       )}
-    </>
+    </div>
   );
 }
