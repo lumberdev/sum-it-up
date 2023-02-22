@@ -26,9 +26,9 @@ const TextInputField = ({
           handleFormSubmit(event, type, summaryLength, customLength, "", inputValue)
         }
       >
-        <div className="mb-12 block min-h-[26rem] w-full resize-none overflow-hidden rounded-[20px] border-2 border-primary bg-white md:rounded-[30px]">
+        <div className="mb-12 block min-h-[26rem] w-full resize-none overflow-hidden rounded-[20px] bg-white md:rounded-[30px]">
           <textarea
-            className="block h-full min-h-[26rem] w-full resize-none overflow-y-auto rounded-[20px] border-none p-8 text-base placeholder:text-dark md:rounded-[30px] md:p-12"
+            className="block h-full min-h-[26rem] w-full resize-none overflow-y-auto rounded-[20px] border-2 border-primary p-8 text-base font-medium transition-all placeholder:font-normal placeholder:text-dark/70 focus:ring-2 focus:ring-inset md:rounded-[30px] md:p-12"
             name="text-input"
             value={inputValue}
             placeholder="Enter some text"

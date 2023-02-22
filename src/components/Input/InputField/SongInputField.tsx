@@ -33,7 +33,7 @@ const SongInputField = ({
         }}
       >
         <input
-          className="mb-4 h-20 rounded-full border-2 border-primary px-4 text-center text-base placeholder:text-dark md:mb-6 md:h-[5.7rem]"
+          className="mb-4 h-20 rounded-full border-2 border-primary px-4 text-center text-base font-medium transition-all duration-200 placeholder:font-normal placeholder:!text-dark/70 focus:outline-none focus:ring-2 focus:ring-inset md:mb-6 md:h-[5.7rem]"
           type="text"
           name="song-name"
           value={songTitle}
@@ -42,7 +42,7 @@ const SongInputField = ({
           onChange={(e) => setSongTitle(e.target.value)}
         />
         <input
-          className="mb-12 h-20 rounded-full border-2 border-primary px-4 text-center text-base placeholder:text-dark md:h-[5.7rem]"
+          className="mb-12 h-20 rounded-full border-2 border-primary px-4 text-center text-base font-medium transition-all duration-200 placeholder:font-normal placeholder:!text-dark/70  focus:border-primary focus:outline-none focus:ring-2 focus:ring-inset md:h-[5.7rem]"
           type="text"
           name="artist-name"
           value={artistName}
