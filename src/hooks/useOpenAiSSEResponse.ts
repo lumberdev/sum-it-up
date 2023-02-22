@@ -104,11 +104,11 @@ const useOpenAiSSEResponse = ({
         : "";
 
     const multiplier = Math.min(wordLimit > 100 ? 2.5 : 1.3);
-    const maxTokenLimit = Math.min(Math.round(wordLimit * multiplier) + 200, 3500);
+    const maxTokenLimit = Math.min(Math.round(wordLimit * multiplier) + 600, 2000);
     const openAiPayload: openAiModelRequest = {
       model: "text-davinci-003",
       prompt: promptText,
-      max_tokens: 3500,
+      max_tokens: maxTokenLimit,
       temperature: 0.2,
       presence_penalty: 0.5,
     };
