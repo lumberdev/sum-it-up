@@ -6,7 +6,6 @@ import SongResult from "./ResultContent/SongResult";
 import TextResult from "./ResultContent/TextResult";
 import ResultPageContentToggler from "../utility-components/result/ResultPageContentToggler";
 import OriginalContent from "./ResultContent/OriginalContent";
-import { ContentType } from "~/types";
 
 type ResultProp = {
   originalContent: string | string[];
