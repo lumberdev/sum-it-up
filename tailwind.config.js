@@ -37,11 +37,20 @@ module.exports = {
       },
       animation: {
         shine: "shine 1s",
+        fadeIn: "fadeIn 0.5s forwards",
       },
       keyframes: {
         shine: {
           "100%": { left: "125%" },
         },
+        fadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+      },
+      transitionTimingFunction: {
+        "in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",
+        "out-expo": "cubic-bezier(0.19, 1, 0.22, 1)",
       },
     },
   },

@@ -22,7 +22,7 @@ const SongInputField = ({
   const type = "song";
   const songInfo = `${songTitle} - ${artistName}`;
   return (
-    <div className="mx-auto max-w-[54rem]">
+    <div className="mx-auto max-w-[54rem] animate-fadeIn">
       <form
         className="flex w-full flex-col rounded-md"
         onSubmit={(event: React.SyntheticEvent) => {

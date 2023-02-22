@@ -19,7 +19,7 @@ const WebsiteInputField = ({
   const [inputUrl, setInputUrl] = useState<string>("");
   const type = "article";
   return (
-    <div className="mx-auto max-w-[54rem]">
+    <div className="mx-auto max-w-[54rem] animate-fadeIn">
       <form
         className="mx-auto flex w-full flex-col justify-center md:flex-row"
         onSubmit={(event: React.SyntheticEvent) => handleFormSubmit(event, type, summaryLength, customLength, inputUrl)}

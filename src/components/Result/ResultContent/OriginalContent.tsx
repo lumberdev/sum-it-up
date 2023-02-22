@@ -15,7 +15,7 @@ const OriginalContent = ({
   return (
     <Container>
       {contentType === "article" && (
-        <div className="mx-auto mb-12 max-w-[75rem] rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
+        <div className="mx-auto mb-12 max-w-[75rem] animate-fadeIn rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
           <a href={getStringOrFirst(content)} target="_blank" className="hover:underline" rel="noreferrer">
             {getStringOrFirst(content)}
           </a>

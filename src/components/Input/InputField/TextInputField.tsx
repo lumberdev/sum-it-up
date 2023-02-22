@@ -19,7 +19,7 @@ const TextInputField = ({
   const [inputValue, setInputValue] = useState<string>("");
   const type = "text";
   return (
-    <div className="mx-auto max-w-[86rem]">
+    <div className="mx-auto max-w-[86rem] animate-fadeIn">
       <form
         className="flex w-full flex-col rounded-md"
         onSubmit={(event: React.SyntheticEvent) =>

@@ -45,7 +45,7 @@ const Input = ({
             </button>
           ))}
           <span
-            className={`z-1 absolute left-2 right-auto h-[calc(100%-1rem)] w-[calc(33.33%-0.5rem)] rounded-full bg-white transition-all duration-300 ease-in-out ${
+            className={`z-1 absolute left-2 right-auto h-[calc(100%-1rem)] w-[calc(33.33%-0.5rem)] rounded-full bg-white transition-all duration-200 ease-in-out ${
               inputTypeSelected === InputType.TEXT && "left-1/2 -translate-x-1/2"
             } ${inputTypeSelected === InputType.SONG && "left-2/3 right-2"}`}
           ></span>
