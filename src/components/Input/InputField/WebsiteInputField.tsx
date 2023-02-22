@@ -17,51 +17,40 @@ const WebsiteInputField = ({
   setCustomLength: (length: string) => void;
 }) => {
   const [inputUrl, setInputUrl] = useState<string>("");
-  const [inputError, setInputError] = useState<string>("");
   const type = "article";
   return (
     <div className="relative mx-auto max-w-[54rem]">
       <form
-        className="mx-auto flex w-full flex-col justify-center md:flex-row"
         onSubmit={(event: React.SyntheticEvent) => {
-          if (
-            /^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i.test(inputUrl) ||
-            /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/i.test(
-              inputUrl,
-            )
-          ) {
-            handleFormSubmit(event, type, summaryLength, customLength, inputUrl);
-            return;
-          }
-
-          event.preventDefault();
-          setInputError("Invalid URL");
+          handleFormSubmit(event, type, summaryLength, customLength, inputUrl);
+          return;
         }}
       >
-        <input
-          className="mb-8 flex h-20 items-center justify-center rounded-full border-2 border-primary px-4 pl-6 placeholder:text-dark md:mb-0 md:h-[5.7rem] md:flex-1 md:rounded-r-none"
-          type="text"
-          name="website-url"
-          value={inputUrl}
-          placeholder="Enter a web page URL"
-          required
-          onChange={(e) => {
-            setInputUrl(e.target.value);
-            setInputError("");
-          }}
-        />
+        <div className="mx-auto flex w-full flex-col justify-center md:flex-row">
+          <input
+            className="mb-8 flex h-20 items-center justify-center rounded-full border-2 border-primary px-4 pl-6 placeholder:text-dark md:mb-0 md:h-[5.7rem] md:flex-1 md:rounded-r-none"
+            type="url"
+            name="website-url"
+            value={inputUrl}
+            placeholder="Enter a web page URL"
+            required
+            onChange={(e) => {
+              if (!e.target.validity) e.target.setCustomValidity("Please enter a valid URL starting with https://");
+              else e.target.setCustomValidity("");
+              setInputUrl(e.target.value);
+            }}
+          />
 
-        <SummarizeButton className="md:!h-[5.7rem] md:rounded-l-none ">Summarize</SummarizeButton>
+          <SummarizeButton className="md:!h-[5.7rem] md:rounded-l-none ">Summarize</SummarizeButton>
+        </div>
+
+        <SummaryLengthSlider
+          summaryLength={summaryLength}
+          setSummaryLength={setSummaryLength}
+          customLength={customLength}
+          setCustomLength={setCustomLength}
+        />
       </form>
-      {inputError.length > 0 && (
-        <div className="bottom-100% absolute mx-auto w-full py-1 text-center text-primary opacity-80">{inputError}</div>
-      )}
-      <SummaryLengthSlider
-        summaryLength={summaryLength}
-        setSummaryLength={setSummaryLength}
-        customLength={customLength}
-        setCustomLength={setCustomLength}
-      />
     </div>
   );
 };

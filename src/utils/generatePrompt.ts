@@ -60,27 +60,29 @@ export function generatePromptTextSSE(text: string | string[], wordLimit: number
   summary%%keypoints%%bias%%tone%%trust
   ${modifier(
     wordLimit,
-  )} ${wordLimit} word length summary summarizing the text%%"Array of Key Points Separated by '|'"%%1 - 2 word string%%String%%number from 1 through 10, 10 is most trustworthy`;
-}
-
-export function generatePromptSongSSE(text: string | string[], wordLimit: number) {
-  return `{${text}}
-  ${modifier(
-    wordLimit,
-  )} meaning of the lyrics above formatted as a csv with "%%" as the delimiter. Formatted like this:\n\n
-  meaning%%mood%%color
-  ${modifier(wordLimit)} ${wordLimit} word length summary of the meaning %% 1 - 2 word string %% valid Hexcode
+  )} ${wordLimit} word length summary summarizing the text%%"Array of Key Points Separated by '|'"%%1 - 2 word string%%String%%number from 1 through 10, 10 is most trustworthy.
   
   generate:`;
 }
-// `{${text}}
 
-//   a summary of the text above as a JSON object that looks like this
-//   "summary__": "${wordLimit} word string",
-//   "keyPoints__": "[Array of Key Points]",
-//   "bias__": "1 - 2 word string",
-//   "tone__": "String",
-//   "trust__": "number from 1 through 10, 10 is most trustworthy"`;
+// export function generatePromptSongSSE(text: string | string[], wordLimit: number) {
+//   return `{${text}}
+//   ${modifier(
+//     wordLimit,
+//   )} meaning of the lyrics above formatted as a csv with "%%" as the delimiter. Formatted like this:\n\n
+//   meaning%%mood%%color
+//   ${modifier(wordLimit)} ${wordLimit} word length summary of the meaning %% 1 - 2 word string %% valid Hexcode.
+
+//   generate:`;
+// }
+
+export function generatePromptSongSSE(text: string | string[], wordLimit: number) {
+  return `{${text}}
+  ${modifier(wordLimit)} meaning of the lyrics above 
+  ${modifier(wordLimit)} ${wordLimit} word length summary of the meaning.
+  
+  generate:`;
+}
 
 /**
  * Depending on the length of the input, a different description will be generated to influence the summary length and detail

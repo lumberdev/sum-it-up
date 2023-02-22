@@ -17,10 +17,9 @@ const TextInputField = ({
   setCustomLength: (length: string) => void;
 }) => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [lengthOfWords, setLengthOfWords] = useState<number>(0);
+  const [lengthOfChars, setLengthOfChars] = useState<number>(0);
   const [inputError, setInputError] = useState<string>("");
   const type = "text";
-  const maxWords = 500;
   const minChars = 100;
   const maxChars = 4000;
 
@@ -29,14 +28,14 @@ const TextInputField = ({
     if (typeof e.target.value === "string") {
       if (e.target.value.length >= maxChars)
         setInputError(`Input cannot exceed ${maxChars} characters, currently at ${e.target.value?.length} characters`);
-      setLengthOfWords((state) => {
+      setLengthOfChars((state) => {
         const value = e.target.value as string;
-        const length = value?.split(" ").filter((item) => item.length).length ?? 0;
-        if (length <= maxWords) {
+        const length = value.length;
+        if (length <= maxChars) {
           setInputValue(value);
           return length;
         }
-        setInputError(`Input cannot exceed ${maxWords} words, currently at ${state} words`);
+        setInputError(`Input cannot exceed ${maxChars} words, currently at ${state} chars`);
         return state;
       });
     }
@@ -68,7 +67,7 @@ const TextInputField = ({
             onChange={handleInputChange}
           />
           <div data-test-id="counter" className="text-primary">
-            {lengthOfWords} / {maxWords}
+            {lengthOfChars} / {maxChars}
           </div>
           {inputError.length > 0 && (
             <div className=" absolute top-0 mx-auto w-full bg-white py-1 text-center text-primary opacity-80">

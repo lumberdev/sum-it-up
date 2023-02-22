@@ -108,7 +108,7 @@ const useOpenAiSSEResponse = ({
     const openAiPayload: openAiModelRequest = {
       model: "text-davinci-003",
       prompt: promptText,
-      max_tokens: maxTokenLimit,
+      max_tokens: 3500,
       temperature: 0.2,
       presence_penalty: 0.5,
     };
