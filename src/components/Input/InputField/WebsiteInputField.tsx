@@ -30,17 +30,8 @@ const WebsiteInputField = ({
           name="website-url"
           value={inputUrl}
           placeholder="Enter a web page URL"
-          pattern="^(https?|ftp):\/\/[^\s/:?#][^\s]*$" // Regex to check if the input is a valid URL
           required
-          onChange={(e) => {
-            // This will display the error message on browser's default tooltip
-            if (!e.target.validity.valid) {
-              e.target.setCustomValidity("Please enter a valid URL");
-            } else {
-              e.target.setCustomValidity("");
-            }
-            setInputUrl(e.target.value);
-          }}
+          onChange={(e) => setInputUrl(e.target.value)}
         />
         <SummarizeButton className="md:!h-[5.7rem] md:rounded-l-none ">Summarize</SummarizeButton>
       </form>
