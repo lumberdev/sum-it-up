@@ -28,11 +28,14 @@ const ResultPageHeader = ({
           </div>
           <div className="relative flex-1 text-right">
             <button
-              className="mx-auto inline-flex h-[3.4rem] min-w-[11.1rem] items-center justify-center rounded-full border-2 border-white bg-transparent text-sm font-bold uppercase text-white md:h-20 md:min-w-[18rem] md:border-primary md:text-lg md:text-primary"
+              className="group relative mx-auto inline-flex h-[3.4rem] min-w-[11.1rem] items-center justify-center overflow-hidden rounded-full border-2 border-white bg-transparent px-5 py-3  text-white md:h-20 md:min-w-[18rem] md:border-primary  md:text-primary"
               type="button"
               onClick={() => handleNewSearchBtnClick()}
             >
-              New Summary
+              <span className="absolute top-0 left-0 -mt-1 hidden h-[22rem] w-[22rem] -translate-x-[25rem] -translate-y-[12rem] rotate-45 bg-primary opacity-100 transition-all duration-[400ms] ease-in-out group-hover:-translate-x-8 md:inline"></span>
+              <span className="relative w-full text-sm font-bold uppercase transition-colors duration-200 ease-in-out md:text-lg md:text-primary md:group-hover:text-white">
+                New Summary
+              </span>
             </button>
           </div>
         </div>

@@ -60,7 +60,13 @@ const Result = ({
           isLoadingSSE={isLoadingSSE}
         />
       )}
-      {resultPageContent === "original" && <OriginalContent content={originalContent} songDetails={songDetails} />}
+      {resultPageContent === "original" && (
+        <OriginalContent
+          content={originalContent}
+          songDetails={songDetails}
+          contentType={summaryResponse?.type || null}
+        />
+      )}
       <div className="text-center">
         <button
           className="mb-[6rem] inline-flex h-20 items-center justify-center  rounded-full border-2 border-primary bg-transparent px-16 text-base font-bold uppercase text-primary md:hidden"

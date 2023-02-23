@@ -41,7 +41,7 @@ const TextInputField = ({
     }
   };
   return (
-    <div className="mx-auto max-w-[86rem]">
+    <div className="mx-auto max-w-[86rem] animate-fadeIn">
       <form
         className="flex w-full flex-col rounded-md"
         onSubmit={(event: React.SyntheticEvent) => {
@@ -55,9 +55,9 @@ const TextInputField = ({
           handleFormSubmit(event, type, summaryLength, customLength, "", inputValue);
         }}
       >
-        <div className="relative mb-12 block min-h-[26rem] w-full resize-none overflow-hidden rounded-[20px] border-2 border-primary bg-white md:rounded-[30px]">
+        <div className="group mb-12 block min-h-[26rem] w-full resize-none overflow-hidden rounded-[20px] border-2  border-primary  bg-white ring-inset focus-within:ring-2 md:rounded-[30px]">
           <textarea
-            className="block h-full min-h-[26rem] w-full resize-none overflow-y-auto rounded-[20px] border-none p-8 text-base outline-none placeholder:text-dark md:rounded-[30px] md:p-12"
+            className="block h-full min-h-[26rem] w-full resize-none overflow-y-auto  bg-transparent p-8 text-base font-medium outline-none transition-all placeholder:font-normal  placeholder:text-dark/70 md:p-12"
             name="text-input"
             minLength={minChars}
             maxLength={maxChars}
