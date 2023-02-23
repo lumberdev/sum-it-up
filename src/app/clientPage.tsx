@@ -9,14 +9,18 @@ import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
 import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
+import LZString from "lz-string";
+import { isValidJSON } from "~/utils/isValidJSON";
 
-export default function ClientPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
-  const [originalContent, setOriginalContent] = useState(searchParams?.original ?? "");
+export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
+  getStringOrFirst(searchParams?.original);
+  const [originalContent, setOriginalContent] = useState(searchParams.original);
   const [displayResult, setDisplayResult] = useState<boolean>(
-    getStringOrFirst(searchParams?.original).length > 0 && getStringOrFirst(searchParams?.result).length > 0,
+    searchParams.original.length > 0 && searchParams.result.length > 0,
   );
+
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(
-    searchParams?.result && JSON.parse(getStringOrFirst(searchParams.result)),
+    searchParams.result && isValidJSON(searchParams.result) ? JSON.parse(searchParams.result) : "",
   );
   const [songDetails, setSongDetails] = useState("");
 
