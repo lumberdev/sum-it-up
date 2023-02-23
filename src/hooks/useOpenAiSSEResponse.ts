@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { setEmitFlags } from "typescript";
 import { fetchArticleData } from "~/query/fetch-article-data";
 import {
   ContentType,
@@ -13,6 +12,7 @@ import {
 import { generatePromptSongSSE, generatePromptTextSSE } from "~/utils/generatePrompt";
 import { getSummaryFromUrl } from "~/utils/open-ai-fetch";
 import { fetchServerSent } from "~/utils/sse-fetch";
+import { textToChunks } from "~/utils/text-to-chunks";
 
 /**
  * A hook that returns streamed text response from openAI
@@ -78,7 +78,8 @@ const useOpenAiSSEResponse = ({
         const body = await getSummaryFromUrl(type, json.chunkedTextContent);
         textContent = body;
       } else {
-        textContent = text ?? "";
+        const chunkedText = textToChunks(text ?? "", 500);
+        textContent = await getSummaryFromUrl(type, chunkedText);
       }
       return textContent;
     };
@@ -102,11 +103,14 @@ const useOpenAiSSEResponse = ({
         ? generatePromptSongSSE(textContent, wordLimit)
         : "";
 
+    const multiplier = Math.min(wordLimit > 100 ? 2.5 : 1.3);
+    const maxTokenLimit = Math.min(Math.round(wordLimit * multiplier) + 600, 2000);
     const openAiPayload: openAiModelRequest = {
       model: "text-davinci-003",
       prompt: promptText,
-      max_tokens: 1000,
-      temperature: 0,
+      max_tokens: maxTokenLimit,
+      temperature: 0.2,
+      presence_penalty: 0.5,
     };
     fetchRef.current = fetchServerSent(
       "https://api.openai.com/v1/completions",
@@ -128,7 +132,6 @@ const useOpenAiSSEResponse = ({
           return;
         }
         const text = JSON.parse(payload).choices?.[0]?.text;
-
         setStreamedResult((state) => {
           const array = `${state}${text}`.split("%%");
           if (type === "article" || type === "text")

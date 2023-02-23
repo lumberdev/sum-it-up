@@ -24,6 +24,7 @@ export type openAiModelRequest = {
   prompt: string;
   temperature: number;
   max_tokens: number;
+  presence_penalty?: number;
 };
 
 export type ErrorMessage = {
