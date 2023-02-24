@@ -10,5 +10,6 @@ export default function Page({ searchParams }: { searchParams?: { [key: string]:
     original: LZString.decompressFromEncodedURIComponent(getStringOrFirst(searchParams?.original)) ?? "",
     result: LZString.decompressFromEncodedURIComponent(getStringOrFirst(searchParams?.result)) ?? "",
   };
+
   return <ClientPage searchParams={decompressedParams} />;
 }

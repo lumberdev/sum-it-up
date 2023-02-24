@@ -9,7 +9,6 @@ import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
 import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
-import LZString from "lz-string";
 import { isValidJSON } from "~/utils/isValidJSON";
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
@@ -18,7 +17,6 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   const [displayResult, setDisplayResult] = useState<boolean>(
     searchParams.original.length > 0 && searchParams.result.length > 0,
   );
-
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(
     searchParams.result && isValidJSON(searchParams.result) ? JSON.parse(searchParams.result) : "",
   );
