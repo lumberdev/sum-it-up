@@ -7,11 +7,18 @@ import { encodeStateToUrl } from "~/utils/generateLinkToShare";
 type SongResultPropType = {
   songMeaningResponse: SongMeaningResponseType;
   songDetails: string;
+  originalContent: string;
   isLoadingSSE: boolean;
   trackShare: (properties: { shareURL: string }) => void;
 };
 
-const SongResult = ({ songMeaningResponse, songDetails, isLoadingSSE, trackShare }: SongResultPropType) => {
+const SongResult = ({
+  songMeaningResponse,
+  originalContent,
+  songDetails,
+  isLoadingSSE,
+  trackShare,
+}: SongResultPropType) => {
   useEffect(() => {
     if (!isLoadingSSE) {
       const encodedUrl = encodeStateToUrl(songDetails, songMeaningResponse);
@@ -27,7 +34,7 @@ const SongResult = ({ songMeaningResponse, songDetails, isLoadingSSE, trackShare
             <ShareLinkButton
               trackShare={trackShare}
               responseObject={songMeaningResponse}
-              originalContent={songDetails}
+              originalContent={originalContent}
               disabled={isLoadingSSE}
             />
           </div>
@@ -38,7 +45,7 @@ const SongResult = ({ songMeaningResponse, songDetails, isLoadingSSE, trackShare
             <ShareLinkButton
               trackShare={trackShare}
               responseObject={songMeaningResponse}
-              originalContent={songDetails}
+              originalContent={originalContent}
             />
           </div>
         )}

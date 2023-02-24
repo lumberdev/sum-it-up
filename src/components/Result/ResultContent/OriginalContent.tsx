@@ -1,6 +1,5 @@
 import React from "react";
 import Container from "../../utility-components/Container";
-import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 import { ContentType } from "~/types";
 
 const OriginalContent = ({
@@ -8,7 +7,7 @@ const OriginalContent = ({
   songDetails,
   contentType,
 }: {
-  content: string | string[];
+  content: string;
   songDetails: string;
   contentType: ContentType | null;
 }) => {
@@ -17,23 +16,10 @@ const OriginalContent = ({
   };
   return (
     <Container>
-      {contentType === "article" && (
-        <div className="mx-auto mb-12 max-w-[75rem] animate-fadeIn rounded-[20px] border-2 border-primary bg-white py-12 px-8 text-lg font-semibold md:my-20 md:p-20">
-          <a href={getStringOrFirst(content)} target="_blank" className="hover:underline" rel="noreferrer">
-            {getStringOrFirst(content)}
-          </a>
-        </div>
-      )}
-      {contentType === "song" && (
-        <div className="mx-auto mb-12 max-w-[75rem] rounded-[20px] border-2 border-primary bg-white py-12 px-8 text-xl font-semibold md:my-20 md:p-20">
-          {capitalize(songDetails || getStringOrFirst(content))}
-        </div>
-      )}
-      {contentType === "text" && (
-        <div className="mx-auto mb-12 max-w-[75rem] rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
-          {getStringOrFirst(content)}
-        </div>
-      )}
+      <article className=" mx-auto mb-12 max-w-[75rem] rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
+        {contentType === "song" && <div>{capitalize(songDetails ?? "")}</div>}
+        <section className="render-span-block" dangerouslySetInnerHTML={{ __html: content }} />
+      </article>
     </Container>
   );
 };

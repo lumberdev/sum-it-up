@@ -1,8 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 @layer base {
@@ -58,4 +59,8 @@
       fill: #3a2adc;
     }
   }
+}
+
+.render-span-block * > span {
+  display: block;
 }
