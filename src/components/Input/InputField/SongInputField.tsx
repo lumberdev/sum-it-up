@@ -58,16 +58,6 @@ const SongInputField = ({
           customLength={customLength}
           setCustomLength={setCustomLength}
         />
-        <input
-          className="mb-12 h-20 rounded-full border-2 border-primary px-4 text-center text-base font-medium transition-all duration-200 placeholder:font-normal placeholder:!text-dark/70  focus:border-primary focus:outline-none focus:ring-2 focus:ring-inset md:h-[5.7rem]"
-          type="text"
-          name="artist-name"
-          required
-          value={artistName}
-          placeholder="Enter artist"
-          onChange={(e) => setArtistName(e.target.value)}
-        />
-        <SummarizeButton>Summarize</SummarizeButton>
       </form>
     </div>
   );
