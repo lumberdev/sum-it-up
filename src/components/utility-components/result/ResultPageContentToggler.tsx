@@ -25,7 +25,7 @@ const ResultPageContentToggler = ({ resultPageContent, setResultPageContent }: R
       </button>
       <span
         className={`z-1 absolute left-2 right-auto h-[calc(100%-1rem)] w-[calc(50%-0.5rem)] rounded-full bg-white transition-all ease-in-out ${
-          resultPageContent === "original" && "left-1/2 right-2"
+          resultPageContent === "original" && "!left-1/2 !right-2"
         }`}
       ></span>
     </div>
