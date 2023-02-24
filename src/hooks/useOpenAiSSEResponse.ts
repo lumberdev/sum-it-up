@@ -165,11 +165,19 @@ const useOpenAiSSEResponse = ({
     !isLoadingSSE && fetchRef.current && fetchRef.current();
   }, [isLoadingSSE]);
 
+  function forceClose() {
+    console.log("CLOSE", fetchRef.current);
+    if (!fetchRef.current) return;
+    fetchRef.current();
+    reset();
+    setIsLoadingSSE(false);
+  }
+
   const { isLoading, mutate, reset } = useMutation({
     mutationFn: streamContent,
   });
 
-  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, reset };
+  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, reset };
 };
 
 export default useOpenAiSSEResponse;

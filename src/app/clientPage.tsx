@@ -10,7 +10,11 @@ import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
 import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 
-export default function ClientPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+export default function ClientPage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const [originalContent, setOriginalContent] = useState(searchParams?.original ?? "");
   const [displayResult, setDisplayResult] = useState<boolean>(
     getStringOrFirst(searchParams?.original).length > 0 && getStringOrFirst(searchParams?.result).length > 0,
@@ -30,7 +34,7 @@ export default function ClientPage({ searchParams }: { searchParams?: { [key: st
     trackShare,
   } = useAnalytics();
 
-  const { mutate, isLoading, isLoadingSSE, streamedResult, isError, reset } = useOpenAiSSEResponse({
+  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError, reset } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
       trackRequestCompleted({ type: res.type, output: streamedResult });
@@ -69,6 +73,7 @@ export default function ClientPage({ searchParams }: { searchParams?: { [key: st
     });
   };
   const handleNewSearchBtnClick = () => {
+    forceClose();
     setDisplayResult(false);
     setOriginalContent("");
     setCurrentResult(null);
