@@ -23,13 +23,13 @@ const Privacy = () => {
             .
           </p>
           <h1 className="my-[3rem] text-center text-[2.5rem] font-bold">Interpretation and Definitions</h1>
-          <h2 className="my-10 text-[2rem] font-bold">Interpretation</h2>
+          <h2 className="my-[2rem] text-[2rem] font-bold">Interpretation</h2>
           <p className="mb-5 text-[1.5rem]">
             The words of which the initial letter is capitalized have meanings defined under the following conditions.
             The following definitions shall have the same meaning regardless of whether they appear in singular or in
             plural.
           </p>
-          <h2 className="my-10 text-[2rem] font-bold">Definitions</h2>
+          <h2 className="my-[2rem] text-[2rem] font-bold">Definitions</h2>
           <p className="mb-5 text-[1.5rem]">For the purposes of this Privacy Policy:</p>
           <ul className="ml-[4rem]">
             <li className="mb-5 list-disc">
@@ -110,7 +110,7 @@ const Privacy = () => {
             </li>
           </ul>
           <h1 className="my-[3rem] text-center text-[2.5rem] font-bold">Collecting and Using Your Personal Data</h1>
-          <h2 className="my-10 text-[2rem] font-bold">Types of Data Collected</h2>
+          <h2 className="my-[2rem] text-[2rem] font-bold">Types of Data Collected</h2>
           <h3 className="mb-5 text-[1.5rem] font-bold">Personal Data</h3>
           <p className="mb-5 text-[1.5rem]">
             While using Our Service, We may ask You to provide Us with certain personally identifiable information that
@@ -216,7 +216,7 @@ const Privacy = () => {
             For more information about the cookies we use and your choices regarding cookies, please visit our Cookies
             Policy or the Cookies section of our Privacy Policy.
           </p>
-          <h2 className="my-10 text-[2rem] font-bold">Use of Your Personal Data</h2>
+          <h2 className="my-[2rem] text-[2rem] font-bold">Use of Your Personal Data</h2>
           <p className="mb-5 text-[1.5rem]">The Company may use Personal Data for the following purposes:</p>
           <ul className="ml-[4rem]">
             <li className="mb-5 list-disc">
@@ -305,7 +305,7 @@ const Privacy = () => {
               Your consent.
             </li>
           </ul>
-          <h2 className="my-10 text-[2rem] font-bold">Retention of Your Personal Data</h2>
+          <h2 className="my-[2rem] text-[2rem] font-bold">Retention of Your Personal Data</h2>
           <p className="mb-5 text-[1.5rem]">
             The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this
             Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our legal
@@ -317,7 +317,7 @@ const Privacy = () => {
             a shorter period of time, except when this data is used to strengthen the security or to improve the
             functionality of Our Service, or We are legally obligated to retain this data for longer time periods.
           </p>
-          <h2 className="my-10 text-[2rem] font-bold">Transfer of Your Personal Data</h2>
+          <h2 className="my-[2rem] text-[2rem] font-bold">Transfer of Your Personal Data</h2>
           <p className="mb-5 text-[1.5rem]">
             Your information, including Personal Data, is processed at the Company&apos;s operating offices and in any
             other places where the parties involved in the processing are located. It means that this information may be
@@ -334,7 +334,7 @@ const Privacy = () => {
             or a country unless there are adequate controls in place including the security of Your data and other
             personal information.
           </p>
-          <h2 className="my-10 text-[2rem] font-bold">Delete Your Personal Data</h2>
+          <h2 className="my-[2rem] text-[2rem] font-bold">Delete Your Personal Data</h2>
           <p className="mb-5 text-[1.5rem]">
             You have the right to delete or request that We assist in deleting the Personal Data that We have collected
             about You.
@@ -352,7 +352,7 @@ const Privacy = () => {
             Please note, however, that We may need to retain certain information when we have a legal obligation or
             lawful basis to do so.
           </p>
-          <h2 className="my-10 text-[2rem] font-bold">Disclosure of Your Personal Data</h2>
+          <h2 className="my-[2rem] text-[2rem] font-bold">Disclosure of Your Personal Data</h2>
           <h3>Business Transactions</h3>
           <p className="mb-5 text-[1.5rem]">
             If the Company is involved in a merger, acquisition or asset sale, Your Personal Data may be transferred. We
@@ -377,7 +377,7 @@ const Privacy = () => {
             <li className="mb-5 list-disc">Protect the personal safety of Users of the Service or the public</li>
             <li className="mb-5 list-disc">Protect against legal liability</li>
           </ul>
-          <h2 className="my-10 text-[2rem] font-bold">Security of Your Personal Data</h2>
+          <h2 className="my-[2rem] text-[2rem] font-bold">Security of Your Personal Data</h2>
           <p className="mb-5 text-[1.5rem]">
             The security of Your Personal Data is important to Us, but remember that no method of transmission over the
             Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable
