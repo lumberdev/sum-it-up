@@ -40,7 +40,7 @@ const useOpenAiSSEResponse = ({
   };
 
   const initTextMappedPoints = {
-    keyPoints: [""],
+    keyPoints: [],
     bias: "",
     summary: "",
     tone: "",
@@ -138,7 +138,7 @@ const useOpenAiSSEResponse = ({
             mappedResult.current = {
               ...mappedResult.current,
               summary: array?.[0],
-              keyPoints: array?.[1]?.split("|"),
+              keyPoints: array?.[1]?.split("|").filter((point) => point.trim() !== ""),
               bias: array?.[2],
               tone: array?.[3],
               trust: Number(array?.[4]),
