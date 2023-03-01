@@ -29,6 +29,7 @@ const useOpenAiSSEResponse = ({
   const [streamedResult, setStreamedResult] = useState<string>("");
   const [isLoadingSSE, setIsLoadingSSE] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const [_earlyClose, setEarlyClose] = useState(false);
 
   const readabilityData = {
     title: "",
@@ -59,7 +60,7 @@ const useOpenAiSSEResponse = ({
 
   const fetchRef = useRef<() => unknown>();
 
-  const streamContent = async (data: RequestBody) => {
+  async function streamContent(data: RequestBody) {
     const { wordLimit, type, url, text } = data;
     setIsLoadingSSE(true);
     mappedResult.current = type === "song" ? { ...initSongMappedPoints, type } : { ...initTextMappedPoints, type };
@@ -112,6 +113,10 @@ const useOpenAiSSEResponse = ({
       temperature: 0.2,
       presence_penalty: 0.5,
     };
+    console.log("earlyClose", _earlyClose);
+    if (_earlyClose) return;
+    console.log("INITIALIZE STREAM");
+
     fetchRef.current = fetchServerSent(
       "https://api.openai.com/v1/completions",
       {
@@ -159,25 +164,31 @@ const useOpenAiSSEResponse = ({
         setIsError(true);
       },
     );
+  }
+  const initiate = (data: RequestBody) => {
+    setEarlyClose(false);
+    return streamContent(data);
   };
+  const { mutate, reset } = useMutation({
+    mutationFn: initiate,
+  });
+  const [data, setData] = useState<RequestBody | null>(null);
 
   useEffect(() => {
     !isLoadingSSE && fetchRef.current && fetchRef.current();
   }, [isLoadingSSE]);
 
   function forceClose() {
-    console.log("CLOSE", fetchRef.current);
+    setEarlyClose(true);
+    // reset();
+    setData(null);
+    setIsLoadingSSE(false);
     if (!fetchRef.current) return;
     fetchRef.current();
-    reset();
-    setIsLoadingSSE(false);
+    setEarlyClose(false);
   }
 
-  const { isLoading, mutate, reset } = useMutation({
-    mutationFn: streamContent,
-  });
-
-  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, reset };
+  return { streamedResult, mutate, isLoadingSSE, isError, forceClose };
 };
 
 export default useOpenAiSSEResponse;

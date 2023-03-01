@@ -34,7 +34,7 @@ export default function ClientPage({
     trackShare,
   } = useAnalytics();
 
-  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError, reset } = useOpenAiSSEResponse({
+  const { mutate, isLoadingSSE, streamedResult, forceClose, isError } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
       trackRequestCompleted({ type: res.type, output: streamedResult });
@@ -94,8 +94,14 @@ export default function ClientPage({
   };
 
   if (isError) return <Error />;
-  if (isLoading || (!displayResult && isLoadingSSE))
-    return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
+  if (!displayResult && isLoadingSSE)
+    return (
+      <Loading
+        summaryContent={originalContent}
+        songDetails={songDetails}
+        handleNewSearchBtnClick={handleNewSearchBtnClick}
+      />
+    );
 
   return (
     <>

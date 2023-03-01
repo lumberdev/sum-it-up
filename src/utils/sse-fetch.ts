@@ -7,19 +7,30 @@ const fetchServerSent = (
   onStream?: (arg: any) => void,
   onError?: (args: unknown) => void,
 ) => {
+  let forceClose = false;
   const source = SSE(input, init);
 
-  source.addEventListener("message", (event: MessageEvent) => {
+  const handleStream = (event: MessageEvent) => {
     const payload = event.data;
     if (typeof onStream === "function") onStream(payload);
-  });
+  };
 
-  source.addEventListener("error", (err: unknown) => {
+  const handleError = (err: unknown) => {
     if (typeof onError === "function") onError(err);
-  });
+  };
+
+  source.addEventListener("message", handleStream);
+
+  source.addEventListener("error", handleError);
   source.stream();
+  console.log("closed sse", source.close);
   const cleanup = () => {
+    forceClose = true;
+    console.log("closed sse 2", source.close);
     source.close();
+
+    source.removeEventListener("message", handleStream);
+    source.removeEventListener("error", handleError);
   };
   return cleanup;
 };
