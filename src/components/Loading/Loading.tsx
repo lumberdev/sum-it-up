@@ -11,10 +11,12 @@ const Loading = ({
   summaryContent,
   songDetails,
   reset,
+  handleNewSearchBtnClick,
 }: {
   summaryContent: string | string[];
   songDetails: string;
   reset: () => void;
+  handleNewSearchBtnClick: () => void;
 }) => {
   const summaryInput = songDetails || summaryContent;
   return (
@@ -23,7 +25,7 @@ const Loading = ({
         <Container className="text-center">
           <div className="mx-auto flex w-full items-center justify-between rounded-full bg-primary p-[1.4rem] md:rounded-none md:bg-transparent md:p-0">
             <div className="relative flex-1">
-              <SumItUpLogo className="main-logo w-[5.2rem] md:w-[8.2rem]" />
+              <SumItUpLogo className="main-logo w-[5.2rem] md:w-[8.2rem]" onClick={handleNewSearchBtnClick} />
             </div>
             <div className="relative flex-1 text-right">
               <button

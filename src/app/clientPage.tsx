@@ -95,7 +95,14 @@ export default function ClientPage({
 
   if (isError) return <Error />;
   if (isLoading || (!displayResult && isLoadingSSE))
-    return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
+    return (
+      <Loading
+        reset={reset}
+        summaryContent={originalContent}
+        songDetails={songDetails}
+        handleNewSearchBtnClick={handleNewSearchBtnClick}
+      />
+    );
 
   return (
     <>
@@ -110,7 +117,7 @@ export default function ClientPage({
         />
       ) : (
         <>
-          <InputPageHeader />
+          <InputPageHeader handleNewSearchBtnClick={handleNewSearchBtnClick} />
           <InputComponent
             handleFormSubmit={handleFormSubmit}
             onInputChange={trackInputSelection}
