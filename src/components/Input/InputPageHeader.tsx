@@ -11,7 +11,7 @@ const InputPageHeader = ({ handleNewSearchBtnClick }: { handleNewSearchBtnClick:
           <div className="relative w-[5.8rem] sm:w-[8rem] md:top-10 md:w-[14.5rem]">
             <HeaderText className="inline-block" />
           </div>
-          <div className="w-[11.6rem]	 cursor-pointer md:w-[14rem]" onClick={handleNewSearchBtnClick}>
+          <div className="w-[11.6rem] cursor-pointer md:w-[14rem]" onClick={handleNewSearchBtnClick}>
             <SumItUpLogo className="w-full" />
           </div>
           <div className="relative w-[5.8rem] sm:w-[8rem] md:top-10 md:w-[14.5rem]">
