@@ -35,7 +35,7 @@ export default function ClientPage({
     trackShare,
   } = useAnalytics();
 
-  const { mutate, isLoading, isLoadingSSE, streamedResult, isError, reset } = useOpenAiSSEResponse({
+  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError, reset } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
       trackRequestCompleted({ type: res.type, output: streamedResult });
@@ -74,6 +74,7 @@ export default function ClientPage({
     });
   };
   const handleNewSearchBtnClick = () => {
+    forceClose();
     setDisplayResult(false);
     setOriginalContent("");
     setCurrentResult(null);

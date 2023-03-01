@@ -1,8 +1,3 @@
-type SummaryLengthSliderPropType = {
-  summaryLength: string;
-  setSummaryLength: (length: string) => void;
-};
-
 const SummaryLengthSlider = ({
   summaryLength,
   setSummaryLength,
@@ -14,6 +9,10 @@ const SummaryLengthSlider = ({
   customLength: string;
   setCustomLength: (length: string) => void;
 }) => {
+  const showCustom = Number(summaryLength) > 300;
+
+  const minLength = 10;
+  const maxLength = 500;
   const options = [
     { name: "Shortest", align: "self-start" },
     { name: "Short", align: "self-center" },
@@ -53,19 +52,24 @@ const SummaryLengthSlider = ({
           ))}
         </div>
       </div>
-      <div>
-        <input
-          type="text"
-          className={`w-100 mt-[6.25rem] h-20 w-80 rounded-full border-[1px] border-solid border-primary p-[.625rem] text-center font-[.875rem] text-primary ${
-            Number(summaryLength) > 300 ? "visible" : "invisible"
-          }`}
-          value={customLength}
-          placeholder="Enter number here"
-          id="custom-summary-length"
-          onChange={(event) => {
-            setCustomLength(event.target.value);
-          }}
-        />
+
+      <div className=" h-20 ">
+        {showCustom && (
+          <input
+            className={`w-100 mt-[6.25rem] h-20 w-80 rounded-full border-[1px] border-solid border-primary p-[.625rem] text-center font-[.875rem] text-primary`}
+            value={customLength}
+            type="number"
+            step="1"
+            required
+            min={minLength}
+            max={maxLength}
+            placeholder="Enter number here"
+            id="custom-summary-length"
+            onChange={(event) => {
+              setCustomLength(event.target.value);
+            }}
+          />
+        )}
       </div>
     </div>
   );

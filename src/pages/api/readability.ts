@@ -8,6 +8,7 @@ import { textToChunks } from "~/utils/text-to-chunks";
 // site.com/api/readability?url_resource="url"&chunk_length=30
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DocumentResponseData | ErrorMessage>) {
   const { query, method } = req;
+
   const urlResource = getStringOrFirst(query.url_resource).replace(/['"]+/g, "");
   const chunkLength = +getStringOrFirst(query.chunk_length).replace(/['"]+/g, "");
 

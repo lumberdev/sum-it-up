@@ -28,7 +28,7 @@ const ResultPageHeader = ({
           </div>
           <div className="relative flex-1 text-right">
             <button
-              className="group relative mx-auto inline-flex h-[3.4rem] min-w-[11.1rem] items-center justify-center overflow-hidden rounded-full border-2 border-white bg-transparent px-5 py-3  text-white md:h-20 md:min-w-[18rem] md:border-primary  md:text-primary"
+              className="group relative mx-auto inline-flex h-[3.4rem] min-w-[11.1rem] items-center justify-center overflow-hidden rounded-full border-2 border-white bg-transparent px-5 py-3  text-white will-change-transform md:h-20 md:min-w-[18rem]  md:border-primary md:text-primary"
               type="button"
               onClick={() => handleNewSearchBtnClick()}
             >
