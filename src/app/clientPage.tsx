@@ -10,6 +10,8 @@ import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
 import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 import { isValidJSON, isValidUrlWithEncodedState } from "~/utils/isValidUrlWithEncodedState";
+import About from "~/components/About";
+import MinHeightBodyContainer from "~/components/utility-components/MinHeightBodyContainer";
 
 export default function ClientPage({
   searchParams,
@@ -99,26 +101,31 @@ export default function ClientPage({
     return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
 
   return (
-    <div className="min-h-[calc(100vh-theme(height.footerMobile))] md:min-h-[calc(100vh-theme(height.footerDesktop))]">
+    <>
       {displayResult ? (
-        <Result
-          trackShare={trackShare}
-          summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
-          handleNewSearchBtnClick={handleNewSearchBtnClick}
-          originalContent={originalContent}
-          songDetails={songDetails}
-          isLoadingSSE={isLoadingSSE}
-        />
+        <MinHeightBodyContainer>
+          <Result
+            trackShare={trackShare}
+            summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
+            handleNewSearchBtnClick={handleNewSearchBtnClick}
+            originalContent={originalContent}
+            songDetails={songDetails}
+            isLoadingSSE={isLoadingSSE}
+          />
+        </MinHeightBodyContainer>
       ) : (
         <>
-          <InputPageHeader />
-          <InputComponent
-            handleFormSubmit={handleFormSubmit}
-            onInputChange={trackInputSelection}
-            onLengthChange={trackLengthSelection}
-          />
+          <MinHeightBodyContainer>
+            <InputPageHeader />
+            <InputComponent
+              handleFormSubmit={handleFormSubmit}
+              onInputChange={trackInputSelection}
+              onLengthChange={trackLengthSelection}
+            />
+          </MinHeightBodyContainer>
+          <About />
         </>
       )}
-    </div>
+    </>
   );
 }

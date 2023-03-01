@@ -2,15 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import ClientPage from "./clientPage";
-import About from "~/components/About";
-import { isValidUrlWithEncodedState } from "~/utils/isValidUrlWithEncodedState";
 
 export default function Page({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
-  return (
-    <>
-      <ClientPage searchParams={searchParams} />
-      {/* Hide about page in the results page */}
-      {!isValidUrlWithEncodedState(searchParams) && <About />} 
-    </>
-  );
+  return <ClientPage searchParams={searchParams} />;
 }
