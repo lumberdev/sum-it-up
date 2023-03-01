@@ -423,7 +423,7 @@ const Privacy = () => {
           <ul className="ml-[4rem]">
             <li className="mb-5 list-disc">
               By email:{" "}
-              <a href="mailto:devs+sumitup@lumber.dev" target="blank">
+              <a className="underline" href="mailto:devs+sumitup@lumber.dev" target="blank">
                 devs+sumitup@lumber.dev
               </a>
             </li>
