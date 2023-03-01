@@ -99,8 +99,7 @@ export default function ClientPage({
     return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
 
   return (
-    // Subtracting footer height from 100vh
-    <div className="min-h-[calc(100vh-7.9rem)] md:min-h-[calc(100vh-5rem)]">
+    <div className="min-h-[calc(100vh-theme(height.footerMobile))] md:min-h-[calc(100vh-theme(height.footerDesktop))]">
       {displayResult ? (
         <Result
           trackShare={trackShare}
