@@ -34,19 +34,20 @@ export default function ClientPage({
     trackShare,
   } = useAnalytics();
 
-  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError, reset } = useOpenAiSSEResponse({
-    onSuccess: (res: ResponseType) => {
-      setLocalStorage(res);
-      trackRequestCompleted({ type: res.type, output: streamedResult });
-    },
-    onStream: (res) => {
-      setDisplayResult(true);
-      setCurrentResult(res);
-    },
-    onError: (err, data) => {
-      trackRequestError({ ...data, error: (err?.message as string) ?? "" });
-    },
-  });
+  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError, setIsError, reset } =
+    useOpenAiSSEResponse({
+      onSuccess: (res: ResponseType) => {
+        setLocalStorage(res);
+        trackRequestCompleted({ type: res.type, output: streamedResult });
+      },
+      onStream: (res) => {
+        setDisplayResult(true);
+        setCurrentResult(res);
+      },
+      onError: (err, data) => {
+        trackRequestError({ ...data, error: (err?.message as string) ?? "" });
+      },
+    });
   const handleFormSubmit: InputFormSubmissionType = async (
     event,
     type,
@@ -92,8 +93,7 @@ export default function ClientPage({
       localStorage.setItem("summaries", JSON.stringify([newData]));
     }
   };
-
-  if (isError) return <Error />;
+  if (isError) return <Error reset={forceClose} setIsError={setIsError} />;
   if (isLoading || (!displayResult && isLoadingSSE))
     return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
 

@@ -177,7 +177,7 @@ const useOpenAiSSEResponse = ({
     mutationFn: streamContent,
   });
 
-  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, reset };
+  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, setIsError, reset };
 };
 
 export default useOpenAiSSEResponse;
