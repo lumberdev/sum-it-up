@@ -4,11 +4,13 @@ const Footer = () => {
   return (
     <footer className="fixed left-0 bottom-0 w-full bg-dark text-white">
       <Container className="mx-0 flex h-[7.9rem] flex-col items-center justify-center gap-[1rem] px-11 md:h-[5rem] md:flex-row md:justify-between md:px-20">
-        <div className="flex items-center">
-          Made by
-          <span className="relative bottom-0.5 mr-1 ml-2 inline-block h-[1.4rem] w-[1.4rem] rounded-full bg-[#FFCC08]"></span>
-          <span className="font-[Roboto] font-bold"> Lumber</span>
-        </div>
+        <Link href="https://lumber.dev/" target="_blank" rel="noreferrer">
+          <div className="flex items-center">
+            Made by
+            <span className="relative bottom-0.5 mr-1 ml-2 inline-block h-[1.4rem] w-[1.4rem] rounded-full bg-[#FFCC08]"></span>
+            <span className="font-[Roboto] font-bold"> Lumber</span>
+          </div>
+        </Link>
         <div className="my-[-1rem] text-[1rem] min-[350px]:hidden md:mr-[5rem] md:text-paragraph">
           © Lumber LLC. All rights reserved
         </div>
