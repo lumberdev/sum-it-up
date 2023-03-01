@@ -41,7 +41,7 @@ const useOpenAiSSEResponse = ({
     url: "",
   };
   const initTextMappedPoints = {
-    keyPoints: [""],
+    keyPoints: [],
     bias: "",
     summary: "",
     tone: "",
@@ -148,7 +148,7 @@ const useOpenAiSSEResponse = ({
             mappedResult.current = {
               ...mappedResult.current,
               summary: array?.[0],
-              keyPoints: array?.[1]?.split("|"),
+              keyPoints: array?.[1]?.split("|").filter((point) => point.trim() !== ""),
               bias: array?.[2],
               tone: array?.[3],
               trust: Number(array?.[4]),
@@ -175,11 +175,18 @@ const useOpenAiSSEResponse = ({
     !isLoadingSSE && fetchRef.current && fetchRef.current();
   }, [isLoadingSSE]);
 
+  function forceClose() {
+    if (!fetchRef.current) return;
+    fetchRef.current();
+    reset();
+    setIsLoadingSSE(false);
+  }
+
   const { isLoading, mutate, reset } = useMutation({
     mutationFn: streamContent,
   });
 
-  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, readabilityData, reset };
+  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, readabilityData, reset };
 };
 
 export default useOpenAiSSEResponse;
