@@ -8,13 +8,39 @@ import Loading from "~/components/Loading/Loading";
 import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
+import { fetchArticleData } from "~/query/fetch-article-data";
+import { useQuery } from "@tanstack/react-query";
+
+const useFetchReadabilityOnLoad = (original: string) => {
+  const urlRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b/;
+  // Fetch readability data in server and pass to client side
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["readabilityDataLoad"],
+    queryFn: async () => {
+      if (urlRegex.test(original.trim())) {
+        const res = await fetchArticleData(original.trim(), 500);
+        if (res) return res.content ?? original;
+      }
+      return original;
+    },
+    retry: 3,
+  });
+
+  return { error, data, isLoading };
+};
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
-  const urlRegex = /^(https?:\/\/)?[0-9a-z-_]*(\.[0-9a-z-_]+)*(\.[a-z]+)+(\/[0-9a-z-_]*)*?\/?$/i;
-  const [displayOriginalContent, setDisplayOriginalContent] = useState(
-    urlRegex.test(searchParams.original) ? "" : searchParams.original,
-  );
+  //
+  const {
+    data: original,
+    error: err,
+    isLoading: initLoadingReadability,
+  } = useFetchReadabilityOnLoad(searchParams.original);
+
+  const [displayOriginalContent, setDisplayOriginalContent] = useState(searchParams.original);
+
   const [displayResult, setDisplayResult] = useState<boolean>(
     searchParams.original.length > 0 && searchParams.result.length > 0,
   );
@@ -49,6 +75,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       trackRequestError({ ...data, error: (err?.message as string) ?? "" });
     },
   });
+
   const handleFormSubmit: InputFormSubmissionType = async (
     event,
     type,
@@ -109,9 +136,9 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
           summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
           handleNewSearchBtnClick={handleNewSearchBtnClick}
           originalContent={originalContent}
-          displayOriginalContent={displayOriginalContent}
+          displayOriginalContent={original ?? displayOriginalContent}
           songDetails={songDetails}
-          isLoadingSSE={isLoadingSSE}
+          isLoadingSSE={initLoadingReadability ?? isLoadingSSE}
         />
       ) : (
         <>
