@@ -8,27 +8,7 @@ import Loading from "~/components/Loading/Loading";
 import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
-import { fetchArticleData } from "~/query/fetch-article-data";
-import { useQuery } from "@tanstack/react-query";
-
-const useFetchReadabilityOnLoad = (original: string) => {
-  const urlRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b/;
-  // Fetch readability data in server and pass to client side
-
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["readabilityDataLoad"],
-    queryFn: async () => {
-      if (urlRegex.test(original.trim())) {
-        const res = await fetchArticleData(original.trim(), 500);
-        if (res) return res.content ?? original;
-      }
-      return original;
-    },
-    retry: 3,
-  });
-
-  return { error, data, isLoading };
-};
+import useFetchReadabilityOnLoad from "~/hooks/useFetchReadabilityOnLoad";
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
@@ -69,6 +49,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       setCurrentResult(res);
     },
     onReadability: (res) => {
+      setDisplayResult(true);
       setDisplayOriginalContent(res.content);
     },
     onError: (err, data) => {
@@ -89,11 +70,12 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     setSongDetails(songInfo);
     if (type === "text") {
       setSongDetails("");
-      text?.length && setDisplayOriginalContent(text);
       text?.length && setOriginalContent(text);
+      text?.length && setDisplayOriginalContent(text);
     } else {
       inputUrl?.length && setOriginalContent(inputUrl);
     }
+
     trackSubmit({ type: type, length: customLength || summaryLength, input: inputUrl || text || "" });
     mutate({
       url: inputUrl ?? "",
@@ -136,9 +118,9 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
           summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
           handleNewSearchBtnClick={handleNewSearchBtnClick}
           originalContent={originalContent}
-          displayOriginalContent={original ?? displayOriginalContent}
+          displayOriginalContent={original && original.length > 0 ? original : displayOriginalContent}
           songDetails={songDetails}
-          isLoadingSSE={initLoadingReadability ?? isLoadingSSE}
+          isLoadingSSE={isLoadingSSE}
         />
       ) : (
         <>

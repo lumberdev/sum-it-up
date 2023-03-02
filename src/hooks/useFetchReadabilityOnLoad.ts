@@ -8,11 +8,12 @@ const useFetchReadabilityOnLoad = (original: string) => {
   const { isLoading, error, data } = useQuery({
     queryKey: ["readabilityDataLoad"],
     queryFn: async () => {
-      if (urlRegex.test(original.trim())) {
-        const res = await fetchArticleData(original.trim(), 500);
-        if (res) return res.content ?? original;
+      const trimmedOriginal = original.trim();
+      if (urlRegex.test(trimmedOriginal)) {
+        const res = await fetchArticleData(trimmedOriginal, 500);
+        if (res) return res.content ?? trimmedOriginal;
       }
-      return original;
+      return trimmedOriginal;
     },
     retry: 3,
   });
