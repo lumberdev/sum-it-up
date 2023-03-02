@@ -19,7 +19,6 @@ const Footer = () => {
           <div className="flex justify-end gap-[1rem] text-[1rem] underline md:gap-[3rem] md:text-paragraph">
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
-            <Link href="/">Accessibility</Link>
           </div>
         </div>
       </Container>
