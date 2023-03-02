@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputComponent from "~/components/Input/Input";
 import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
 import InputPageHeader from "~/components/Input/InputPageHeader";
@@ -19,7 +19,11 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     isLoading: initLoadingReadability,
   } = useFetchReadabilityOnLoad(searchParams.original);
 
-  const [displayOriginalContent, setDisplayOriginalContent] = useState(searchParams.original);
+  const [displayOriginalContent, setDisplayOriginalContent] = useState(original);
+
+  useEffect(() => {
+    setDisplayOriginalContent(original);
+  }, [original]);
 
   const [displayResult, setDisplayResult] = useState<boolean>(
     searchParams.original.length > 0 && searchParams.result.length > 0,
@@ -87,8 +91,8 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   const handleNewSearchBtnClick = () => {
     forceClose();
     setDisplayResult(false);
-    setOriginalContent("");
     setCurrentResult(null);
+    setOriginalContent("");
     setDisplayOriginalContent("");
     setSongDetails("");
     window.history.replaceState(null, "", window.location.origin);
@@ -118,7 +122,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
           summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
           handleNewSearchBtnClick={handleNewSearchBtnClick}
           originalContent={originalContent}
-          displayOriginalContent={original && original.length > 0 ? original : displayOriginalContent}
+          displayOriginalContent={displayOriginalContent}
           songDetails={songDetails}
           isLoadingSSE={isLoadingSSE}
         />

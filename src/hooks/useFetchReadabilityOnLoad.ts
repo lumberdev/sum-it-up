@@ -5,7 +5,11 @@ const useFetchReadabilityOnLoad = (original: string) => {
   const urlRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b/;
   // Fetch readability data in server and pass to client side
 
-  const { isLoading, error, data } = useQuery({
+  const {
+    isLoading,
+    error,
+    data = "",
+  } = useQuery({
     queryKey: ["readabilityDataLoad"],
     queryFn: async () => {
       const trimmedOriginal = original.trim();
@@ -13,6 +17,7 @@ const useFetchReadabilityOnLoad = (original: string) => {
         const res = await fetchArticleData(trimmedOriginal, 500);
         if (res) return res.content ?? trimmedOriginal;
       }
+
       return trimmedOriginal;
     },
     retry: 3,
