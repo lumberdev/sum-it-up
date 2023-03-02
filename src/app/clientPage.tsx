@@ -27,7 +27,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(
     searchParams.result && JSON.parse(searchParams.result),
   );
-  const [songDetails, setSongDetails] = useState("");
+  const [songDetails, setSongDetails] = useState(searchParams.songDetails.length > 0 ? searchParams.songDetails : "");
 
   const {
     trackInputSelection,
