@@ -34,7 +34,7 @@ export default function ClientPage({
     trackShare,
   } = useAnalytics();
 
-  const { mutate, isLoadingSSE, streamedResult, forceClose, isError } = useOpenAiSSEResponse({
+  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
       trackRequestCompleted({ type: res.type, output: streamedResult });
@@ -44,9 +44,11 @@ export default function ClientPage({
       setCurrentResult(res);
     },
     onError: (err, data) => {
+      setDisplayResult(false);
       trackRequestError({ ...data, error: (err?.message as string) ?? "" });
     },
   });
+
   const handleFormSubmit: InputFormSubmissionType = async (
     event,
     type,
@@ -94,7 +96,7 @@ export default function ClientPage({
   };
 
   if (isError) return <Error />;
-  if (!displayResult && isLoadingSSE)
+  if (isLoading || (!displayResult && isLoadingSSE))
     return (
       <Loading
         summaryContent={originalContent}

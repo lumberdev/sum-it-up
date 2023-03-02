@@ -23,12 +23,10 @@ const fetchServerSent = (
 
   source.addEventListener("error", handleError);
   source.stream();
-  console.log("closed sse", source.close);
+
   const cleanup = () => {
     forceClose = true;
-    console.log("closed sse 2", source.close);
     source.close();
-
     source.removeEventListener("message", handleStream);
     source.removeEventListener("error", handleError);
   };
