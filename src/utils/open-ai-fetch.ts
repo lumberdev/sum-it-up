@@ -39,6 +39,7 @@ async function callWithUrl(
       byline: json.byline,
       dir: json.dir,
       title: json.title,
+      content: json.content,
       url,
       trust: 0,
       ...response,

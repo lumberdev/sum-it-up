@@ -3,10 +3,9 @@ import { TextSummaryResponseType, TextResponse } from "~/types";
 import ShareLinkButton from "../../utility-components/result/ShareLinkButton";
 import { useEffect } from "react";
 import { encodeStateToUrl } from "~/utils/generateLinkToShare";
-import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 
 type TextResultPropType = {
-  originalContent: string | string[];
+  originalContent: string;
   textSummaryResponse: TextSummaryResponseType | TextResponse;
   isLoadingSSE: boolean;
   trackShare: (properties: { shareURL: string }) => void;
@@ -15,7 +14,7 @@ type TextResultPropType = {
 const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE, trackShare }: TextResultPropType) => {
   useEffect(() => {
     if (!isLoadingSSE) {
-      const originalContentString = getStringOrFirst(originalContent);
+      const originalContentString = originalContent;
       const encodedUrl = encodeStateToUrl(originalContentString, textSummaryResponse);
       history.replaceState({}, "", encodedUrl);
     }

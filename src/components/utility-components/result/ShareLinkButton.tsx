@@ -2,7 +2,6 @@ import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
 import { ResponseType } from "~/types";
 import { encodeStateToUrl } from "~/utils/generateLinkToShare";
 import CopyUrlIcon from "../../../assets/copy-url-icon.svg";
-import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 
 const ShareLinkButton = ({
   originalContent,
@@ -10,7 +9,7 @@ const ShareLinkButton = ({
   disabled,
   trackShare,
 }: {
-  originalContent: string | string[];
+  originalContent: string;
   trackShare: (properties: { shareURL: string }) => void;
   responseObject: ResponseType;
   disabled?: boolean;
@@ -19,7 +18,7 @@ const ShareLinkButton = ({
   return (
     <button
       onClick={() => {
-        const originalContentString = getStringOrFirst(originalContent);
+        const originalContentString = originalContent;
         const encodedUrl = encodeStateToUrl(originalContentString, responseObject);
         copyToClipboard(encodedUrl);
         trackShare({ shareURL: encodedUrl });

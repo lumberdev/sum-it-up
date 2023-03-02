@@ -21,10 +21,12 @@ const useOpenAiSSEResponse = ({
   onSuccess,
   onStream,
   onError,
+  onReadability,
 }: {
   onSuccess?: (res: ResponseType) => unknown;
   onStream?: (res: ResponseType) => unknown;
   onError?: (error: { message: string }, data: RequestBody) => unknown;
+  onReadability?: (data: { [key: string]: string }) => unknown;
 }) => {
   const [streamedResult, setStreamedResult] = useState<string>("");
   const [isLoadingSSE, setIsLoadingSSE] = useState<boolean>(false);
@@ -35,10 +37,9 @@ const useOpenAiSSEResponse = ({
     dir: "",
     type: "article" as ContentType,
     byline: "",
-    // content: "",
+    content: "",
     url: "",
   };
-
   const initTextMappedPoints = {
     keyPoints: [],
     bias: "",
@@ -67,14 +68,23 @@ const useOpenAiSSEResponse = ({
       let textContent = "";
       if (type === "article" || type === "song") {
         const json = await fetchArticleData(url, 500);
+        if (typeof onReadability === "function")
+          onReadability({
+            byline: json.byline,
+            title: json.title,
+            dir: json.dir,
+            url,
+            content: json.content,
+          });
+
         mappedResult.current = {
           ...mappedResult.current,
           byline: json.byline,
           title: json.title,
           dir: json.dir,
           url,
-          // content: json.content,
         };
+
         const body = await getSummaryFromUrl(type, json.chunkedTextContent);
         textContent = body;
       } else {
@@ -166,7 +176,6 @@ const useOpenAiSSEResponse = ({
   }, [isLoadingSSE]);
 
   function forceClose() {
-    console.log("CLOSE", fetchRef.current);
     if (!fetchRef.current) return;
     fetchRef.current();
     reset();
@@ -177,7 +186,7 @@ const useOpenAiSSEResponse = ({
     mutationFn: streamContent,
   });
 
-  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, reset };
+  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, readabilityData, reset };
 };
 
 export default useOpenAiSSEResponse;
