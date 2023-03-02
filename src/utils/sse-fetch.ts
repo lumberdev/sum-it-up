@@ -7,7 +7,6 @@ const fetchServerSent = (
   onStream?: (arg: any) => void,
   onError?: (args: unknown) => void,
 ) => {
-  let forceClose = false;
   const source = SSE(input, init);
 
   const handleStream = (event: MessageEvent) => {
@@ -25,10 +24,9 @@ const fetchServerSent = (
   source.stream();
 
   const cleanup = () => {
-    forceClose = true;
-    source.close();
     source.removeEventListener("message", handleStream);
     source.removeEventListener("error", handleError);
+    source.close();
   };
   return cleanup;
 };
