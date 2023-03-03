@@ -21,10 +21,12 @@ const useOpenAiSSEResponse = ({
   onSuccess,
   onStream,
   onError,
+  onReadability,
 }: {
   onSuccess?: (res: ResponseType) => unknown;
   onStream?: (res: ResponseType) => unknown;
   onError?: (error: { message: string }, data: RequestBody) => unknown;
+  onReadability?: (data: { [key: string]: string }) => unknown;
 }) => {
   // store callbacks here so if they ever change they don't rerender the internal hook state.
   const callbackFunctionRefs = useRef({ onSuccess, onStream, onError });
@@ -41,9 +43,9 @@ const useOpenAiSSEResponse = ({
     dir: "",
     type: "article" as ContentType,
     byline: "",
+    content: "",
     url: "",
   };
-
   const initTextMappedPoints = {
     keyPoints: [],
     bias: "",
@@ -66,8 +68,7 @@ const useOpenAiSSEResponse = ({
 
   const streamContent = useCallback(({ data, textContent }: { data: RequestBody; textContent: string }) => {
     const { onStream, onSuccess, onError } = callbackFunctionRefs.current;
-    const { wordLimit, type, url, text } = data;
-
+    const { wordLimit, type } = data;
     if (!data || !Object.keys(data).length) return;
 
     const promptText =
@@ -158,6 +159,14 @@ const useOpenAiSSEResponse = ({
           dir: json.dir,
           url,
         };
+        if (typeof onReadability === "function")
+          onReadability({
+            byline: json.byline,
+            title: json.title,
+            dir: json.dir,
+            url,
+            content: json.content,
+          });
         const body = await getSummaryFromUrl(type, json.chunkedTextContent);
         textContent = body;
       } else {
@@ -201,7 +210,7 @@ const useOpenAiSSEResponse = ({
     fetchRef.current();
   }
 
-  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose };
+  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, readabilityData };
 };
 
 export default useOpenAiSSEResponse;

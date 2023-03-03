@@ -2,6 +2,7 @@ import { useState } from "react";
 import SummaryLengthSlider from "../../utility-components/input/SummaryLengthSlider";
 import { InputFormSubmissionType } from "~/types";
 import SummarizeButton from "../../utility-components/input/SummarizeButton";
+import { generateSongUrl } from "~/utils/generate-song-url";
 
 const SongInputField = ({
   handleFormSubmit,
@@ -25,9 +26,7 @@ const SongInputField = ({
     <div className="mx-auto max-w-[54rem] animate-fadeIn">
       <form
         onSubmit={(event: React.SyntheticEvent) => {
-          const inputUrl = `https://www.google.com/search?q=lyrics+to+${artistName.split(" ").join("-")}+${songTitle
-            .split(" ")
-            .join("-")}`;
+          const inputUrl = generateSongUrl(artistName, songTitle);
           handleFormSubmit(event, type, summaryLength, customLength, inputUrl, "", songInfo);
         }}
       >
