@@ -66,6 +66,7 @@ const useOpenAiSSEResponse = ({
 
   const fetchRef = useRef<() => unknown>();
 
+
   const streamContent = useCallback(({ data, textContent }: { data: RequestBody; textContent: string }) => {
     const { onStream, onSuccess, onError } = callbackFunctionRefs.current;
     const { wordLimit, type } = data;
