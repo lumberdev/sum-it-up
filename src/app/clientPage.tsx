@@ -8,6 +8,10 @@ import Loading from "~/components/Loading/Loading";
 import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
+import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
+import { isValidJSON } from "~/utils/isValidJSON";
+import About from "~/components/About";
+import MinHeightBodyContainer from "~/components/utility-components/MinHeightBodyContainer";
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
@@ -19,7 +23,9 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     searchParams.original.length > 0 && searchParams.result.length > 0,
   );
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(
-    searchParams.result && JSON.parse(searchParams.result),
+    searchParams?.result &&
+      isValidJSON(getStringOrFirst(searchParams.result)) &&
+      JSON.parse(getStringOrFirst(searchParams.result)),
   );
   const [songDetails, setSongDetails] = useState("");
 
@@ -112,23 +118,28 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   return (
     <>
       {displayResult ? (
-        <Result
-          trackShare={trackShare}
-          summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
-          handleNewSearchBtnClick={handleNewSearchBtnClick}
-          originalContent={originalContent}
-          displayOriginalContent={displayOriginalContent}
-          songDetails={songDetails}
-          isLoadingSSE={isLoadingSSE}
-        />
+        <MinHeightBodyContainer>
+          <Result
+            trackShare={trackShare}
+            summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
+            handleNewSearchBtnClick={handleNewSearchBtnClick}
+            originalContent={originalContent}
+            displayOriginalContent={displayOriginalContent}
+            songDetails={songDetails}
+            isLoadingSSE={isLoadingSSE}
+          />
+        </MinHeightBodyContainer>
       ) : (
         <>
-          <InputPageHeader />
-          <InputComponent
-            handleFormSubmit={handleFormSubmit}
-            onInputChange={trackInputSelection}
-            onLengthChange={trackLengthSelection}
-          />
+          <MinHeightBodyContainer>
+            <InputPageHeader />
+            <InputComponent
+              handleFormSubmit={handleFormSubmit}
+              onInputChange={trackInputSelection}
+              onLengthChange={trackLengthSelection}
+            />
+          </MinHeightBodyContainer>
+          <About />
         </>
       )}
     </>

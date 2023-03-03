@@ -4,7 +4,7 @@ import LumberLogo from "~/assets/lumber_logo.svg";
 const Footer = () => {
   return (
     <footer className="fixed left-0 bottom-0 w-full bg-dark text-white">
-      <Container className="mx-0 flex h-[7.9rem] flex-col items-center justify-center gap-[1rem] px-11 md:h-[5rem] md:flex-row md:justify-between md:px-20">
+      <Container className="mx-0 flex h-[theme(height.footerMobile)] flex-col items-center justify-center gap-[1rem] px-11 md:h-[theme(height.footerDesktop)] md:flex-row md:justify-between md:px-20">
         <div className="flex items-center">
           Made by
           <LumberLogo className="relative bottom-0.5 ml-4" />
