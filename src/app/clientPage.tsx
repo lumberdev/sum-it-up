@@ -12,7 +12,7 @@ import useFetchReadabilityOnLoad from "~/hooks/useFetchReadabilityOnLoad";
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
-  //
+
   const {
     data: original,
     error: err,
