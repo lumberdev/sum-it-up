@@ -66,7 +66,6 @@ const useOpenAiSSEResponse = ({
 
   const fetchRef = useRef<() => unknown>();
 
-
   const streamContent = useCallback(({ data, textContent }: { data: RequestBody; textContent: string }) => {
     const { onStream, onSuccess, onError } = callbackFunctionRefs.current;
     const { wordLimit, type } = data;
@@ -144,6 +143,7 @@ const useOpenAiSSEResponse = ({
   const [data, setData] = useState<RequestBody | null>(null);
 
   const initiate = async (data: RequestBody) => {
+    setIsError(false);
     setIsLoadingSSE(true);
     earlyClose.current = false;
     const { type, url, text } = data;
@@ -206,6 +206,7 @@ const useOpenAiSSEResponse = ({
     earlyClose.current = true;
     reset();
     setData(null);
+    setIsError(false);
     setIsLoadingSSE(false);
     if (!fetchRef.current) return;
     fetchRef.current();
