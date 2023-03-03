@@ -45,6 +45,7 @@ const SongResult = ({
           <div className="mt-10 block md:hidden">
             <ShareLinkButton
               trackShare={trackShare}
+              songDetails={songDetails}
               responseObject={songMeaningResponse}
               originalContent={originalContent}
             />
