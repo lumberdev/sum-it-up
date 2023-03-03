@@ -9,6 +9,10 @@ import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
 import useFetchReadabilityOnLoad from "~/hooks/useFetchReadabilityOnLoad";
+import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
+import { isValidJSON } from "~/utils/isValidJSON";
+import About from "~/components/About";
+import MinHeightBodyContainer from "~/components/utility-components/MinHeightBodyContainer";
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
@@ -29,7 +33,9 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     searchParams.original.length > 0 && searchParams.result.length > 0,
   );
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(
-    searchParams.result && JSON.parse(searchParams.result),
+    searchParams?.result &&
+      isValidJSON(getStringOrFirst(searchParams.result)) &&
+      JSON.parse(getStringOrFirst(searchParams.result)),
   );
   const [songDetails, setSongDetails] = useState(searchParams.songDetails.length > 0 ? searchParams.songDetails : "");
 
@@ -43,7 +49,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     trackShare,
   } = useAnalytics();
 
-  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError, reset } = useOpenAiSSEResponse({
+  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
       trackRequestCompleted({ type: res.type, output: streamedResult });
@@ -53,10 +59,10 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       setCurrentResult(res);
     },
     onReadability: (res) => {
-      setDisplayResult(true);
       setDisplayOriginalContent(res.content);
     },
     onError: (err, data) => {
+      setDisplayResult(false);
       trackRequestError({ ...data, error: (err?.message as string) ?? "" });
     },
   });
@@ -112,28 +118,39 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
 
   if (isError) return <Error />;
   if (isLoading || (!displayResult && isLoadingSSE))
-    return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
+    return (
+      <Loading
+        summaryContent={originalContent}
+        songDetails={songDetails}
+        handleNewSearchBtnClick={handleNewSearchBtnClick}
+      />
+    );
 
   return (
     <>
       {displayResult ? (
-        <Result
-          trackShare={trackShare}
-          summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
-          handleNewSearchBtnClick={handleNewSearchBtnClick}
-          originalContent={originalContent}
-          displayOriginalContent={displayOriginalContent}
-          songDetails={songDetails}
-          isLoadingSSE={isLoadingSSE}
-        />
+        <MinHeightBodyContainer>
+          <Result
+            trackShare={trackShare}
+            summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
+            handleNewSearchBtnClick={handleNewSearchBtnClick}
+            originalContent={originalContent}
+            displayOriginalContent={displayOriginalContent}
+            songDetails={songDetails}
+            isLoadingSSE={isLoadingSSE}
+          />
+        </MinHeightBodyContainer>
       ) : (
         <>
-          <InputPageHeader />
-          <InputComponent
-            handleFormSubmit={handleFormSubmit}
-            onInputChange={trackInputSelection}
-            onLengthChange={trackLengthSelection}
-          />
+          <MinHeightBodyContainer>
+            <InputPageHeader />
+            <InputComponent
+              handleFormSubmit={handleFormSubmit}
+              onInputChange={trackInputSelection}
+              onLengthChange={trackLengthSelection}
+            />
+          </MinHeightBodyContainer>
+          <About />
         </>
       )}
     </>
