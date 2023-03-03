@@ -41,7 +41,6 @@ const useOpenAiSSEResponse = ({
     dir: "",
     type: "article" as ContentType,
     byline: "",
-    // content: "",
     url: "",
   };
 
@@ -54,12 +53,12 @@ const useOpenAiSSEResponse = ({
     ...readabilityData,
   };
 
-  const initSongMappedPoints = {
-    mood: "",
-    moodColor: "",
-    meaning: "",
-    ...readabilityData,
-  };
+  // const initSongMappedPoints = {
+  //   mood: "",
+  //   moodColor: "",
+  //   meaning: "",
+  //   ...readabilityData,
+  // };
   // useRef to get most updated result without rerender
   const mappedResult = useRef<TextSummaryResponseType | SongMeaningResponseType>(initTextMappedPoints);
 
@@ -143,8 +142,9 @@ const useOpenAiSSEResponse = ({
   const [data, setData] = useState<RequestBody | null>(null);
 
   const initiate = async (data: RequestBody) => {
+    setIsLoadingSSE(true);
     earlyClose.current = false;
-    const { wordLimit, type, url, text } = data;
+    const { type, url, text } = data;
 
     const buildContentToStream = async () => {
       let textContent = "";
@@ -157,7 +157,6 @@ const useOpenAiSSEResponse = ({
           title: json.title,
           dir: json.dir,
           url,
-          // content: json.content,
         };
         const body = await getSummaryFromUrl(type, json.chunkedTextContent);
         textContent = body;
