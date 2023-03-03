@@ -33,7 +33,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     trackShare,
   } = useAnalytics();
 
-  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError, reset } = useOpenAiSSEResponse({
+  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
       trackRequestCompleted({ type: res.type, output: streamedResult });
@@ -46,9 +46,11 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       setDisplayOriginalContent(res.content);
     },
     onError: (err, data) => {
+      setDisplayResult(false);
       trackRequestError({ ...data, error: (err?.message as string) ?? "" });
     },
   });
+
   const handleFormSubmit: InputFormSubmissionType = async (
     event,
     type,
@@ -99,7 +101,13 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
 
   if (isError) return <Error />;
   if (isLoading || (!displayResult && isLoadingSSE))
-    return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
+    return (
+      <Loading
+        summaryContent={originalContent}
+        songDetails={songDetails}
+        handleNewSearchBtnClick={handleNewSearchBtnClick}
+      />
+    );
 
   return (
     <>

@@ -9,16 +9,23 @@ const fetchServerSent = (
 ) => {
   const source = SSE(input, init);
 
-  source.addEventListener("message", (event: MessageEvent) => {
+  const handleStream = (event: MessageEvent) => {
     const payload = event.data;
     if (typeof onStream === "function") onStream(payload);
-  });
+  };
 
-  source.addEventListener("error", (err: unknown) => {
+  const handleError = (err: unknown) => {
     if (typeof onError === "function") onError(err);
-  });
+  };
+
+  source.addEventListener("message", handleStream);
+
+  source.addEventListener("error", handleError);
   source.stream();
+
   const cleanup = () => {
+    source.removeEventListener("message", handleStream);
+    source.removeEventListener("error", handleError);
     source.close();
   };
   return cleanup;
