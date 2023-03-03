@@ -8,10 +8,8 @@ import { textToChunks } from "~/utils/text-to-chunks";
 // site.com/api/readability?url_resource="url"&chunk_length=30
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DocumentResponseData | ErrorMessage>) {
   const { query, method } = req;
-
   const urlResource = getStringOrFirst(query.url_resource).replace(/['"]+/g, "");
   const chunkLength = +getStringOrFirst(query.chunk_length).replace(/['"]+/g, "");
-
   // Run function here on GET request
   if (method === "GET") {
     if (!urlResource) res.status(400).json({ message: "Please provide a valid URL", code: 400 });

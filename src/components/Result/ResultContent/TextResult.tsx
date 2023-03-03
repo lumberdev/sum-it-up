@@ -3,10 +3,9 @@ import { TextSummaryResponseType, TextResponse } from "~/types";
 import ShareLinkButton from "../../utility-components/result/ShareLinkButton";
 import { useEffect } from "react";
 import { encodeStateToUrl } from "~/utils/generateLinkToShare";
-import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 
 type TextResultPropType = {
-  originalContent: string | string[];
+  originalContent: string;
   textSummaryResponse: TextSummaryResponseType | TextResponse;
   isLoadingSSE: boolean;
   trackShare: (properties: { shareURL: string }) => void;
@@ -15,7 +14,7 @@ type TextResultPropType = {
 const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE, trackShare }: TextResultPropType) => {
   useEffect(() => {
     if (!isLoadingSSE) {
-      const originalContentString = getStringOrFirst(originalContent);
+      const originalContentString = originalContent;
       const encodedUrl = encodeStateToUrl(originalContentString, textSummaryResponse);
       history.replaceState({}, "", encodedUrl);
     }
@@ -29,7 +28,9 @@ const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE, trackS
     <Container>
       <div className="mx-auto mb-8 max-w-[75rem] animate-fadeIn rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-bold">Summary</h3>
+          <h3 className="text-xl font-bold">
+            {textSummaryResponse.type === "article" ? "Article Summary" : "Text Summary"}
+          </h3>
           <div className="hidden md:block">
             <ShareLinkButton
               trackShare={trackShare}

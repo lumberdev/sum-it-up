@@ -8,7 +8,8 @@ import ResultPageContentToggler from "../utility-components/result/ResultPageCon
 import OriginalContent from "./ResultContent/OriginalContent";
 
 type ResultProp = {
-  originalContent: string | string[];
+  originalContent: string;
+  displayOriginalContent: string;
   summaryResponse?: TextSummaryResponseType | SongMeaningResponseType | null;
   handleNewSearchBtnClick: () => void;
   songDetails: string;
@@ -18,6 +19,7 @@ type ResultProp = {
 
 const Result = ({
   originalContent,
+  displayOriginalContent,
   summaryResponse,
   handleNewSearchBtnClick,
   trackShare,
@@ -41,6 +43,7 @@ const Result = ({
           trackShare={trackShare}
           songMeaningResponse={summaryResponse as SongMeaningResponseType}
           songDetails={songDetails}
+          originalContent={originalContent}
           isLoadingSSE={isLoadingSSE}
         />
       )}
@@ -62,9 +65,9 @@ const Result = ({
       )}
       {resultPageContent === "original" && (
         <OriginalContent
-          content={originalContent}
-          songDetails={songDetails}
+          content={displayOriginalContent}
           contentType={summaryResponse?.type || null}
+          songDetails={songDetails}
         />
       )}
       <div className="text-center">
