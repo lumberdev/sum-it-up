@@ -5,10 +5,12 @@ const Footer = () => {
   return (
     <footer className="fixed left-0 bottom-0 w-full bg-dark text-white">
       <Container className="mx-0 flex h-[theme(height.footerMobile)] flex-col items-center justify-center gap-[1rem] px-11 md:h-[theme(height.footerDesktop)] md:flex-row md:justify-between md:px-20">
-        <div className="flex items-center">
-          Made by
-          <LumberLogo className="relative bottom-0.5 ml-4" />
-        </div>
+        <Link href="https://lumber.dev/" target="_blank" rel="noreferrer">
+          <div className="flex items-center">
+            Made by
+            <LumberLogo className="relative bottom-0.5 ml-4" />
+          </div>
+        </Link>
         <div className="my-[-1rem] text-[1rem] min-[350px]:hidden md:mr-[5rem] md:text-paragraph">
           © Lumber LLC. All rights reserved
         </div>

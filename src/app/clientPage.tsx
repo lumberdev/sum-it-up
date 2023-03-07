@@ -132,7 +132,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       ) : (
         <>
           <MinHeightBodyContainer>
-            <InputPageHeader />
+            <InputPageHeader handleNewSearchBtnClick={handleNewSearchBtnClick} />
             <InputComponent
               handleFormSubmit={handleFormSubmit}
               onInputChange={trackInputSelection}
