@@ -255,8 +255,8 @@ const Terms = () => {
           <ul>
             <li>
               By email:
-              <a className="underline" href="mailto:devs+sumitup@lumber.dev" target="blank">
-                devs+sumitup@lumber.dev
+              <a className="underline" href="mailto:privacy@lumber.dev" target="blank">
+                privacy@lumber.dev
               </a>
             </li>
           </ul>
