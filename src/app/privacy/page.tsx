@@ -1,10 +1,19 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import InputPageHeader from "~/components/Input/InputPageHeader";
 import Container from "../../components/utility-components/Container";
 
 const Privacy = () => {
+  let router = useRouter();
+
   return (
     <>
-      <InputPageHeader />
+      <InputPageHeader
+        handleNewSearchBtnClick={() => {
+          router.push("/");
+        }}
+      />
       <Container className="mt-10 p-10 text-justify text-paragraph text-dark">
         <div className="mb-[4rem] text-[1.5rem]">
           <h1 className="mt-[3rem] text-center text-[3rem] font-bold">Privacy Policy</h1>
