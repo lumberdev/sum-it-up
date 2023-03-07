@@ -3,7 +3,7 @@ import HeaderText from "../../assets/header-text.svg";
 import HeaderMusic from "../../assets/header-music.svg";
 import Container from "../utility-components/Container";
 
-const InputPageHeader = () => {
+const InputPageHeader = ({ handleNewSearchBtnClick }: { handleNewSearchBtnClick: () => void }) => {
   return (
     <header className="flex min-h-[14rem] w-full flex-col pt-12 md:pt-16">
       <Container className="text-center">
@@ -11,7 +11,7 @@ const InputPageHeader = () => {
           <div className="relative w-[5.8rem] sm:w-[8rem] md:top-10 md:w-[14.5rem]">
             <HeaderText className="inline-block" />
           </div>
-          <div className="w-[11.6rem] md:w-[14rem]">
+          <div className="w-[11.6rem] cursor-pointer md:w-[14rem]" onClick={handleNewSearchBtnClick}>
             <SumItUpLogo className="w-full" />
           </div>
           <div className="relative w-[5.8rem] sm:w-[8rem] md:top-10 md:w-[14.5rem]">

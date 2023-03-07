@@ -17,8 +17,8 @@ const ResultPageHeader = ({
     <header className="w-full py-8 md:py-10">
       <Container className="text-center">
         <div className="mx-auto flex w-full items-center justify-between rounded-full bg-primary p-[1.4rem] md:rounded-none md:bg-transparent md:p-0">
-          <div className="relative flex-1">
-            <SumItUpLogo className="main-logo w-[5.2rem] md:w-[8.2rem]" />
+          <div className="relative flex-1 cursor-pointer" onClick={handleNewSearchBtnClick}>
+            <SumItUpLogo className="main-logo  w-[5.2rem] md:w-[8.2rem]" />
           </div>
           <div className="hidden flex-1 md:block">
             {resultPageContent && setResultPageContent ? (

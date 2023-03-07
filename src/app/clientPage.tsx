@@ -9,18 +9,23 @@ import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
 import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
+import { isValidJSON } from "~/utils/isValidJSON";
+import About from "~/components/About";
+import MinHeightBodyContainer from "~/components/utility-components/MinHeightBodyContainer";
 
-export default function ClientPage({
-  searchParams,
-}: {
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) {
-  const [originalContent, setOriginalContent] = useState(searchParams?.original ?? "");
+export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
+  const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
+  const urlRegex = /^(https?:\/\/)?[0-9a-z-_]*(\.[0-9a-z-_]+)*(\.[a-z]+)+(\/[0-9a-z-_]*)*?\/?$/i;
+  const [displayOriginalContent, setDisplayOriginalContent] = useState(
+    urlRegex.test(searchParams.original) ? "" : searchParams.original,
+  );
   const [displayResult, setDisplayResult] = useState<boolean>(
-    getStringOrFirst(searchParams?.original).length > 0 && getStringOrFirst(searchParams?.result).length > 0,
+    searchParams.original.length > 0 && searchParams.result.length > 0,
   );
   const [currentResult, setCurrentResult] = useState<ResponseType | null>(
-    searchParams?.result && JSON.parse(getStringOrFirst(searchParams.result)),
+    searchParams?.result &&
+      isValidJSON(getStringOrFirst(searchParams.result)) &&
+      JSON.parse(getStringOrFirst(searchParams.result)),
   );
   const [songDetails, setSongDetails] = useState("");
 
@@ -34,20 +39,24 @@ export default function ClientPage({
     trackShare,
   } = useAnalytics();
 
-  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError, setIsError, reset } =
-    useOpenAiSSEResponse({
-      onSuccess: (res: ResponseType) => {
-        setLocalStorage(res);
-        trackRequestCompleted({ type: res.type, output: streamedResult });
-      },
-      onStream: (res) => {
-        setDisplayResult(true);
-        setCurrentResult(res);
-      },
-      onError: (err, data) => {
-        trackRequestError({ ...data, error: (err?.message as string) ?? "" });
-      },
-    });
+  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError } = useOpenAiSSEResponse({
+    onSuccess: (res: ResponseType) => {
+      setLocalStorage(res);
+      trackRequestCompleted({ type: res.type, output: streamedResult });
+    },
+    onStream: (res) => {
+      setDisplayResult(true);
+      setCurrentResult(res);
+    },
+    onReadability: (res) => {
+      setDisplayOriginalContent(res.content);
+    },
+    onError: (err, data) => {
+      setDisplayResult(false);
+      trackRequestError({ ...data, error: (err?.message as string) ?? "" });
+    },
+  });
+
   const handleFormSubmit: InputFormSubmissionType = async (
     event,
     type,
@@ -61,6 +70,7 @@ export default function ClientPage({
     setSongDetails(songInfo);
     if (type === "text") {
       setSongDetails("");
+      text?.length && setDisplayOriginalContent(text);
       text?.length && setOriginalContent(text);
     } else {
       inputUrl?.length && setOriginalContent(inputUrl);
@@ -78,6 +88,7 @@ export default function ClientPage({
     setDisplayResult(false);
     setOriginalContent("");
     setCurrentResult(null);
+    setDisplayOriginalContent("");
     setSongDetails("");
     window.history.replaceState(null, "", window.location.origin);
     trackNewSummary();
@@ -93,29 +104,41 @@ export default function ClientPage({
       localStorage.setItem("summaries", JSON.stringify([newData]));
     }
   };
-  if (isError) return <Error reset={forceClose} setIsError={setIsError} />;
+  if (isError) return <Error reset={handleNewSearchBtnClick} />;
   if (isLoading || (!displayResult && isLoadingSSE))
-    return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
+    return (
+      <Loading
+        summaryContent={originalContent}
+        songDetails={songDetails}
+        handleNewSearchBtnClick={handleNewSearchBtnClick}
+      />
+    );
 
   return (
     <>
       {displayResult ? (
-        <Result
-          trackShare={trackShare}
-          summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
-          handleNewSearchBtnClick={handleNewSearchBtnClick}
-          originalContent={originalContent}
-          songDetails={songDetails}
-          isLoadingSSE={isLoadingSSE}
-        />
+        <MinHeightBodyContainer>
+          <Result
+            trackShare={trackShare}
+            summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
+            handleNewSearchBtnClick={handleNewSearchBtnClick}
+            originalContent={originalContent}
+            displayOriginalContent={displayOriginalContent}
+            songDetails={songDetails}
+            isLoadingSSE={isLoadingSSE}
+          />
+        </MinHeightBodyContainer>
       ) : (
         <>
-          <InputPageHeader />
-          <InputComponent
-            handleFormSubmit={handleFormSubmit}
-            onInputChange={trackInputSelection}
-            onLengthChange={trackLengthSelection}
-          />
+          <MinHeightBodyContainer>
+            <InputPageHeader handleNewSearchBtnClick={handleNewSearchBtnClick} />
+            <InputComponent
+              handleFormSubmit={handleFormSubmit}
+              onInputChange={trackInputSelection}
+              onLengthChange={trackLengthSelection}
+            />
+          </MinHeightBodyContainer>
+          <About />
         </>
       )}
     </>
