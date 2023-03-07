@@ -18,7 +18,7 @@ const getHTML = async (url: string): Promise<string> => {
       headers: { "User-Agent": userAgent },
     });
 
-    if (res.status === 404) {
+    if (res.status !== 200) {
       // If googleusercontent cache search fails, use the raw url version.
       res = await fetch(url, {
         method: "get",

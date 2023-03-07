@@ -48,6 +48,10 @@ module.exports = {
           "100%": { opacity: 1 },
         },
       },
+      height: {
+        footerDesktop: "5rem",
+        footerMobile: "7.9rem",
+      },
     },
   },
   plugins: [],

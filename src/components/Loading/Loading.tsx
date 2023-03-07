@@ -10,12 +10,10 @@ import OnIt from "../../assets/On-It.svg";
 const Loading = ({
   summaryContent,
   songDetails,
-  reset,
   handleNewSearchBtnClick,
 }: {
   summaryContent: string | string[];
   songDetails: string;
-  reset: () => void;
   handleNewSearchBtnClick: () => void;
 }) => {
   const summaryInput = songDetails || summaryContent;
@@ -31,7 +29,7 @@ const Loading = ({
               <button
                 className="mx-auto inline-flex h-[3.4rem] min-w-[11.1rem] items-center justify-center rounded-full border-2 border-white bg-transparent text-sm font-bold uppercase text-white md:hidden md:h-20 md:min-w-[18rem] md:border-primary md:text-lg md:text-primary"
                 type="button"
-                onClick={() => reset()}
+                onClick={() => handleNewSearchBtnClick()}
               >
                 New Summary
               </button>

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchArticleData } from "~/query/fetch-article-data";
 import {
   ContentType,
@@ -21,24 +21,31 @@ const useOpenAiSSEResponse = ({
   onSuccess,
   onStream,
   onError,
+  onReadability,
 }: {
   onSuccess?: (res: ResponseType) => unknown;
   onStream?: (res: ResponseType) => unknown;
   onError?: (error: { message: string }, data: RequestBody) => unknown;
+  onReadability?: (data: { [key: string]: string }) => unknown;
 }) => {
+  // store callbacks here so if they ever change they don't rerender the internal hook state.
+  const callbackFunctionRefs = useRef({ onSuccess, onStream, onError });
+
   const [streamedResult, setStreamedResult] = useState<string>("");
   const [isLoadingSSE, setIsLoadingSSE] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const [textContent, setTextContent] = useState("");
+
+  const earlyClose = useRef(false);
 
   const readabilityData = {
     title: "",
     dir: "",
     type: "article" as ContentType,
     byline: "",
-    // content: "",
+    content: "",
     url: "",
   };
-
   const initTextMappedPoints = {
     keyPoints: [],
     bias: "",
@@ -48,50 +55,20 @@ const useOpenAiSSEResponse = ({
     ...readabilityData,
   };
 
-  const initSongMappedPoints = {
-    mood: "",
-    moodColor: "",
-    meaning: "",
-    ...readabilityData,
-  };
+  // const initSongMappedPoints = {
+  //   mood: "",
+  //   moodColor: "",
+  //   meaning: "",
+  //   ...readabilityData,
+  // };
   // useRef to get most updated result without rerender
   const mappedResult = useRef<TextSummaryResponseType | SongMeaningResponseType>(initTextMappedPoints);
 
   const fetchRef = useRef<() => unknown>();
 
-  const streamContent = async (data: RequestBody) => {
-    const { wordLimit, type, url, text } = data;
-    setIsLoadingSSE(true);
-    mappedResult.current = type === "song" ? { ...initSongMappedPoints, type } : { ...initTextMappedPoints, type };
-    const buildContentToStream = async () => {
-      let textContent = "";
-      if (type === "article" || type === "song") {
-        const json = await fetchArticleData(url, 500);
-        mappedResult.current = {
-          ...mappedResult.current,
-          byline: json.byline,
-          title: json.title,
-          dir: json.dir,
-          url,
-          // content: json.content,
-        };
-        const body = await getSummaryFromUrl(type, json.chunkedTextContent);
-        textContent = body;
-      } else {
-        const chunkedText = textToChunks(text ?? "", 500);
-        textContent = await getSummaryFromUrl(type, chunkedText);
-      }
-      return textContent;
-    };
-    let textContent = "";
-    try {
-      textContent = await buildContentToStream();
-    } catch (err) {
-      setIsError(true);
-      onError && onError(err as { message: string }, data);
-      return;
-    }
-    setStreamedResult("");
+  const streamContent = useCallback(({ data, textContent }: { data: RequestBody; textContent: string }) => {
+    const { onStream, onSuccess, onError } = callbackFunctionRefs.current;
+    const { wordLimit, type } = data;
     if (!data || !Object.keys(data).length) return;
 
     const promptText =
@@ -112,6 +89,7 @@ const useOpenAiSSEResponse = ({
       temperature: 0.2,
       presence_penalty: 0.5,
     };
+
     fetchRef.current = fetchServerSent(
       "https://api.openai.com/v1/completions",
       {
@@ -142,6 +120,7 @@ const useOpenAiSSEResponse = ({
               bias: array?.[2],
               tone: array?.[3],
               trust: Number(array?.[4]),
+              type,
             };
           else
             mappedResult.current = {
@@ -159,25 +138,81 @@ const useOpenAiSSEResponse = ({
         setIsError(true);
       },
     );
+  }, []);
+
+  const [data, setData] = useState<RequestBody | null>(null);
+
+  const initiate = async (data: RequestBody) => {
+    setIsError(false);
+    setIsLoadingSSE(true);
+    earlyClose.current = false;
+    const { type, url, text } = data;
+
+    const buildContentToStream = async () => {
+      let textContent = "";
+      if (type === "article" || type === "song") {
+        const json = await fetchArticleData(url, 500);
+        mappedResult.current = {
+          ...mappedResult.current,
+          type,
+          byline: json.byline,
+          title: json.title,
+          dir: json.dir,
+          url,
+        };
+        if (typeof onReadability === "function")
+          onReadability({
+            byline: json.byline,
+            title: json.title,
+            dir: json.dir,
+            url,
+            content: json.content,
+          });
+        const body = await getSummaryFromUrl(type, json.chunkedTextContent);
+        textContent = body;
+      } else {
+        const chunkedText = textToChunks(text ?? "", 500);
+        textContent = await getSummaryFromUrl(type, chunkedText);
+      }
+      return textContent;
+    };
+
+    let textContent = "";
+
+    textContent = await buildContentToStream();
+    return { textContent, data };
   };
 
   useEffect(() => {
-    !isLoadingSSE && fetchRef.current && fetchRef.current();
-  }, [isLoadingSSE]);
+    setStreamedResult("");
+    if (!textContent || !data || earlyClose.current) return;
+    streamContent({ data, textContent });
+  }, [textContent, data, earlyClose, streamContent]);
 
-  function forceClose() {
-    console.log("CLOSE", fetchRef.current);
-    if (!fetchRef.current) return;
-    fetchRef.current();
-    reset();
-    setIsLoadingSSE(false);
-  }
-
-  const { isLoading, mutate, reset } = useMutation({
-    mutationFn: streamContent,
+  const { mutate, reset, isLoading } = useMutation({
+    mutationFn: initiate,
+    onSuccess: (res) => {
+      setTextContent(res.textContent);
+      setData(res.data);
+    },
+    onError: (res, variables) => {
+      const { onError } = callbackFunctionRefs.current;
+      onError && onError(res as { message: string }, variables);
+      setIsError(true);
+    },
   });
 
-  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, reset };
+  function forceClose() {
+    earlyClose.current = true;
+    reset();
+    setData(null);
+    setIsError(false);
+    setIsLoadingSSE(false);
+    if (!fetchRef.current) return;
+    fetchRef.current();
+  }
+
+  return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, readabilityData };
 };
 
 export default useOpenAiSSEResponse;
