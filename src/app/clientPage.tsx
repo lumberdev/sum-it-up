@@ -104,8 +104,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       localStorage.setItem("summaries", JSON.stringify([newData]));
     }
   };
-
-  if (isError) return <Error />;
+  if (isError) return <Error handleNewSearchBtnClick={handleNewSearchBtnClick} />;
   if (isLoading || (!displayResult && isLoadingSSE))
     return (
       <Loading

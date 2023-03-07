@@ -4,8 +4,8 @@ import { ResultPageContentType } from "~/types";
 import ResultPageContentToggler from "../utility-components/result/ResultPageContentToggler";
 
 type ResultPageHeaderPropType = {
-  resultPageContent: ResultPageContentType;
-  setResultPageContent: (type: ResultPageContentType) => void;
+  resultPageContent?: ResultPageContentType;
+  setResultPageContent?: (type: ResultPageContentType) => void;
   handleNewSearchBtnClick: () => void;
 };
 const ResultPageHeader = ({
@@ -21,10 +21,12 @@ const ResultPageHeader = ({
             <SumItUpLogo className="main-logo  w-[5.2rem] md:w-[8.2rem]" />
           </div>
           <div className="hidden flex-1 md:block">
-            <ResultPageContentToggler
-              resultPageContent={resultPageContent}
-              setResultPageContent={setResultPageContent}
-            />
+            {resultPageContent && setResultPageContent ? (
+              <ResultPageContentToggler
+                resultPageContent={resultPageContent}
+                setResultPageContent={setResultPageContent}
+              />
+            ) : null}
           </div>
           <div className="relative flex-1 text-right">
             <button
