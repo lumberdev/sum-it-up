@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputComponent from "~/components/Input/Input";
 import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
 import InputPageHeader from "~/components/Input/InputPageHeader";
@@ -8,6 +8,7 @@ import Loading from "~/components/Loading/Loading";
 import Error from "~/components/Error/Error";
 import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
 import useAnalytics from "~/hooks/use-analytics";
+import useFetchReadabilityOnLoad from "~/hooks/useFetchReadabilityOnLoad";
 import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 import { isValidJSON } from "~/utils/isValidJSON";
 import About from "~/components/About";
@@ -15,10 +16,19 @@ import MinHeightBodyContainer from "~/components/utility-components/MinHeightBod
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
-  const urlRegex = /^(https?:\/\/)?[0-9a-z-_]*(\.[0-9a-z-_]+)*(\.[a-z]+)+(\/[0-9a-z-_]*)*?\/?$/i;
-  const [displayOriginalContent, setDisplayOriginalContent] = useState(
-    urlRegex.test(searchParams.original) ? "" : searchParams.original,
-  );
+
+  const {
+    data: original,
+    error: err,
+    isLoading: initLoadingReadability,
+  } = useFetchReadabilityOnLoad(searchParams.original);
+
+  const [displayOriginalContent, setDisplayOriginalContent] = useState(original);
+
+  useEffect(() => {
+    setDisplayOriginalContent(original);
+  }, [original]);
+
   const [displayResult, setDisplayResult] = useState<boolean>(
     searchParams.original.length > 0 && searchParams.result.length > 0,
   );
@@ -27,7 +37,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       isValidJSON(getStringOrFirst(searchParams.result)) &&
       JSON.parse(getStringOrFirst(searchParams.result)),
   );
-  const [songDetails, setSongDetails] = useState("");
+  const [songDetails, setSongDetails] = useState(searchParams.songDetails.length > 0 ? searchParams.songDetails : "");
 
   const {
     trackInputSelection,
@@ -70,11 +80,12 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     setSongDetails(songInfo);
     if (type === "text") {
       setSongDetails("");
-      text?.length && setDisplayOriginalContent(text);
       text?.length && setOriginalContent(text);
+      text?.length && setDisplayOriginalContent(text);
     } else {
       inputUrl?.length && setOriginalContent(inputUrl);
     }
+
     trackSubmit({ type: type, length: customLength || summaryLength, input: inputUrl || text || "" });
     mutate({
       url: inputUrl ?? "",
@@ -86,8 +97,8 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   const handleNewSearchBtnClick = () => {
     forceClose();
     setDisplayResult(false);
-    setOriginalContent("");
     setCurrentResult(null);
+    setOriginalContent("");
     setDisplayOriginalContent("");
     setSongDetails("");
     window.history.replaceState(null, "", window.location.origin);
