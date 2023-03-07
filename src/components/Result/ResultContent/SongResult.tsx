@@ -14,17 +14,17 @@ type SongResultPropType = {
 
 const SongResult = ({
   songMeaningResponse,
-  originalContent,
   songDetails,
+  originalContent,
   isLoadingSSE,
   trackShare,
 }: SongResultPropType) => {
   useEffect(() => {
     if (!isLoadingSSE) {
-      const encodedUrl = encodeStateToUrl(songDetails, songMeaningResponse);
+      const encodedUrl = encodeStateToUrl(originalContent, songMeaningResponse, songDetails);
       history.replaceState({}, "", encodedUrl);
     }
-  }, [isLoadingSSE, songDetails, songMeaningResponse]);
+  }, [isLoadingSSE, originalContent, songDetails, songMeaningResponse]);
   return (
     <Container>
       <div className="mx-auto mb-12 max-w-[75rem] animate-fadeIn rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
@@ -33,6 +33,7 @@ const SongResult = ({
           <div className="hidden md:block">
             <ShareLinkButton
               trackShare={trackShare}
+              songDetails={songDetails}
               responseObject={songMeaningResponse}
               originalContent={originalContent}
               disabled={isLoadingSSE}
@@ -44,6 +45,7 @@ const SongResult = ({
           <div className="mt-10 block md:hidden">
             <ShareLinkButton
               trackShare={trackShare}
+              songDetails={songDetails}
               responseObject={songMeaningResponse}
               originalContent={originalContent}
             />

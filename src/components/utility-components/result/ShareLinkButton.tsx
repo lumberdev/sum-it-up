@@ -7,11 +7,13 @@ const ShareLinkButton = ({
   originalContent,
   responseObject,
   disabled,
+  songDetails,
   trackShare,
 }: {
   originalContent: string;
   trackShare: (properties: { shareURL: string }) => void;
   responseObject: ResponseType;
+  songDetails?: string;
   disabled?: boolean;
 }) => {
   const { copyToClipboard, didCopy } = useCopyToClipboard();
@@ -19,7 +21,7 @@ const ShareLinkButton = ({
     <button
       onClick={() => {
         const originalContentString = originalContent;
-        const encodedUrl = encodeStateToUrl(originalContentString, responseObject);
+        const encodedUrl = encodeStateToUrl(originalContentString, responseObject, songDetails);
         copyToClipboard(encodedUrl);
         trackShare({ shareURL: encodedUrl });
       }}
