@@ -1,8 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 @layer base {
@@ -66,4 +67,17 @@
   input[type="text"]::-webkit-input-placeholder {
     color: #3a2adc;
   }
+
+  .main-logo path {
+    fill: #ffffff;
+  }
+  @media screen and (min-width: 768px) {
+    .main-logo path {
+      fill: #3a2adc;
+    }
+  }
+}
+
+.render-span-block * > span {
+  display: block;
 }

@@ -1,14 +1,6 @@
 import { openAiGetUseableTextContent, openAIRequest } from "~/api-functions/open-ai-request";
-import { fetchArticleData } from "~/query/fetch-article-data";
-import {
-  ContentType,
-  SongType,
-  TextResponse,
-  ResponseType,
-  DocumentResponseData,
-  OpenAiRequestProps,
-  DataType,
-} from "~/types";
+
+import { ContentType, SongType, TextResponse, ResponseType, DocumentResponseData, DataType } from "~/types";
 
 async function callWithText(text: string, wordLimit: number, type: ContentType): Promise<TextResponse> {
   try {
@@ -36,7 +28,7 @@ async function callWithUrl(
 ): Promise<ResponseType> {
   try {
     const CHUNK_LENGTH = 500;
-    // await fetchRetry(`/readability?url_resource=${url}`, 100, 3)
+
     const json = await articleFetcher(url, CHUNK_LENGTH);
 
     const body = await getSummaryFromUrl(type, json.chunkedTextContent);
@@ -47,6 +39,7 @@ async function callWithUrl(
       byline: json.byline,
       dir: json.dir,
       title: json.title,
+      content: json.content,
       url,
       trust: 0,
       ...response,

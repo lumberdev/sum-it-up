@@ -7,12 +7,9 @@ import {
 } from "~/utils/generatePrompt";
 import { ContentType, DataType, OpenAiRequestProps, OpenAiSummarizeProps, SongType } from "~/types";
 
-function getValidProps(type: ContentType, chunkedTextContent: Array<string>, text: string) {
+function getValidProps(type: ContentType, chunkedTextContent: Array<string>) {
   switch (type) {
     case "text":
-      if (!text || !text.length) throw new Error("no data provided");
-      return [text];
-
     case "song":
     case "article":
       if (!chunkedTextContent || !chunkedTextContent.length) throw new Error("no data provided");
@@ -28,7 +25,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const openAICompletion = async (promptText: string, max_tokens: number) => {
+const openAICompletion = async (promptText: string, max_tokens: number): Promise<string> => {
   const completion = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: promptText,
@@ -42,7 +39,7 @@ const openAICompletion = async (promptText: string, max_tokens: number) => {
 };
 
 export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
-  const content = getValidProps(props.type, props.chunkedTextContent ?? [], props.text ?? "");
+  const content = getValidProps(props.type, props.chunkedTextContent ?? []);
   let textContent = "";
   if (content.length > 1) {
     const promises = content.map(
@@ -50,7 +47,12 @@ export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
         await openAICompletion(generateCondensedSummaryPrompt(string, props.wordLimit), props.maxToken ?? 50),
     );
     const results = await Promise.allSettled(promises);
-    results.forEach((res) => (textContent += res.status === "fulfilled" ? res.value : ""));
+    const filteredRejection = results.filter((res) => res.status !== "rejected");
+
+    filteredRejection.forEach((res) => (textContent += res.status === "fulfilled" ? res.value : ""));
+
+    // @ts-ignore
+    if (textContent === "") throw new Error(results?.[0]?.reason?.message);
   } else {
     textContent = content[0];
   }
@@ -91,7 +93,7 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
       trust: undefined,
     };
     try {
-      parsedResponseData = await JSON.parse(completionText);
+      parsedResponseData = await JSON.parse(completionText as string);
     } catch (error) {
       throw new Error("Invalid JSON response from OpenAi");
     }

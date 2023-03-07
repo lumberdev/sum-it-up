@@ -1,87 +1,36 @@
-"use client";
-import { useState } from "react";
-import InputComponent from "~/components/Input/Input";
-import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
-import InputPageHeader from "~/components/Input/InputPageHeader";
-import Result from "~/components/Result/Result";
-import Loading from "~/components/Loading/Loading";
-import Error from "~/components/Error/Error";
-import useOpenAiSSEResponse from "~/hooks/useOpenAiSSEResponse";
+import "server-only";
+// this seems like an open issue, search params returned empty object, so had to force-dynamic : https://github.com/vercel/next.js/issues/43077
+export const dynamic = "force-dynamic";
 
-export default function Home() {
-  const [originalContent, setOriginalContent] = useState("");
-  const [displayResult, setDisplayResult] = useState(false);
-  const [currentResult, setCurrentResult] = useState<ResponseType | null>(null);
-  const [songDetails, setSongDetails] = useState("");
+import readability from "~/api-functions/readability";
+import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
+import ClientPage from "./clientPage";
 
-  const { mutate, isLoading, isLoadingSSE, isError, reset } = useOpenAiSSEResponse({
-    onSuccess: (res: ResponseType) => {
-      setLocalStorage(res);
-    },
-    onStream: (res) => {
-      setDisplayResult(true);
-      setCurrentResult(res);
-    },
-  });
-  const handleFormSubmit: InputFormSubmissionType = async (
-    event,
-    type,
-    summaryLength,
-    customLength,
-    inputUrl,
-    text,
-    songInfo = "",
-  ) => {
-    event.preventDefault();
-    setSongDetails(songInfo);
-    if (type === "text") {
-      setSongDetails("");
-      text?.length && setOriginalContent(text);
-    } else {
-      inputUrl?.length && setOriginalContent(inputUrl);
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const urlRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b/;
+  // Fetch readability data in server and pass to client side
+  const fetchReadabilityOnLoad = async () => {
+    const original = getStringOrFirst(searchParams?.original).trim();
+    if (urlRegex.test(original)) {
+      try {
+        const json = await readability(original, 500);
+        return json.content;
+      } catch (e) {
+        console.log(e);
+        return original;
+      }
     }
-    mutate({
-      url: inputUrl ?? "",
-      wordLimit: parseInt(customLength || summaryLength),
-      type,
-      text,
-    });
-  };
-  const handleNewSearchBtnClick = () => {
-    setDisplayResult(false);
+    return original;
   };
 
-  const setLocalStorage = (newData: ResponseType) => {
-    const existingData = localStorage.getItem("summaries");
-    if (existingData) {
-      const existingDataArr: ResponseType[] = JSON.parse(existingData);
-      existingDataArr.push(newData);
-      localStorage.setItem("summaries", JSON.stringify(existingDataArr));
-    } else {
-      localStorage.setItem("summaries", JSON.stringify([newData]));
-    }
+  const parsedSearchParams = {
+    original: await fetchReadabilityOnLoad(),
+    result: getStringOrFirst(searchParams?.result),
   };
-  // TODO: Refactor loading and error states
-  if (isLoading || (!displayResult && isLoadingSSE))
-    return <Loading reset={reset} summaryContent={originalContent} songDetails={songDetails} />;
 
-  if (isError) return <Error />;
-
-  return (
-    <>
-      {displayResult ? (
-        <Result
-          summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
-          handleNewSearchBtnClick={handleNewSearchBtnClick}
-          originalContent={originalContent}
-          songDetails={songDetails}
-        />
-      ) : (
-        <>
-          <InputPageHeader />
-          <InputComponent handleFormSubmit={handleFormSubmit} />
-        </>
-      )}
-    </>
-  );
+  return <ClientPage searchParams={parsedSearchParams} />;
 }
