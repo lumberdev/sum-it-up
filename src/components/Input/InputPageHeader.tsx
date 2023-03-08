@@ -19,7 +19,7 @@ const InputPageHeader = ({ handleNewSearchBtnClick }: { handleNewSearchBtnClick:
           </div>
         </div>
         <div className="mx-auto mt-7 px-12 text-base font-bold text-dark md:mt-0 md:max-w-[70%] md:text-xl lg:max-w-none">
-          Get an instant summary of any text, website content (URL) or song for free.
+          Get an instant summary of any text, article content (URL) or song for free.
         </div>
       </Container>
     </header>

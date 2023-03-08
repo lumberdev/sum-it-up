@@ -76,6 +76,11 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     text,
     songInfo = "",
   ) => {
+    let validURL = inputUrl;
+    // Readability requires us to send urls with the correct format, but because we want to support more forms of urls (google.com || www.google.com || https://www.google.com etc) we need to append the protocol before we send the data off.
+    if (inputUrl && !/(https:\/\/) | (http:\/\/)/i.test(inputUrl)) {
+      validURL = "http://" + validURL;
+    }
     event.preventDefault();
     setSongDetails(songInfo);
     if (type === "text") {
@@ -83,12 +88,12 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       text?.length && setOriginalContent(text);
       text?.length && setDisplayOriginalContent(text);
     } else {
-      inputUrl?.length && setOriginalContent(inputUrl);
+      validURL?.length && setOriginalContent(validURL);
     }
 
-    trackSubmit({ type: type, length: customLength || summaryLength, input: inputUrl || text || "" });
+    trackSubmit({ type: type, length: customLength || summaryLength, input: validURL || text || "" });
     mutate({
-      url: inputUrl ?? "",
+      url: validURL ?? "",
       wordLimit: Number(customLength || summaryLength),
       type,
       text,

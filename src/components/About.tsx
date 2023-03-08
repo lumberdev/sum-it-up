@@ -6,7 +6,7 @@ const About = () => {
       <div className="mx-auto max-w-[88rem] rounded-[1rem] bg-white px-10 py-20 md:px-20">
         <h4 className="mb-8 text-center text-xl font-bold md:mb-10 md:text-heading3">ABOUT</h4>
         <p className="mb-4">
-          Sum It Up is the ultimate AI tool for summarizing any text, website, or song. With its advanced algorithms and
+          Sum It Up is the ultimate AI tool for summarizing any text, article, or song. With its advanced algorithms and
           natural language processing capabilities, Sum It Up quickly and accurately condenses long articles, lengthy
           web pages, and even complete songs into easy-to-read summaries. Whether you&apos;re a busy professional
           looking to stay informed, a student trying to stay on top of your reading list, or just someone who wants to
@@ -20,8 +20,8 @@ const About = () => {
           will do the rest. You can even save summaries for later reference or share them with others.
         </p>
         <p className="mb-4">
-          Another great feature of Sum It Up is its ability to summarize websites. Whether you&apos;re trying to get a
-          quick overview of a news article, a product review, or a blog post, Sum It Up can condense the important
+          Another great feature of Sum It Up is its ability to summarize article content. Whether you&apos;re trying to
+          get a quick overview of a news article, a product review, or a blog post, Sum It Up can condense the important
           information into a single, easy-to-read summary. This can save you a lot of time when you&apos;re trying to
           stay on top of the latest news or trends.
         </p>
@@ -30,7 +30,7 @@ const About = () => {
           inspiration or just someone who wants to understand the main themes of a song, Sum It Up can help. With its
           advanced analysis capabilities, Sum It Up can identify the key lyrics and themes of any song, making it a
           valuable tool for anyone who wants to get a better understanding of the music they love. All in all, Sum It Up
-          is the best tool for summarizing any text, website or song. Try it today and see for yourself how much time
+          is the best tool for summarizing any text, article or song. Try it today and see for yourself how much time
           and effort it can save you.
         </p>
       </div>

@@ -11,7 +11,7 @@ export const metadata = {
     maximumScale: 1,
   },
   openGraph: {
-    title: "Sum It Up! | The free AI Summary Tool | Texts, Websites, Songs",
+    title: "Sum It Up! | The free AI Summary Tool | Texts, Articles, Songs",
     description:
       "Use AI to summarize texts, URLs and even song lyrics in seconds. Save time and get the gist of any content effortlessly. Try it now.",
     url: process.env.NEXT_HOST_URL,
