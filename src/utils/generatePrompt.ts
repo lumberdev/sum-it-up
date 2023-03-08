@@ -1,3 +1,5 @@
+import { ChatGPTPromptPropsItem } from "~/types";
+
 export function generatePromptArticle(article: string | string[], wordLimit: number) {
   return `{${article}}
 
@@ -91,5 +93,50 @@ export const modifier = (wordLimit: number) => {
   if (wordLimit < 50) return "an extremely short";
   if (wordLimit < 100) return "a short";
   if (wordLimit < 200) return "a very detailed";
-  return "multiple paragraphs of an incredibly long, detailed, and verbose and longwinded text in the style of a new york times article";
+  return "multiple paragraphs of an incredibly long, detailed, and verbose and long-winded text in the style of a new york times article";
 };
+
+/* ------ Chat GPT Prompts below ------ */
+
+// As of March 8, 2023, chatGPT api docs recommends setting the system role to user to set more explicit instructions as sometimes the system prompt is ignored by some models
+
+// https://platform.openai.com/docs/guides/chat/instructing-chat-models
+
+export function generateCondensedSummaryPromptObjectArray(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
+  return [
+    { role: "user", content: text },
+    {
+      role: "user",
+      content: `generate an extremely short summary of up to ${wordLimit} words based on the text`,
+    },
+  ];
+}
+
+export function generatePromptSongSSEObjectArray(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
+  return [
+    { role: "user", content: text },
+    {
+      role: "system",
+      content: `${modifier(wordLimit)} ${wordLimit} word length summary of the meaning of the song lyrics submitted.`,
+    },
+  ];
+}
+
+export function generatePromptTextSSEObjectArray(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
+  return [
+    {
+      role: "system",
+      content: `You are a CSV bot, you MUST use %% as the delimeter: ${modifier(
+        wordLimit,
+      )} summary of the incoming user text formatted as a csv with %% as the delimiter. Formatted like this:\n\n
+        summary%%keypoints%%bias%%tone%%trust\n
+        ${modifier(
+          wordLimit,
+        )} ${wordLimit} word length summary summarizing the text YOU MUST REACH ${wordLimit} words %% Array of Key Points of 70 words or less Separated by '|' %% 1 - 2 word string %% String %% number from 1 through 10, 10 is most trustworthy`,
+    },
+    {
+      role: "user",
+      content: `Summarize this and output a CSV with %% as the delimiter, you MUST use %% as the delimeter: ${text}`,
+    },
+  ];
+}
