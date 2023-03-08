@@ -117,7 +117,9 @@ export function generatePromptSongSSEObjectArray(text: string, wordLimit: number
     { role: "user", content: text },
     {
       role: "system",
-      content: `${modifier(wordLimit)} ${wordLimit} word length summary of the meaning of the song lyrics submitted.`,
+      content: `${modifier(
+        wordLimit,
+      )} ${wordLimit} word length interpretation of the meaning of the song lyrics submitted.`,
     },
   ];
 }
@@ -126,17 +128,11 @@ export function generatePromptTextSSEObjectArray(text: string, wordLimit: number
   return [
     {
       role: "system",
-      content: `You are a CSV bot, you MUST use %% as the delimeter: ${modifier(
-        wordLimit,
-      )} summary of the incoming user text formatted as a csv with %% as the delimiter. Formatted like this:\n\n
-        summary%%keypoints%%bias%%tone%%trust\n
-        ${modifier(
-          wordLimit,
-        )} ${wordLimit} word length summary summarizing the text YOU MUST REACH ${wordLimit} words %% Array of Key Points of 70 words or less Separated by '|' %% 1 - 2 word string %% String %% number from 1 through 10, 10 is most trustworthy`,
+      content: `I want you to act as a new york times article author. Given the user text contained in curly braces respond with a short ${wordLimit} word article about the text. First generate the article summary, then generate a list of key points with "*>" as bullet the  under the key "KEYS", then generate a 1 word string of the bias under the key "BIAS", then generate a 1 word string of the tone under the key "TONE", then generate a 1 number verdict of trust out of 10 inclusive (10 is highest trust) under the key "TRUST"`,
     },
     {
       role: "user",
-      content: `Summarize this and output a CSV with %% as the delimiter, you MUST use %% as the delimeter: ${text}`,
+      content: `text: {${text}}`,
     },
   ];
 }

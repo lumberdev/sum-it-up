@@ -116,12 +116,15 @@ const useOpenAiSSEResponse = ({
 
         const text = JSON.parse(payload).choices?.[0]?.delta?.content ?? "";
         setStreamedResult((state) => {
-          const array = `${state}${text}`.split("%%");
+          const array = `${state}${text}`.split(/(KEYS:|TONE:|TRUST:|BIAS:)/i).reduce((acc: string[], value) => {
+            if (/(KEYS:|TONE:|TRUST:|BIAS:)/i.test(value)) return acc;
+            return [...acc, value];
+          }, []);
           if (type === "article" || type === "text")
             mappedResult.current = {
               ...mappedResult.current,
               summary: array?.[0],
-              keyPoints: array?.[1]?.split("|").filter((point) => point.trim() !== ""),
+              keyPoints: array?.[1]?.split("*>").filter((point) => point.trim() !== ""),
               bias: array?.[2],
               tone: array?.[3],
               trust: Number(array?.[4]),
@@ -135,6 +138,7 @@ const useOpenAiSSEResponse = ({
               moodColor: array?.[2],
             };
           onStream && onStream(mappedResult.current);
+
           return `${state}${text}`;
         });
       },
