@@ -4,24 +4,29 @@ import ReactQueryWrapper from "~/components/utility-components/ReactQueryWrapper
 import * as snippet from "@segment/snippet";
 import Script from "next/script";
 
+const metadataObject = {
+  title: "Sum It Up! | The free AI Summary Tool | Texts, Articles, Songs",
+  description:
+    "Use AI to summarize texts, URLs and even song lyrics in seconds. Save time and get the gist of any content effortlessly. Try it now.",
+  url: process.env.NEXT_HOST_URL,
+  images: [
+    {
+      url: `/shareImage.png`,
+      width: 800,
+      height: 600,
+    },
+  ],
+};
+
 export const metadata = {
   viewport: {
     width: "device-width",
     initialScale: 1,
     maximumScale: 1,
   },
+  ...metadataObject,
   openGraph: {
-    title: "Sum It Up! | The free AI Summary Tool | Texts, Articles, Songs",
-    description:
-      "Use AI to summarize texts, URLs and even song lyrics in seconds. Save time and get the gist of any content effortlessly. Try it now.",
-    url: process.env.NEXT_HOST_URL,
-    images: [
-      {
-        url: `/shareImage.png`,
-        width: 800,
-        height: 600,
-      },
-    ],
+    ...metadataObject,
   },
   robots: {
     index: true,
