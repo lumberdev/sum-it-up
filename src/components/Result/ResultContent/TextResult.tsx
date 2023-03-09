@@ -3,6 +3,7 @@ import { TextSummaryResponseType, TextResponse } from "~/types";
 import ShareLinkButton from "../../utility-components/result/ShareLinkButton";
 import { useEffect } from "react";
 import { encodeStateToUrl } from "~/utils/generateLinkToShare";
+import useAnalytics from "~/hooks/use-analytics";
 
 type TextResultPropType = {
   originalContent: string;
@@ -12,10 +13,12 @@ type TextResultPropType = {
 };
 
 const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE, trackShare }: TextResultPropType) => {
+  const { trackRequestCompleted } = useAnalytics();
   useEffect(() => {
     if (!isLoadingSSE) {
       const originalContentString = originalContent;
       const encodedUrl = encodeStateToUrl(originalContentString, textSummaryResponse);
+      trackRequestCompleted({ type: textSummaryResponse.type, output: JSON.stringify(textSummaryResponse) });
       history.replaceState({}, "", encodedUrl);
     }
   }, [isLoadingSSE, originalContent, textSummaryResponse]);

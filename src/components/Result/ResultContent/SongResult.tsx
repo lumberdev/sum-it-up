@@ -3,6 +3,7 @@ import { SongMeaningResponseType } from "~/types";
 import ShareLinkButton from "../../utility-components/result/ShareLinkButton";
 import { useEffect } from "react";
 import { encodeStateToUrl } from "~/utils/generateLinkToShare";
+import useAnalytics from "~/hooks/use-analytics";
 
 type SongResultPropType = {
   songMeaningResponse: SongMeaningResponseType;
@@ -19,9 +20,12 @@ const SongResult = ({
   isLoadingSSE,
   trackShare,
 }: SongResultPropType) => {
+  const { trackRequestCompleted } = useAnalytics();
+
   useEffect(() => {
     if (!isLoadingSSE) {
       const encodedUrl = encodeStateToUrl(originalContent, songMeaningResponse, songDetails);
+      trackRequestCompleted({ type: songMeaningResponse.type, output: songMeaningResponse.meaning });
       history.replaceState({}, "", encodedUrl);
     }
   }, [isLoadingSSE, originalContent, songDetails, songMeaningResponse]);
