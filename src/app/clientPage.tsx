@@ -45,14 +45,12 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     trackSubmit,
     trackNewSummary,
     trackRequestError,
-    trackRequestCompleted,
     trackShare,
   } = useAnalytics();
 
   const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError } = useOpenAiSSEResponse({
     onSuccess: (res: ResponseType) => {
       setLocalStorage(res);
-      trackRequestCompleted({ type: res.type, output: streamedResult });
     },
     onStream: (res) => {
       setDisplayResult(true);
