@@ -45,17 +45,15 @@ const TextInputField = ({
       <form
         onSubmit={(event: React.SyntheticEvent) => {
           if (inputValue.length < minChars) {
-            setInputError(
-              `Input must be at least ${minChars} characters long, currently at ${inputValue.length} characters`,
-            );
+            setInputError(`Input must be at least ${minChars} characters long`);
             event.preventDefault();
             return;
           }
           handleFormSubmit(event, type, summaryLength, customLength, "", inputValue);
         }}
       >
-        <div className="flex w-full flex-col rounded-md">
-          <div className="group mb-12 block min-h-[26rem] w-full resize-none overflow-hidden rounded-[20px] border-2  border-primary  bg-white ring-inset focus-within:ring-2 md:rounded-[30px]">
+        <div className="relative flex w-full flex-col rounded-md">
+          <div className=" group  mb-12 block min-h-[26rem] w-full resize-none overflow-hidden rounded-[20px] border-2  border-primary  bg-white ring-inset focus-within:ring-2 md:rounded-[30px]">
             <textarea
               className="block h-full min-h-[26rem] w-full resize-none overflow-y-auto  bg-transparent p-8 text-base font-medium outline-none transition-all placeholder:font-normal  placeholder:text-dark/70 md:p-12"
               name="text-input"
@@ -71,9 +69,7 @@ const TextInputField = ({
             </div>
           </div>
           {inputError.length > 0 && (
-            <div className=" absolute top-0 mx-auto w-full bg-white py-1 text-center text-primary opacity-80">
-              {inputError}
-            </div>
+            <div className="absolute top-0 mx-auto w-full  py-1 text-center text-primary opacity-80">{inputError}</div>
           )}
         </div>
 

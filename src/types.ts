@@ -57,7 +57,7 @@ export interface CustomRequest<T> extends NextApiRequest {
 }
 
 export enum InputType {
-  WEBSITE = "Website",
+  ARTICLE = "Article",
   TEXT = "Text",
   SONG = "Song",
 }
