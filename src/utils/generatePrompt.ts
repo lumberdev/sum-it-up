@@ -104,23 +104,23 @@ export const modifier = (wordLimit: number) => {
 
 export function generateCondensedSummaryPromptObjectArray(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
   return [
-    { role: "user", content: text },
     {
-      role: "user",
+      role: "system",
       content: `generate an extremely short summary of up to ${wordLimit} words based on the text`,
     },
+    { role: "user", content: text },
   ];
 }
 
 export function generatePromptSongSSEObjectArray(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
   return [
-    { role: "user", content: text },
     {
       role: "system",
       content: `${modifier(
         wordLimit,
       )} ${wordLimit} word length interpretation of the meaning of the song lyrics submitted.`,
     },
+    { role: "user", content: text },
   ];
 }
 
