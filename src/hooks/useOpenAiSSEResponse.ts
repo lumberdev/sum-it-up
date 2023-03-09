@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchArticleData } from "~/query/fetch-article-data";
 import {
+  ChatGPTModelRequest,
   ContentType,
   openAiModelRequest,
   RequestBody,
@@ -9,7 +10,12 @@ import {
   SongMeaningResponseType,
   TextSummaryResponseType,
 } from "~/types";
-import { generatePromptSongSSE, generatePromptTextSSE } from "~/utils/generatePrompt";
+import {
+  generatePromptSongSSE,
+  generatePromptSongSSEObjectArray,
+  generatePromptTextSSE,
+  generatePromptTextSSEObjectArray,
+} from "~/utils/generatePrompt";
 import { getSummaryFromUrl } from "~/utils/open-ai-fetch";
 import { fetchServerSent } from "~/utils/sse-fetch";
 import { textToChunks } from "~/utils/text-to-chunks";
@@ -71,27 +77,25 @@ const useOpenAiSSEResponse = ({
     const { wordLimit, type } = data;
     if (!data || !Object.keys(data).length) return;
 
-    const promptText =
-      type === "text"
-        ? generatePromptTextSSE(textContent, wordLimit)
-        : type === "article"
-        ? generatePromptTextSSE(textContent, wordLimit)
+    const promptObject =
+      type === "text" || type === "article"
+        ? generatePromptTextSSEObjectArray(textContent, wordLimit)
         : type === "song"
-        ? generatePromptSongSSE(textContent, wordLimit)
-        : "";
+        ? generatePromptSongSSEObjectArray(textContent, wordLimit)
+        : [];
 
     const multiplier = Math.min(wordLimit > 100 ? 2.5 : 1.3);
     const maxTokenLimit = Math.min(Math.round(wordLimit * multiplier) + 600, 2000);
-    const openAiPayload: openAiModelRequest = {
-      model: "text-davinci-003",
-      prompt: promptText,
+    const openAiPayload: ChatGPTModelRequest = {
+      model: "gpt-3.5-turbo",
+      messages: promptObject,
       max_tokens: maxTokenLimit,
       temperature: 0.2,
       presence_penalty: 0.5,
     };
 
     fetchRef.current = fetchServerSent(
-      "https://api.openai.com/v1/completions",
+      "https://api.openai.com/v1/chat/completions",
       {
         headers: {
           "Content-Type": "application/json",
@@ -109,14 +113,18 @@ const useOpenAiSSEResponse = ({
           onSuccess && onSuccess(mappedResult.current);
           return;
         }
-        const text = JSON.parse(payload).choices?.[0]?.text;
+
+        const text = JSON.parse(payload).choices?.[0]?.delta?.content ?? "";
         setStreamedResult((state) => {
-          const array = `${state}${text}`.split("%%");
+          const array = `${state}${text}`.split(/(KEYS:|TONE:|TRUST:|BIAS:)/i).reduce((acc: string[], value) => {
+            if (/(KEYS:|TONE:|TRUST:|BIAS:)/i.test(value)) return acc;
+            return [...acc, value];
+          }, []);
           if (type === "article" || type === "text")
             mappedResult.current = {
               ...mappedResult.current,
               summary: array?.[0],
-              keyPoints: array?.[1]?.split("|").filter((point) => point.trim() !== ""),
+              keyPoints: array?.[1]?.split("*>").filter((point) => point.trim() !== ""),
               bias: array?.[2],
               tone: array?.[3],
               trust: Number(array?.[4]),
@@ -130,6 +138,7 @@ const useOpenAiSSEResponse = ({
               moodColor: array?.[2],
             };
           onStream && onStream(mappedResult.current);
+
           return `${state}${text}`;
         });
       },

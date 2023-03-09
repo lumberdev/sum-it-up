@@ -5,7 +5,7 @@ import Container from "../utility-components/Container";
 
 const InputPageHeader = ({ handleNewSearchBtnClick }: { handleNewSearchBtnClick: () => void }) => {
   return (
-    <header className="flex min-h-[14rem] w-full flex-col pt-12 md:pt-16">
+    <div className="flex min-h-[14rem] w-full flex-col pt-12 md:pt-16">
       <Container className="text-center">
         <div className="mx-auto flex w-full max-w-[100rem] items-end justify-between px-8 md:items-start md:px-0">
           <div className="relative w-[5.8rem] sm:w-[8rem] md:top-10 md:w-[14.5rem]">
@@ -22,7 +22,7 @@ const InputPageHeader = ({ handleNewSearchBtnClick }: { handleNewSearchBtnClick:
           Get an instant summary of any text, article content (URL) or song for free.
         </div>
       </Container>
-    </header>
+    </div>
   );
 };
 

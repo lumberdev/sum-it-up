@@ -1,11 +1,20 @@
 import { Configuration, OpenAIApi } from "openai";
 import {
-  generateCondensedSummaryPrompt,
+  generateCondensedSummaryPromptObjectArray,
   generatePromptArticle,
   generatePromptSong,
+  generatePromptSongSSEObjectArray,
   generatePromptText,
+  generatePromptTextSSEObjectArray,
 } from "~/utils/generatePrompt";
-import { ContentType, DataType, OpenAiRequestProps, OpenAiSummarizeProps, SongType } from "~/types";
+import {
+  ChatGPTPromptPropsItem,
+  ContentType,
+  DataType,
+  OpenAiRequestProps,
+  OpenAiSummarizeProps,
+  SongType,
+} from "~/types";
 
 function getValidProps(type: ContentType, chunkedTextContent: Array<string>) {
   switch (type) {
@@ -25,17 +34,16 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const openAICompletion = async (promptText: string, max_tokens: number): Promise<string> => {
-  const completion = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: promptText,
+const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_tokens: number): Promise<string> => {
+  const completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: promptObject,
     max_tokens,
-    temperature: 0,
   });
 
-  if (!completion.data.choices?.[0].text) throw new Error("OpenAI did not produce a response");
+  if (!completion.data.choices?.[0]?.message?.content) throw new Error("OpenAI did not produce a response");
 
-  return completion.data.choices?.[0].text;
+  return completion.data.choices?.[0]?.message?.content;
 };
 
 export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
@@ -44,7 +52,10 @@ export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
   if (content.length > 1) {
     const promises = content.map(
       async (string) =>
-        await openAICompletion(generateCondensedSummaryPrompt(string, props.wordLimit), props.maxToken ?? 50),
+        await openAICompletion(
+          generateCondensedSummaryPromptObjectArray(string, props.wordLimit),
+          props.maxToken ?? 50,
+        ),
     );
     const results = await Promise.allSettled(promises);
     const filteredRejection = results.filter((res) => res.status !== "rejected");
@@ -67,21 +78,19 @@ export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType
   const wordLimit = props.wordLimit || 100;
   const textContent = props.textContent;
   if (!textContent) throw new Error("No content provided");
-  const promptText =
-    props.type === "text"
-      ? generatePromptText(textContent, wordLimit)
-      : props.type === "article"
-      ? generatePromptArticle(textContent, wordLimit)
+  const promptObject =
+    props.type === "text" || props.type === "article"
+      ? generatePromptTextSSEObjectArray(textContent, wordLimit)
       : props.type === "song"
-      ? generatePromptSong(textContent, wordLimit)
+      ? generatePromptSongSSEObjectArray(textContent, wordLimit)
       : "";
 
-  if (!promptText) {
+  if (!promptObject) {
     throw new Error("Prompt is empty");
   }
 
   try {
-    const completionText = await openAICompletion(promptText, 1000);
+    const completionText = await openAICompletion(promptObject, 1000);
     let parsedResponseData = {
       meaning: "",
       mood: "",

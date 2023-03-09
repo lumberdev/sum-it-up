@@ -1,3 +1,5 @@
+import { ChatGPTPromptPropsItem } from "~/types";
+
 export function generatePromptArticle(article: string | string[], wordLimit: number) {
   return `{${article}}
 
@@ -91,5 +93,46 @@ export const modifier = (wordLimit: number) => {
   if (wordLimit < 50) return "an extremely short";
   if (wordLimit < 100) return "a short";
   if (wordLimit < 200) return "a very detailed";
-  return "multiple paragraphs of an incredibly long, detailed, and verbose and longwinded text in the style of a new york times article";
+  return "multiple paragraphs of an incredibly long, detailed, and verbose and long-winded text in the style of a new york times article";
 };
+
+/* ------ Chat GPT Prompts below ------ */
+
+// As of March 8, 2023, chatGPT api docs recommends setting the system role to user to set more explicit instructions as sometimes the system prompt is ignored by some models
+
+// https://platform.openai.com/docs/guides/chat/instructing-chat-models
+
+export function generateCondensedSummaryPromptObjectArray(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
+  return [
+    {
+      role: "system",
+      content: `generate an extremely short summary of up to ${wordLimit} words based on the text`,
+    },
+    { role: "user", content: text },
+  ];
+}
+
+export function generatePromptSongSSEObjectArray(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
+  return [
+    {
+      role: "system",
+      content: `${modifier(
+        wordLimit,
+      )} ${wordLimit} word length interpretation of the meaning of the song lyrics submitted.`,
+    },
+    { role: "user", content: text },
+  ];
+}
+
+export function generatePromptTextSSEObjectArray(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
+  return [
+    {
+      role: "system",
+      content: `I want you to act as a new york times article author. Given the user text contained in curly braces respond with a short ${wordLimit} word article about the text. First generate the article summary, then generate a list of key points with "*>" as bullet the  under the key "KEYS", then generate a 1 word string of the bias under the key "BIAS", then generate a 1 word string of the tone under the key "TONE", then generate a 1 number verdict of trust out of 10 inclusive (10 is highest trust) under the key "TRUST"`,
+    },
+    {
+      role: "user",
+      content: `text: {${text}}`,
+    },
+  ];
+}

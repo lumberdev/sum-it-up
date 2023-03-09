@@ -19,9 +19,22 @@ export type DocumentResponseData = {
   chunkedTextContent: Array<string>;
 };
 
+export type ChatGPTPromptPropsItem = {
+  role: "user" | "system";
+  content: string;
+};
+
 export type openAiModelRequest = {
   model: string;
   prompt: string;
+  temperature: number;
+  max_tokens: number;
+  presence_penalty?: number;
+};
+
+export type ChatGPTModelRequest = {
+  model: "gpt-3.5-turbo";
+  messages: ChatGPTPromptPropsItem[];
   temperature: number;
   max_tokens: number;
   presence_penalty?: number;
