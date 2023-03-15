@@ -18,6 +18,8 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
   switch (type) {
     case "text":
     case "song":
+      if (!chunkedTextContent || !chunkedTextContent.length) throw new Error("no data provided");
+      return chunkedTextContent;
     case "article":
       if (!chunkedTextContent || !chunkedTextContent.length) throw new Error("no data provided");
       if (chunkedTextContent[0].split(" ").length < 200) {
@@ -55,13 +57,8 @@ const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_toke
   return completion.data.choices?.[0]?.message?.content;
 };
 
-export async function getInsufficientLengthErrorMessage(
-  url: string,
-) {
-  const errorMessage = await openAICompletion(
-    generateInsufficientLengthErrorPromptObjectArray(url, 50),
-    50,
-  );
+export async function getInsufficientLengthErrorMessage(url: string) {
+  const errorMessage = await openAICompletion(generateInsufficientLengthErrorPromptObjectArray(url, 50), 50);
   return errorMessage;
 }
 
