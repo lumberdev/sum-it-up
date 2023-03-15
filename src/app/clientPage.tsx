@@ -16,6 +16,7 @@ import MinHeightBodyContainer from "~/components/utility-components/MinHeightBod
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const {
     data: original,
@@ -60,6 +61,9 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       setDisplayOriginalContent(res.content);
     },
     onError: (err, data) => {
+      if (err?.name === "insufficient length") {
+        setErrorMessage(err?.message as string);
+      }
       setDisplayResult(false);
       trackRequestError({ ...data, error: (err?.message as string) ?? "" });
     },
@@ -118,7 +122,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       localStorage.setItem("summaries", JSON.stringify([newData]));
     }
   };
-  if (isError) return <Error handleNewSearchBtnClick={handleNewSearchBtnClick} />;
+  if (isError) return <Error handleNewSearchBtnClick={handleNewSearchBtnClick} errorMessage={errorMessage} />;
   if (isLoading || (!displayResult && isLoadingSSE))
     return (
       <Loading

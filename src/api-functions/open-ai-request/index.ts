@@ -1,10 +1,7 @@
 import { Configuration, OpenAIApi } from "openai";
 import {
   generateCondensedSummaryPromptObjectArray,
-  generatePromptArticle,
-  generatePromptSong,
   generatePromptSongSSEObjectArray,
-  generatePromptText,
   generatePromptTextSSEObjectArray,
 } from "~/utils/generatePrompt";
 import {
@@ -22,6 +19,13 @@ function getValidProps(type: ContentType, chunkedTextContent: Array<string>) {
     case "song":
     case "article":
       if (!chunkedTextContent || !chunkedTextContent.length) throw new Error("no data provided");
+      if (chunkedTextContent[0].split(" ").length < 200) {
+        const error = new Error(
+          "The content of the URL you are trying to summarize is too short. Please try again with a different URL.",
+        );
+        error.name = "insufficient length";
+        throw error;
+      }
       return chunkedTextContent;
 
     default:

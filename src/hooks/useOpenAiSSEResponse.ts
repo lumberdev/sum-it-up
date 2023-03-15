@@ -4,18 +4,12 @@ import { fetchArticleData } from "~/query/fetch-article-data";
 import {
   ChatGPTModelRequest,
   ContentType,
-  openAiModelRequest,
   RequestBody,
   ResponseType,
   SongMeaningResponseType,
   TextSummaryResponseType,
 } from "~/types";
-import {
-  generatePromptSongSSE,
-  generatePromptSongSSEObjectArray,
-  generatePromptTextSSE,
-  generatePromptTextSSEObjectArray,
-} from "~/utils/generatePrompt";
+import { generatePromptSongSSEObjectArray, generatePromptTextSSEObjectArray } from "~/utils/generatePrompt";
 import { getSummaryFromUrl } from "~/utils/open-ai-fetch";
 import { fetchServerSent } from "~/utils/sse-fetch";
 import { textToChunks } from "~/utils/text-to-chunks";
@@ -31,7 +25,7 @@ const useOpenAiSSEResponse = ({
 }: {
   onSuccess?: (res: ResponseType) => unknown;
   onStream?: (res: ResponseType) => unknown;
-  onError?: (error: { message: string }, data: RequestBody) => unknown;
+  onError?: (error: { message: string; name?: string }, data: RequestBody) => unknown;
   onReadability?: (data: { [key: string]: string }) => unknown;
 }) => {
   // store callbacks here so if they ever change they don't rerender the internal hook state.
@@ -159,36 +153,41 @@ const useOpenAiSSEResponse = ({
 
     const buildContentToStream = async () => {
       let textContent = "";
-      if (type === "article" || type === "song") {
-        const json = await fetchArticleData(url, 500);
-        mappedResult.current = {
-          ...mappedResult.current,
-          type,
-          byline: json.byline,
-          title: json.title,
-          dir: json.dir,
-          url,
-        };
-        if (typeof onReadability === "function")
-          onReadability({
+      try {
+        if (type === "article" || type === "song") {
+          const json = await fetchArticleData(url, 500);
+          mappedResult.current = {
+            ...mappedResult.current,
+            type,
             byline: json.byline,
             title: json.title,
             dir: json.dir,
             url,
-            content: json.content,
-          });
-        const body = await getSummaryFromUrl(type, json.chunkedTextContent);
-        textContent = body;
-      } else {
-        const chunkedText = textToChunks(text ?? "", 500);
-        textContent = await getSummaryFromUrl(type, chunkedText);
+          };
+          if (typeof onReadability === "function")
+            onReadability({
+              byline: json.byline,
+              title: json.title,
+              dir: json.dir,
+              url,
+              content: json.content,
+            });
+          const body = await getSummaryFromUrl(type, json.chunkedTextContent);
+          textContent = body;
+        } else {
+          const chunkedText = textToChunks(text ?? "", 500);
+          textContent = await getSummaryFromUrl(type, chunkedText);
+        }
+        return textContent;
+      } catch (err) {
+        onError && onError(err as { message: string; name?: string }, data);
+        setIsError(true);
       }
-      return textContent;
     };
 
     let textContent = "";
 
-    textContent = await buildContentToStream();
+    textContent = (await buildContentToStream()) || "";
     return { textContent, data };
   };
 
