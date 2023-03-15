@@ -172,7 +172,7 @@ const useOpenAiSSEResponse = ({
               url,
               content: json.content,
             });
-          const body = await getSummaryFromUrl(type, json.chunkedTextContent);
+          const body = await getSummaryFromUrl(type, json.chunkedTextContent, url);
           textContent = body;
         } else {
           const chunkedText = textToChunks(text ?? "", 500);

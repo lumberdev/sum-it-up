@@ -138,18 +138,17 @@ export function generatePromptTextSSEObjectArray(text: string, wordLimit: number
 }
 
 export function generateInsufficientLengthErrorPromptObjectArray(
-  type: string,
-  text: string,
+  url: string,
   wordLimit: number,
 ): ChatGPTPromptPropsItem[] {
   return [
     {
       role: "system",
-      content: `If the input text contains a URL that points to an article, generate a brief summary of the article consisting of two sentences, limited to a maximum of ${wordLimit} words. The first sentence should begin with "The article discusses," and the second sentence should say: "The content of the article you are trying to summarize is too short. Please try summarizing a different URL." If the input text does not contain a URL, simply return the second sentence of the summary.`,
+      content: `If the url points to an article and there is sufficient information available, generate a brief summary of the article consisting of two sentences, with the 1st sentence limited to a maximum of ${wordLimit} words. The 1st sentence should begin with "The article discusses," and the 2nd sentence should say: "The content of the article you are trying to summarize is too short. Please try summarizing using different URL." If there isn't sufficient information available, simply return the second sentence of the summary.`,
     },
     {
       role: "user",
-      content: `text: {${text}}`,
+      content: `url: {${url}}`,
     },
   ];
 }
