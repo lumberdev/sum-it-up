@@ -98,6 +98,8 @@ export interface TextResponse {
   tone: string;
   bias: string;
   trust: number;
+  inputCharacterLength: number;
+  outputCharacterLength: number;
   type: ContentType;
 }
 
@@ -118,6 +120,8 @@ export type SongMeaningResponseType = {
   moodColor: string;
   title: string;
   url: string;
+  inputCharacterLength: number;
+  outputCharacterLength: number;
   type: ContentType;
 };
 

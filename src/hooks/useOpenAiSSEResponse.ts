@@ -58,6 +58,8 @@ const useOpenAiSSEResponse = ({
     summary: "",
     tone: "",
     trust: 0,
+    inputCharacterLength: -1,
+    outputCharacterLength: -1,
     ...readabilityData,
   };
 
@@ -127,6 +129,7 @@ const useOpenAiSSEResponse = ({
               keyPoints: array?.[1]?.split("*>").filter((point) => point.trim() !== ""),
               bias: array?.[2],
               tone: array?.[3],
+              outputCharacterLength: `${state}${text}`.length,
               trust: Number(array?.[4]),
               type,
             };
@@ -135,6 +138,7 @@ const useOpenAiSSEResponse = ({
               ...mappedResult.current,
               meaning: array?.[0],
               mood: array?.[1],
+              outputCharacterLength: `${state}${text}`.length,
               moodColor: array?.[2],
             };
           onStream && onStream(mappedResult.current);
@@ -161,12 +165,24 @@ const useOpenAiSSEResponse = ({
       let textContent = "";
       if (type === "article" || type === "song") {
         const json = await fetchArticleData(url, 500);
+
+        // check if total content length exceeds 5000 words
+        const words = json.chunkedTextContent.flatMap((value) => value.split(" "));
+        const totalWordsOfArticle = words.length;
+        const inputCharacterLength = json.chunkedTextContent?.reduce((acc, value) => (acc += value.length), 0);
+        const max_word_length = 5000;
+        if (totalWordsOfArticle > max_word_length)
+          throw new Error(
+            `Error content too long, content exceeds ${max_word_length} words, content length: ${totalWordsOfArticle}`,
+          );
+
         mappedResult.current = {
           ...mappedResult.current,
           type,
           byline: json.byline,
           title: json.title,
           dir: json.dir,
+          inputCharacterLength,
           url,
         };
         if (typeof onReadability === "function")
@@ -177,10 +193,16 @@ const useOpenAiSSEResponse = ({
             url,
             content: json.content,
           });
+
         const body = await getSummaryFromUrl(type, json.chunkedTextContent);
         textContent = body;
       } else {
         const chunkedText = textToChunks(text ?? "", 500);
+        const inputCharacterLength = chunkedText?.reduce((acc, value) => (acc += value.length), 0);
+        mappedResult.current = {
+          ...mappedResult.current,
+          inputCharacterLength,
+        };
         textContent = await getSummaryFromUrl(type, chunkedText);
       }
       return textContent;

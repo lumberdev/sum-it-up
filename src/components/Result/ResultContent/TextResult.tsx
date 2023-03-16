@@ -18,7 +18,12 @@ const TextResult = ({ originalContent, textSummaryResponse, isLoadingSSE, trackS
     if (!isLoadingSSE) {
       const originalContentString = originalContent;
       const encodedUrl = encodeStateToUrl(originalContentString, textSummaryResponse);
-      trackRequestCompleted({ type: textSummaryResponse.type, output: JSON.stringify(textSummaryResponse) });
+      trackRequestCompleted({
+        type: textSummaryResponse.type,
+        output: JSON.stringify(textSummaryResponse),
+        inputCharacterLength: textSummaryResponse.inputCharacterLength,
+        outputCharacterLength: textSummaryResponse.outputCharacterLength,
+      });
       history.replaceState({}, "", encodedUrl);
     }
   }, [isLoadingSSE, originalContent, textSummaryResponse]);
