@@ -25,7 +25,7 @@ const useOpenAiSSEResponse = ({
 }: {
   onSuccess?: (res: ResponseType) => unknown;
   onStream?: (res: ResponseType) => unknown;
-  onError?: (error: { message: string }, data: RequestBody) => unknown;
+  onError?: (error: { message: string; name?: string }, data: RequestBody) => unknown;
   onReadability?: (data: { [key: string]: string }) => unknown;
 }) => {
   // store callbacks here so if they ever change they don't rerender the internal hook state.
@@ -157,54 +157,49 @@ const useOpenAiSSEResponse = ({
 
     const buildContentToStream = async () => {
       let textContent = "";
-      if (type === "article" || type === "song") {
-        const json = await fetchArticleData(url, 500);
+      try {
+        if (type === "article" || type === "song") {
+          const json = await fetchArticleData(url, 500);
+          const inputCharacterLength = json.chunkedTextContent?.reduce((acc, value) => (acc += value.length), 0);
 
-        // check if total content length exceeds 5000 words
-        const words = json.chunkedTextContent.flatMap((value) => value.split(" "));
-        const totalWordsOfArticle = words.length;
-        const inputCharacterLength = json.chunkedTextContent?.reduce((acc, value) => (acc += value.length), 0);
-        const max_word_length = 5000;
-        if (totalWordsOfArticle > max_word_length)
-          throw new Error(
-            `Error content too long, content exceeds ${max_word_length} words, content length: ${totalWordsOfArticle}`,
-          );
-
-        mappedResult.current = {
-          ...mappedResult.current,
-          type,
-          byline: json.byline,
-          title: json.title,
-          dir: json.dir,
-          inputCharacterLength,
-          url,
-        };
-        if (typeof onReadability === "function")
-          onReadability({
+          mappedResult.current = {
+            ...mappedResult.current,
+            type,
+            inputCharacterLength,
             byline: json.byline,
             title: json.title,
             dir: json.dir,
             url,
-            content: json.content,
-          });
-
-        const body = await getSummaryFromUrl(type, json.chunkedTextContent);
-        textContent = body;
-      } else {
-        const chunkedText = textToChunks(text ?? "", 500);
-        const inputCharacterLength = chunkedText?.reduce((acc, value) => (acc += value.length), 0);
-        mappedResult.current = {
-          ...mappedResult.current,
-          inputCharacterLength,
-        };
-        textContent = await getSummaryFromUrl(type, chunkedText);
+          };
+          if (typeof onReadability === "function")
+            onReadability({
+              byline: json.byline,
+              title: json.title,
+              dir: json.dir,
+              url,
+              content: json.content,
+            });
+          const body = await getSummaryFromUrl(type, json.chunkedTextContent, url);
+          textContent = body;
+        } else {
+          const chunkedText = textToChunks(text ?? "", 500);
+          const inputCharacterLength = chunkedText?.reduce((acc, value) => (acc += value.length), 0);
+          mappedResult.current = {
+            ...mappedResult.current,
+            inputCharacterLength,
+          };
+          textContent = await getSummaryFromUrl(type, chunkedText);
+        }
+        return textContent;
+      } catch (err) {
+        onError && onError(err as { message: string; name?: string }, data);
+        setIsError(true);
       }
-      return textContent;
     };
 
     let textContent = "";
 
-    textContent = await buildContentToStream();
+    textContent = (await buildContentToStream()) || "";
     return { textContent, data };
   };
 

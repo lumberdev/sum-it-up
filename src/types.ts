@@ -61,6 +61,7 @@ export type OpenAiRequestProps = {
 export type OpenAiSummarizeProps = {
   text?: string;
   maxToken?: number;
+  url?: string;
   chunkedTextContent?: Array<string>;
   wordLimit: number;
   type: ContentType;
