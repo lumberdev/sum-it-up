@@ -1,11 +1,9 @@
 import { Configuration, OpenAIApi } from "openai";
 import {
   generateCondensedSummaryPromptObjectArray,
-  generatePromptArticle,
-  generatePromptSong,
   generatePromptSongSSEObjectArray,
-  generatePromptText,
   generatePromptTextSSEObjectArray,
+  generateInsufficientLengthErrorPromptObjectArray,
 } from "~/utils/generatePrompt";
 import {
   ChatGPTPromptPropsItem,
@@ -16,12 +14,25 @@ import {
   SongType,
 } from "~/types";
 
-function getValidProps(type: ContentType, chunkedTextContent: Array<string>) {
+async function getValidProps(type: ContentType, chunkedTextContent: Array<string>, url?: string) {
   switch (type) {
     case "text":
     case "song":
+      if (!chunkedTextContent || !chunkedTextContent.length) throw new Error("no data provided");
+      return chunkedTextContent;
     case "article":
       if (!chunkedTextContent || !chunkedTextContent.length) throw new Error("no data provided");
+      if (chunkedTextContent[0].split(" ").length < 200) {
+        let errorMessage =
+          "The content of the article you are trying to summarize is too short. Please try summarizing using a different URL.";
+        if (url) {
+          errorMessage = await getInsufficientLengthErrorMessage(url);
+        }
+
+        const error = new Error(`${errorMessage}`);
+        error.name = "insufficient length";
+        throw error;
+      }
       return chunkedTextContent;
 
     default:
@@ -46,8 +57,13 @@ const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_toke
   return completion.data.choices?.[0]?.message?.content;
 };
 
+export async function getInsufficientLengthErrorMessage(url: string) {
+  const errorMessage = await openAICompletion(generateInsufficientLengthErrorPromptObjectArray(url, 50), 50);
+  return errorMessage;
+}
+
 export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
-  const content = getValidProps(props.type, props.chunkedTextContent ?? []);
+  const content = await getValidProps(props.type, props.chunkedTextContent ?? [], props.url);
   let textContent = "";
   if (content.length > 1) {
     const promises = content.map(
