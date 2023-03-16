@@ -4,18 +4,12 @@ import { fetchArticleData } from "~/query/fetch-article-data";
 import {
   ChatGPTModelRequest,
   ContentType,
-  openAiModelRequest,
   RequestBody,
   ResponseType,
   SongMeaningResponseType,
   TextSummaryResponseType,
 } from "~/types";
-import {
-  generatePromptSongSSE,
-  generatePromptSongSSEObjectArray,
-  generatePromptTextSSE,
-  generatePromptTextSSEObjectArray,
-} from "~/utils/generatePrompt";
+import { generatePromptSongSSEObjectArray, generatePromptTextSSEObjectArray } from "~/utils/generatePrompt";
 import { getSummaryFromUrl } from "~/utils/open-ai-fetch";
 import { fetchServerSent } from "~/utils/sse-fetch";
 import { textToChunks } from "~/utils/text-to-chunks";
