@@ -47,7 +47,12 @@ const useAnalytics = () => {
   function trackNewSummary() {
     track(EVENT_NAMES.NEW_SUMMARY, {});
   }
-  function trackRequestCompleted(properties: { type: string; output: string }) {
+  function trackRequestCompleted(properties: {
+    type: string;
+    output: string;
+    inputCharacterLength: number;
+    outputCharacterLength: number;
+  }) {
     track(EVENT_NAMES.REQUEST_COMPLETED, properties);
   }
   function trackRequestError(properties: RequestBody & { error: string }) {

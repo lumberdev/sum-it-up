@@ -52,6 +52,8 @@ const useOpenAiSSEResponse = ({
     summary: "",
     tone: "",
     trust: 0,
+    inputCharacterLength: -1,
+    outputCharacterLength: -1,
     ...readabilityData,
   };
 
@@ -121,6 +123,7 @@ const useOpenAiSSEResponse = ({
               keyPoints: array?.[1]?.split("*>").filter((point) => point.trim() !== ""),
               bias: array?.[2],
               tone: array?.[3],
+              outputCharacterLength: `${state}${text}`.length,
               trust: Number(array?.[4]),
               type,
             };
@@ -129,6 +132,7 @@ const useOpenAiSSEResponse = ({
               ...mappedResult.current,
               meaning: array?.[0],
               mood: array?.[1],
+              outputCharacterLength: `${state}${text}`.length,
               moodColor: array?.[2],
             };
           onStream && onStream(mappedResult.current);
@@ -156,9 +160,12 @@ const useOpenAiSSEResponse = ({
       try {
         if (type === "article" || type === "song") {
           const json = await fetchArticleData(url, 500);
+          const inputCharacterLength = json.chunkedTextContent?.reduce((acc, value) => (acc += value.length), 0);
+
           mappedResult.current = {
             ...mappedResult.current,
             type,
+            inputCharacterLength,
             byline: json.byline,
             title: json.title,
             dir: json.dir,
@@ -176,6 +183,11 @@ const useOpenAiSSEResponse = ({
           textContent = body;
         } else {
           const chunkedText = textToChunks(text ?? "", 500);
+          const inputCharacterLength = chunkedText?.reduce((acc, value) => (acc += value.length), 0);
+          mappedResult.current = {
+            ...mappedResult.current,
+            inputCharacterLength,
+          };
           textContent = await getSummaryFromUrl(type, chunkedText);
         }
         return textContent;

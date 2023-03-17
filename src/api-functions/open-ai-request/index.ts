@@ -14,11 +14,25 @@ import {
   SongType,
 } from "~/types";
 
+function checkIfChunkedContentExceedsLimit(chunkedTextContent: Array<string>) {
+  const totalWordsOfArticle = chunkedTextContent.flatMap((value) => value.split(" ")).length;
+  const max_word_length = 5000;
+  if (totalWordsOfArticle > max_word_length) {
+    const error = new Error(
+      `Error content too long, content exceeds ${max_word_length} words, content length: ${totalWordsOfArticle}`,
+    );
+    error.name = "Length constraint violation";
+
+    throw error;
+  }
+}
+
 async function getValidProps(type: ContentType, chunkedTextContent: Array<string>, url?: string) {
   switch (type) {
     case "text":
     case "song":
       if (!chunkedTextContent || !chunkedTextContent.length) throw new Error("no data provided");
+      checkIfChunkedContentExceedsLimit(chunkedTextContent);
       return chunkedTextContent;
     case "article":
       if (!chunkedTextContent || !chunkedTextContent.length) throw new Error("no data provided");
@@ -28,11 +42,11 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
         if (url) {
           errorMessage = await getInsufficientLengthErrorMessage(url);
         }
-
         const error = new Error(`${errorMessage}`);
-        error.name = "insufficient length";
+        error.name = "Length constraint violation";
         throw error;
       }
+      checkIfChunkedContentExceedsLimit(chunkedTextContent);
       return chunkedTextContent;
 
     default:

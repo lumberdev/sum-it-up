@@ -25,7 +25,12 @@ const SongResult = ({
   useEffect(() => {
     if (!isLoadingSSE) {
       const encodedUrl = encodeStateToUrl(originalContent, songMeaningResponse, songDetails);
-      trackRequestCompleted({ type: songMeaningResponse.type, output: songMeaningResponse.meaning });
+      trackRequestCompleted({
+        type: songMeaningResponse.type,
+        output: songMeaningResponse.meaning,
+        inputCharacterLength: songMeaningResponse.inputCharacterLength,
+        outputCharacterLength: songMeaningResponse.outputCharacterLength,
+      });
       history.replaceState({}, "", encodedUrl);
     }
   }, [isLoadingSSE, originalContent, songDetails, songMeaningResponse]);

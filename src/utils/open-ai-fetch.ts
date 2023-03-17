@@ -13,6 +13,8 @@ async function callWithText(text: string, wordLimit: number, type: ContentType):
     const validResponse = {
       type,
       trust: 0,
+      inputCharacterLength: text.length,
+      outputCharacterLength: JSON.stringify(response).length,
       ...response,
     };
     return { ...validResponse };
@@ -42,6 +44,8 @@ async function callWithUrl(
       content: json.content,
       url,
       trust: 0,
+      inputCharacterLength: json.chunkedTextContent?.reduce((acc, value) => (acc += value.length), 0),
+      outputCharacterLength: JSON.stringify(response).length,
       ...response,
     };
     return {
