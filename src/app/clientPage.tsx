@@ -61,7 +61,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       setDisplayOriginalContent(res.content);
     },
     onError: (err, data) => {
-      if (err?.name === "insufficient length") {
+      if (err?.name === "Length constraint violation") {
         setErrorMessage(err?.message as string);
       }
       setDisplayResult(false);
