@@ -21,7 +21,7 @@ function checkIfChunkedContentExceedsLimit(chunkedTextContent: Array<string>) {
     const error = new Error(
       `Error content too long, content exceeds ${max_word_length} words, content length: ${totalWordsOfArticle}`,
     );
-    error.name = "insufficient length";
+    error.name = "Length constraint violation";
 
     throw error;
   }
@@ -43,7 +43,7 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
           errorMessage = await getInsufficientLengthErrorMessage(url);
         }
         const error = new Error(`${errorMessage}`);
-        error.name = "insufficient length";
+        error.name = "Length constraint violation";
         throw error;
       }
       checkIfChunkedContentExceedsLimit(chunkedTextContent);
