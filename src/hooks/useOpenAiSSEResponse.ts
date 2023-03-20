@@ -1,15 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchArticleData } from "~/query/fetch-article-data";
-import {
-  ChatGPTModelRequest,
-  ContentType,
-  RequestBody,
-  ResponseType,
-  SongMeaningResponseType,
-  TextSummaryResponseType,
-} from "~/types";
-import { generatePromptSongSSEObjectArray, generatePromptTextSSEObjectArray } from "~/utils/generatePrompt";
+import { ChatGPTModelRequest, ContentType, RequestBody, MarkdownResponse } from "~/types";
+import { generatePromptSongMarkdown, generateTextSummaryMarkdown } from "~/utils/generatePrompt";
 import { getSummaryFromUrl } from "~/utils/open-ai-fetch";
 import { fetchServerSent } from "~/utils/sse-fetch";
 import { textToChunks } from "~/utils/text-to-chunks";
@@ -23,8 +16,8 @@ const useOpenAiSSEResponse = ({
   onError,
   onReadability,
 }: {
-  onSuccess?: (res: ResponseType) => unknown;
-  onStream?: (res: ResponseType) => unknown;
+  onSuccess?: (res: MarkdownResponse) => unknown;
+  onStream?: (res: MarkdownResponse) => unknown;
   onError?: (error: { message: string; name?: string }, data: RequestBody) => unknown;
   onReadability?: (data: { [key: string]: string }) => unknown;
 }) => {
@@ -47,24 +40,13 @@ const useOpenAiSSEResponse = ({
     url: "",
   };
   const initTextMappedPoints = {
-    keyPoints: [],
-    bias: "",
-    summary: "",
-    tone: "",
-    trust: 0,
+    markdown: "",
     inputCharacterLength: -1,
     outputCharacterLength: -1,
     ...readabilityData,
-  };
+  } as MarkdownResponse;
 
-  // const initSongMappedPoints = {
-  //   mood: "",
-  //   moodColor: "",
-  //   meaning: "",
-  //   ...readabilityData,
-  // };
-  // useRef to get most updated result without rerender
-  const mappedResult = useRef<TextSummaryResponseType | SongMeaningResponseType>(initTextMappedPoints);
+  const mappedResult = useRef<MarkdownResponse>(initTextMappedPoints);
 
   const fetchRef = useRef<() => unknown>();
 
@@ -75,9 +57,9 @@ const useOpenAiSSEResponse = ({
 
     const promptObject =
       type === "text" || type === "article"
-        ? generatePromptTextSSEObjectArray(textContent, wordLimit)
+        ? generateTextSummaryMarkdown(textContent, wordLimit)
         : type === "song"
-        ? generatePromptSongSSEObjectArray(textContent, wordLimit)
+        ? generatePromptSongMarkdown(textContent, wordLimit)
         : [];
 
     const multiplier = Math.min(wordLimit > 100 ? 2.5 : 1.3);
@@ -112,29 +94,15 @@ const useOpenAiSSEResponse = ({
 
         const text = JSON.parse(payload).choices?.[0]?.delta?.content ?? "";
         setStreamedResult((state) => {
-          const array = `${state}${text}`.split(/(KEYS:|TONE:|TRUST:|BIAS:)/i).reduce((acc: string[], value) => {
-            if (/(KEYS:|TONE:|TRUST:|BIAS:)/i.test(value)) return acc;
-            return [...acc, value];
-          }, []);
-          if (type === "article" || type === "text")
-            mappedResult.current = {
-              ...mappedResult.current,
-              summary: array?.[0],
-              keyPoints: array?.[1]?.split("*>").filter((point) => point.trim() !== ""),
-              bias: array?.[2],
-              tone: array?.[3],
-              outputCharacterLength: `${state}${text}`.length,
-              trust: Number(array?.[4]),
-              type,
-            };
-          else
-            mappedResult.current = {
-              ...mappedResult.current,
-              meaning: array?.[0],
-              mood: array?.[1],
-              outputCharacterLength: `${state}${text}`.length,
-              moodColor: array?.[2],
-            };
+          console.log(`${state}${text}`);
+
+          mappedResult.current = {
+            ...mappedResult.current,
+            markdown: `${state}${text}`,
+            outputCharacterLength: `${state}${text}`.length,
+            type,
+          };
+
           onStream && onStream(mappedResult.current);
 
           return `${state}${text}`;

@@ -1,5 +1,5 @@
 import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
-import { ResponseType } from "~/types";
+import { MarkdownResponse } from "~/types";
 import { encodeStateToUrl } from "~/utils/generateLinkToShare";
 import CopyUrlIcon from "../../../assets/copy-url-icon.svg";
 
@@ -12,7 +12,7 @@ const ShareLinkButton = ({
 }: {
   originalContent: string;
   trackShare: (properties: { shareURL: string }) => void;
-  responseObject: ResponseType;
+  responseObject: MarkdownResponse;
   songDetails?: string;
   disabled?: boolean;
 }) => {
