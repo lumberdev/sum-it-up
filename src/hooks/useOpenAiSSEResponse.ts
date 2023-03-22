@@ -94,8 +94,6 @@ const useOpenAiSSEResponse = ({
 
         const text = JSON.parse(payload).choices?.[0]?.delta?.content ?? "";
         setStreamedResult((state) => {
-          console.log(`${state}${text}`);
-
           mappedResult.current = {
             ...mappedResult.current,
             markdown: `${state}${text}`,

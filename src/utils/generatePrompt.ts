@@ -157,15 +157,15 @@ export function generateTextSummaryMarkdown(text: string, wordLimit: number): Ch
   return [
     {
       role: "system",
-      content: `Generate a markdown summary of the following user text content following this format
+      content: `Generate a markdown summary of the following user text content following this format.
       
       ## (Title of summary)
       summary content (${markdownModifier(wordLimit)})
       \n\n
-      ## Key Points:
+      ### Key Points:
       - key points based on the summary
       \n\n
-      ### Analysis:
+      #### Analysis:
       The tone of this article is {one word tone}, the bias is {one word}.
       There's a {number between 1 and 10, 10 being the most likely} chance that this content is truthful`,
     },
