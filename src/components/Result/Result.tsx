@@ -1,16 +1,17 @@
-import { useState } from "react";
-import { SongMeaningResponseType, TextSummaryResponseType } from "~/types";
+import { useEffect, useState } from "react";
+import { MarkdownResponse } from "~/types";
 import ResultPageHeader from "./ResultPageHeader";
 import { ResultPageContentType } from "~/types";
-import SongResult from "./ResultContent/SongResult";
-import TextResult from "./ResultContent/TextResult";
 import ResultPageContentToggler from "../utility-components/result/ResultPageContentToggler";
 import OriginalContent from "./ResultContent/OriginalContent";
+import { encodeStateToUrl } from "~/utils/generateLinkToShare";
+import useAnalytics from "~/hooks/use-analytics";
+import GenericResult from "./ResultContent/GenericResult";
 
 type ResultProp = {
   originalContent: string;
   displayOriginalContent: string;
-  summaryResponse?: TextSummaryResponseType | SongMeaningResponseType | null;
+  markdownResponse?: MarkdownResponse;
   handleNewSearchBtnClick: () => void;
   songDetails: string;
   isLoadingSSE: boolean;
@@ -20,13 +21,40 @@ type ResultProp = {
 const Result = ({
   originalContent,
   displayOriginalContent,
-  summaryResponse,
+  markdownResponse,
   handleNewSearchBtnClick,
   trackShare,
   songDetails,
   isLoadingSSE,
 }: ResultProp) => {
   const [resultPageContent, setResultPageContent] = useState<ResultPageContentType>("summary");
+
+  const { trackRequestCompleted } = useAnalytics();
+
+  useEffect(() => {
+    if (!isLoadingSSE && markdownResponse) {
+      let encodedUrl = "";
+      if (markdownResponse?.type === "song") {
+        encodedUrl = encodeStateToUrl(originalContent, markdownResponse, songDetails);
+        trackRequestCompleted({
+          type: markdownResponse.type,
+          output: markdownResponse.markdown,
+          inputCharacterLength: markdownResponse.inputCharacterLength,
+          outputCharacterLength: markdownResponse.outputCharacterLength,
+        });
+      } else {
+        const originalContentString = originalContent;
+        encodedUrl = encodeStateToUrl(originalContentString, markdownResponse);
+        trackRequestCompleted({
+          type: markdownResponse.type,
+          output: JSON.stringify(markdownResponse),
+          inputCharacterLength: markdownResponse.inputCharacterLength,
+          outputCharacterLength: markdownResponse.outputCharacterLength,
+        });
+      }
+      history.replaceState({}, "", encodedUrl);
+    }
+  }, [isLoadingSSE, originalContent, songDetails, markdownResponse]);
 
   return (
     <>
@@ -38,35 +66,22 @@ const Result = ({
       <div className="my-12 text-center md:hidden">
         <ResultPageContentToggler resultPageContent={resultPageContent} setResultPageContent={setResultPageContent} />
       </div>
-      {resultPageContent === "summary" && summaryResponse?.type === "song" && (
-        <SongResult
+
+      {resultPageContent === "summary" && markdownResponse && (
+        <GenericResult
           trackShare={trackShare}
-          songMeaningResponse={summaryResponse as SongMeaningResponseType}
           songDetails={songDetails}
+          markdownResponse={markdownResponse}
           originalContent={originalContent}
           isLoadingSSE={isLoadingSSE}
+          type={markdownResponse?.type}
         />
       )}
-      {resultPageContent === "summary" && summaryResponse?.type === "article" && (
-        <TextResult
-          trackShare={trackShare}
-          textSummaryResponse={summaryResponse as TextSummaryResponseType}
-          originalContent={originalContent}
-          isLoadingSSE={isLoadingSSE}
-        />
-      )}
-      {resultPageContent === "summary" && summaryResponse?.type === "text" && (
-        <TextResult
-          trackShare={trackShare}
-          textSummaryResponse={summaryResponse as TextSummaryResponseType}
-          originalContent={originalContent}
-          isLoadingSSE={isLoadingSSE}
-        />
-      )}
+
       {resultPageContent === "original" && (
         <OriginalContent
           content={displayOriginalContent}
-          contentType={summaryResponse?.type || null}
+          contentType={markdownResponse?.type || null}
           songDetails={songDetails}
         />
       )}

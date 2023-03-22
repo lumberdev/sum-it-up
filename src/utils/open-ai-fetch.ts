@@ -44,6 +44,7 @@ async function callWithUrl(
       content: json.content,
       url,
       trust: 0,
+      bias: "",
       inputCharacterLength: json.chunkedTextContent?.reduce((acc, value) => (acc += value.length), 0),
       outputCharacterLength: JSON.stringify(response).length,
       ...response,
@@ -73,7 +74,7 @@ async function summarizeChunkedContent(
     chunkedTextContent,
     max_token: maxToken,
     wordLimit,
-    url
+    url,
   };
   const response = (await openAiGetUseableTextContent(body)) as string;
   return response;

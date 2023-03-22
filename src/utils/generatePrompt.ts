@@ -152,3 +152,58 @@ export function generateInsufficientLengthErrorPromptObjectArray(
     },
   ];
 }
+
+export function generateTextSummaryMarkdown(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
+  return [
+    {
+      role: "system",
+      content: `Generate a markdown summary of the following user text content following this format.
+      
+      ## (Title of summary)
+      summary content (${markdownModifier(wordLimit)})
+      \n\n
+      ### Key Points:
+      - key points based on the summary
+      \n\n
+      #### Analysis:
+      The tone of this article is {one word tone}, the bias is {one word}.
+      There's a {number between 1 and 10, 10 being the most likely} chance that this content is truthful`,
+    },
+    {
+      role: "user",
+      content: `text: {${text}}`,
+    },
+  ];
+}
+
+export function generatePromptSongMarkdown(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
+  return [
+    {
+      role: "system",
+      content: `Generate a markdown interpretation of the meaning of the song lyrics submitted following this format
+        
+        ## (Title)
+        interpretation of the meaning of the song (${markdownModifier(wordLimit)})
+
+       - Mood evoked by song: {mood}
+        `,
+    },
+    { role: "user", content: text },
+  ];
+}
+
+function markdownModifier(wordLimit: number) {
+  if (wordLimit <= 100) {
+    return `generate a short sentence of about ${wordLimit} words in length`;
+  }
+
+  if (wordLimit <= 200) {
+    return `generate a long comment of about ${wordLimit} words in length`;
+  }
+  if (wordLimit <= 300) {
+    return `generate a rich summary of about ${wordLimit} words in length`;
+  }
+  if (wordLimit > 300) {
+    return `generate a rich New York Times article of ${wordLimit} words in length`;
+  }
+}

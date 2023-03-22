@@ -88,43 +88,40 @@ export type DataType = {
   trust?: number;
 };
 
+export type SharedResponse = {
+  inputCharacterLength: number;
+  outputCharacterLength: number;
+  type: ContentType;
+};
+
+export type SharedReadability = {
+  bias: string;
+  title: string;
+  content: string;
+  byline: string | null;
+  dir: any; // not sure what this would be
+  url: string;
+};
+
 export type SongType = {
   meaning: string;
   mood: string;
   moodColor: string;
 };
-export interface TextResponse {
+export interface TextResponse extends SharedResponse {
   keyPoints: string[];
   summary: string;
   tone: string;
   bias: string;
   trust: number;
-  inputCharacterLength: number;
-  outputCharacterLength: number;
-  type: ContentType;
 }
 
-export interface TextSummaryResponseType extends TextResponse {
-  bias: string;
-  title: string;
-  content: string;
-  byline: string | null;
-  dir: any; // not sure what this would be
-  url: string;
+export interface MarkdownResponse extends SharedResponse, SharedReadability {
+  markdown: string;
 }
-export type SongMeaningResponseType = {
-  byline: string | null;
-  dir: any; // not sure what this would be
-  meaning: string;
-  content: string;
-  mood: string;
-  moodColor: string;
-  title: string;
-  url: string;
-  inputCharacterLength: number;
-  outputCharacterLength: number;
-  type: ContentType;
-};
+
+export interface TextSummaryResponseType extends TextResponse, SharedReadability {}
+export interface SongMeaningResponseType extends SharedResponse, SongType, SharedReadability {}
 
 export type ResponseType = TextSummaryResponseType | SongMeaningResponseType | TextResponse;
 

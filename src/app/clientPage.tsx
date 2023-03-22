@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import InputComponent from "~/components/Input/Input";
-import { InputFormSubmissionType, ResponseType, SongMeaningResponseType, TextSummaryResponseType } from "~/types";
+import { InputFormSubmissionType, MarkdownResponse } from "~/types";
 import InputPageHeader from "~/components/Input/InputPageHeader";
 import Result from "~/components/Result/Result";
 import Loading from "~/components/Loading/Loading";
@@ -33,24 +33,18 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   const [displayResult, setDisplayResult] = useState<boolean>(
     searchParams.original.length > 0 && searchParams.result.length > 0,
   );
-  const [currentResult, setCurrentResult] = useState<ResponseType | null>(
+  const [currentResult, setCurrentResult] = useState<MarkdownResponse | null>(
     searchParams?.result &&
       isValidJSON(getStringOrFirst(searchParams.result)) &&
       JSON.parse(getStringOrFirst(searchParams.result)),
   );
   const [songDetails, setSongDetails] = useState(searchParams.songDetails.length > 0 ? searchParams.songDetails : "");
 
-  const {
-    trackInputSelection,
-    trackLengthSelection,
-    trackSubmit,
-    trackNewSummary,
-    trackRequestError,
-    trackShare,
-  } = useAnalytics();
+  const { trackInputSelection, trackLengthSelection, trackSubmit, trackNewSummary, trackRequestError, trackShare } =
+    useAnalytics();
 
   const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError } = useOpenAiSSEResponse({
-    onSuccess: (res: ResponseType) => {
+    onSuccess: (res: MarkdownResponse) => {
       setLocalStorage(res);
     },
     onStream: (res) => {
@@ -112,10 +106,10 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     trackNewSummary();
   };
 
-  const setLocalStorage = (newData: ResponseType) => {
+  const setLocalStorage = (newData: MarkdownResponse) => {
     const existingData = localStorage.getItem("summaries");
     if (existingData) {
-      const existingDataArr: ResponseType[] = JSON.parse(existingData);
+      const existingDataArr: MarkdownResponse[] = JSON.parse(existingData);
       existingDataArr.push(newData);
       localStorage.setItem("summaries", JSON.stringify(existingDataArr));
     } else {
@@ -138,7 +132,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
         <MinHeightBodyContainer>
           <Result
             trackShare={trackShare}
-            summaryResponse={currentResult as TextSummaryResponseType | SongMeaningResponseType}
+            markdownResponse={currentResult as MarkdownResponse}
             handleNewSearchBtnClick={handleNewSearchBtnClick}
             originalContent={originalContent}
             displayOriginalContent={displayOriginalContent}
