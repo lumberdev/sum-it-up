@@ -18,11 +18,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const {
-    data: original,
-    error: err,
-    isLoading: initLoadingReadability,
-  } = useFetchReadabilityOnLoad(searchParams.original);
+  const { data: original } = useFetchReadabilityOnLoad(searchParams.original);
 
   const [displayOriginalContent, setDisplayOriginalContent] = useState(original);
 
@@ -43,7 +39,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   const { trackInputSelection, trackLengthSelection, trackSubmit, trackNewSummary, trackRequestError, trackShare } =
     useAnalytics();
 
-  const { mutate, isLoading, isLoadingSSE, streamedResult, forceClose, isError } = useOpenAiSSEResponse({
+  const { mutate, isLoading, isLoadingSSE, forceClose, isError } = useOpenAiSSEResponse({
     onSuccess: (res: MarkdownResponse) => {
       setLocalStorage(res);
     },

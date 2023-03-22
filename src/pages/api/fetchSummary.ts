@@ -55,7 +55,3 @@ export default async function handler(
     res.status(500).json({ message: "Request errored out", code: 500 });
   }
 }
-
-// export const config = {
-//   type: "experimental-background",
-// };
