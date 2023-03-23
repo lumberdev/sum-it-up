@@ -54,7 +54,7 @@ const Result = ({
       }
       history.replaceState({}, "", encodedUrl);
     }
-  }, [isLoadingSSE, originalContent, songDetails, markdownResponse]);
+  }, [isLoadingSSE, originalContent, songDetails, markdownResponse, trackRequestCompleted]);
 
   return (
     <>
