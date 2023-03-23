@@ -4,7 +4,7 @@ import { SSEOptionTypes } from "~/types";
 const fetchServerSent = (
   input: RequestInfo | URL,
   init?: SSEOptionTypes | undefined,
-  onStream?: (arg: any) => void,
+  onStream?: (arg: unknown) => void,
   onError?: (args: unknown) => void,
 ) => {
   const source = SSE(input, init);

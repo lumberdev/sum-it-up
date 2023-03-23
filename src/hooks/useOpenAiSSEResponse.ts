@@ -85,14 +85,14 @@ const useOpenAiSSEResponse = ({
           stream: true,
         }),
       },
-      (payload: string) => {
+      (payload) => {
         if ((payload as string) === "[DONE]") {
           setIsLoadingSSE(false);
           onSuccess && onSuccess(mappedResult.current);
           return;
         }
 
-        const text = JSON.parse(payload).choices?.[0]?.delta?.content ?? "";
+        const text = JSON.parse(payload as string).choices?.[0]?.delta?.content ?? "";
         setStreamedResult((state) => {
           mappedResult.current = {
             ...mappedResult.current,

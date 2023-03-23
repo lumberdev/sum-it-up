@@ -13,8 +13,8 @@ const Input = ({
   onLengthChange,
 }: {
   handleFormSubmit: InputFormSubmissionType;
-  onInputChange: (properties: { type: string }) => any;
-  onLengthChange: (properties: { length: number }) => any;
+  onInputChange: (properties: { type: string }) => unknown;
+  onLengthChange: (properties: { length: number }) => unknown;
 }) => {
   const [inputTypeSelected, setInputTypeSelected] = useState<InputType>(InputType.ARTICLE);
   const [summaryLength, setSummaryLength] = useState("200");

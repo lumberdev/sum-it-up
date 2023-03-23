@@ -99,7 +99,7 @@ export type SharedReadability = {
   title: string;
   content: string;
   byline: string | null;
-  dir: any; // not sure what this would be
+  dir?: string; // not sure what this would be
   url: string;
 };
 
@@ -136,7 +136,7 @@ export type InputFormSubmissionType = (
 ) => Promise<void>;
 
 export type SSEOptionTypes = {
-  headers: Object;
+  headers: object;
   method: string;
   payload: string;
 };
