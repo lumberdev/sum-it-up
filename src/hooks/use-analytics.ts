@@ -1,4 +1,4 @@
-import { EVENT_NAMES } from "analytics/events";
+import { EVENT_NAMES } from "~/analytics/events";
 import { useEffect, useMemo, useRef } from "react";
 import { RequestBody } from "~/types";
 
