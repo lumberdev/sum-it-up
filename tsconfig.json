@@ -25,14 +25,6 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "decs.d.ts",
-    "/Users/maiasasson/work/sum-it-up/.next/types/**/*.ts",
-    "src/app/clientPage.spec.jx"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "decs.d.ts"],
   "exclude": ["node_modules"]
 }
