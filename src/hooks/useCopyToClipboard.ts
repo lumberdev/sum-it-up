@@ -9,7 +9,7 @@ export const useCopyToClipboard = () => {
       timeoutIdRef.current = setTimeout(() => setDidCopy(false), 2000);
     }
     return () => {
-      clearTimeout(timeoutIdRef.current!);
+      if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     };
   }, [didCopy]);
 

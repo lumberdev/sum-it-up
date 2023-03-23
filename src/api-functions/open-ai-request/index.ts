@@ -1,18 +1,9 @@
 import { Configuration, OpenAIApi } from "openai";
 import {
   generateCondensedSummaryPromptObjectArray,
-  generatePromptSongSSEObjectArray,
-  generatePromptTextSSEObjectArray,
   generateInsufficientLengthErrorPromptObjectArray,
 } from "~/utils/generatePrompt";
-import {
-  ChatGPTPromptPropsItem,
-  ContentType,
-  DataType,
-  OpenAiRequestProps,
-  OpenAiSummarizeProps,
-  SongType,
-} from "~/types";
+import { ChatGPTPromptPropsItem, ContentType, OpenAiSummarizeProps } from "~/types";
 
 function checkIfChunkedContentExceedsLimit(chunkedTextContent: Array<string>) {
   const totalWordsOfArticle = chunkedTextContent.flatMap((value) => value.split(" ")).length;
@@ -25,6 +16,11 @@ function checkIfChunkedContentExceedsLimit(chunkedTextContent: Array<string>) {
 
     throw error;
   }
+}
+
+async function getInsufficientLengthErrorMessage(url: string) {
+  const errorMessage = await openAICompletion(generateInsufficientLengthErrorPromptObjectArray(url, 50), 50);
+  return errorMessage;
 }
 
 async function getValidProps(type: ContentType, chunkedTextContent: Array<string>, url?: string) {
@@ -71,11 +67,6 @@ const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_toke
   return completion.data.choices?.[0]?.message?.content;
 };
 
-export async function getInsufficientLengthErrorMessage(url: string) {
-  const errorMessage = await openAICompletion(generateInsufficientLengthErrorPromptObjectArray(url, 50), 50);
-  return errorMessage;
-}
-
 export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
   const content = await getValidProps(props.type, props.chunkedTextContent ?? [], props.url);
   let textContent = "";
@@ -98,66 +89,4 @@ export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
     textContent = content[0];
   }
   return textContent;
-}
-
-export async function openAIRequest(props: OpenAiRequestProps): Promise<DataType | SongType> {
-  if (!configuration.apiKey) {
-    throw new Error("OpenAI API key not configured, please follow instructions in README.md");
-  }
-
-  const wordLimit = props.wordLimit || 100;
-  const textContent = props.textContent;
-  if (!textContent) throw new Error("No content provided");
-  const promptObject =
-    props.type === "text" || props.type === "article"
-      ? generatePromptTextSSEObjectArray(textContent, wordLimit)
-      : props.type === "song"
-      ? generatePromptSongSSEObjectArray(textContent, wordLimit)
-      : "";
-
-  if (!promptObject) {
-    throw new Error("Prompt is empty");
-  }
-
-  try {
-    const completionText = await openAICompletion(promptObject, 1000);
-    let parsedResponseData = {
-      meaning: "",
-      mood: "",
-      moodColor: "",
-      keyPoints: [],
-      bias: "",
-      tone: "",
-      summary: "",
-      trust: undefined,
-    };
-    try {
-      parsedResponseData = await JSON.parse(completionText as string);
-    } catch (error) {
-      throw new Error("Invalid JSON response from OpenAi");
-    }
-    if (props.type === "song") {
-      const responseObject = {
-        meaning: parsedResponseData?.meaning,
-        mood: parsedResponseData?.mood,
-        moodColor: parsedResponseData?.moodColor,
-      };
-
-      return responseObject;
-    }
-    const responseObject = {
-      keyPoints: parsedResponseData?.keyPoints,
-      bias: parsedResponseData?.bias,
-      tone: parsedResponseData?.tone,
-      summary: parsedResponseData?.summary,
-      trust: parsedResponseData?.trust,
-    };
-
-    return responseObject;
-  } catch (error) {
-    if (error) {
-      throw error;
-    }
-    throw new Error("An error occurred during your request.");
-  }
 }
