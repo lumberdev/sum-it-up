@@ -3,9 +3,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
 
 const queryClient = new QueryClient();
-const renderWithAllTheProveiders = (ui: ReactNode) =>
+const renderWithAllTheProviders = (ui: ReactNode) =>
   render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
 
 export * from "@testing-library/react";
 
-export { renderWithAllTheProveiders as render };
+export { renderWithAllTheProviders as render };

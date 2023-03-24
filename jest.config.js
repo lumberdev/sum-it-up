@@ -1,5 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const nextJest = require("next/jest");
+
 /**
  * Setting up Jest
  * https://nextjs.org/docs/testing#setting-up-jest-with-the-rust-compiler
@@ -16,15 +18,16 @@ const customJestConfig = {
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transformIgnorePatterns: ["node_modules/(?!(react-markdown))"],
 
-  setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   testEnvironment: "jest-environment-jsdom",
 
   moduleNameMapper: {
     "~/(.*)$": "<rootDir>/src/$1",
     "next/router": "<rootDir>/__mocks__/next/router.js",
-    "react-markdown": "<rootDir>/node_modules/react-markdown/react-markdown.min.js",
+    "react-markdown": "<rootDir>/node_modules/react-markdown/react-markdown.min.js", // There's an issue with [ESM + Jest](https://stackoverflow.com/questions/72382316/jest-encountered-an-unexpected-token-react-markdown)
   },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
+
 module.exports = createJestConfig(customJestConfig);
