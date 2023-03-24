@@ -6,12 +6,13 @@ on:
       - main
     types:
       - opened
-      - synchronized
+      - synchronize
       - reopened
       - ready_for_review
 
 jobs:
   test:
+    # if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
 
     steps:
