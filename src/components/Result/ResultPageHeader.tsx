@@ -1,7 +1,7 @@
-import SumItUpLogo from "../../assets/sum-it-up.svg";
 import Container from "../utility-components/Container";
 import { ResultPageContentType } from "~/types";
 import ResultPageContentToggler from "../utility-components/result/ResultPageContentToggler";
+import Image from "next/image";
 
 type ResultPageHeaderPropType = {
   resultPageContent?: ResultPageContentType;
@@ -18,7 +18,20 @@ const ResultPageHeader = ({
       <Container className="text-center">
         <div className="mx-auto flex w-full items-center justify-between rounded-full bg-primary p-[1.4rem] md:rounded-none md:bg-transparent md:p-0">
           <div className="relative flex-1 cursor-pointer" onClick={handleNewSearchBtnClick}>
-            <SumItUpLogo className="main-logo  w-[5.2rem] md:w-[8.2rem]" />
+            <Image
+              alt="Sum it up Logo"
+              src="/assets/sum-it-up.svg"
+              className="main-logo hidden w-[5.2rem] md:block md:w-[8.2rem]"
+              height="0"
+              width="0"
+            />
+            <Image
+              alt="Sum it up Logo"
+              src="/assets/sum-it-up-white.svg"
+              className="main-logo w-[5.2rem] md:hidden"
+              height="0"
+              width="0"
+            />
           </div>
           <div className="hidden flex-1 md:block">
             {resultPageContent && setResultPageContent ? (

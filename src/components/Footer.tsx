@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Container from "./utility-components/Container";
-import LumberLogo from "~/assets/lumber_logo.svg";
+import Image from "next/image";
 const Footer = () => {
   return (
     <footer className="fixed left-0 bottom-0 w-full bg-dark text-white">
@@ -8,7 +8,13 @@ const Footer = () => {
         <Link href="https://lumber.dev/" target="_blank" rel="noreferrer">
           <div className="flex items-center">
             Made by
-            <LumberLogo className="relative bottom-0.5 ml-4" />
+            <Image
+              alt="Lumber Logo"
+              src="/assets/lumber_logo.svg"
+              width="70"
+              height="0"
+              className="relative bottom-0.5 ml-4"
+            />
           </div>
         </Link>
         <div className="my-[-1rem] text-[1rem] min-[350px]:hidden md:mr-[5rem] md:text-paragraph">

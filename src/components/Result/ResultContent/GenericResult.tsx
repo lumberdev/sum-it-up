@@ -20,12 +20,15 @@ const GenericResult = ({
   isLoadingSSE,
   type,
 }: GenericResultPropType) => {
-  const header = type === "song" ? "Song Meaning" : "article" ? "Article Summary" : "Summary";
+  const header = type === "song" ? "Song Meaning" : type === "article" ? "Article Summary" : "Summary";
+
   return (
     <Container>
       <div className="mx-auto mb-12 max-w-[75rem] animate-fadeIn rounded-[20px] border-2 border-primary bg-white py-12 px-8 md:my-20 md:p-20">
         <div className="flex items-center justify-between pb-8">
-          <h2 className="text-xl font-bold">{header}</h2>
+          <h2 className="text-xl font-bold" data-testid="result-heading-title">
+            {header}
+          </h2>
           <div className="hidden md:block">
             <ShareLinkButton
               trackShare={trackShare}

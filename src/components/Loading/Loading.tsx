@@ -1,11 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
-import loaderGif from "../../assets/Text-Loader.gif";
-import songLoaderGif from "../../assets/Song-Loader.gif";
 import Container from "../utility-components/Container";
-import SumItUpLogo from "../../assets/sum-it-up.svg";
-import OnIt from "../../assets/On-It.svg";
 
 const Loading = ({
   summaryContent,
@@ -23,7 +18,20 @@ const Loading = ({
         <Container className="text-center">
           <div className="mx-auto flex w-full items-center justify-between rounded-full bg-primary p-[1.4rem] md:rounded-none md:bg-transparent md:p-0">
             <div className="relative flex-1 cursor-pointer" onClick={handleNewSearchBtnClick}>
-              <SumItUpLogo className="main-logo w-[5.2rem] md:w-[8.2rem]" />
+              <Image
+                alt="Sum it up Logo"
+                src="/assets/sum-it-up.svg"
+                className="main-logo hidden w-[5.2rem] md:block md:w-[8.2rem]"
+                height="0"
+                width="0"
+              />
+              <Image
+                alt="Sum it up Logo"
+                src="/assets/sum-it-up-white.svg"
+                className="main-logo w-[5.2rem] md:hidden"
+                height="0"
+                width="0"
+              />
             </div>
             <div className="relative flex-1 text-right">
               <button
@@ -49,10 +57,17 @@ const Loading = ({
       </header>
       <div className="flex min-h-[80vh] animate-fadeIn flex-col items-center justify-center pb-10 text-center">
         <div className="flex min-h-[50vh] flex-col items-center justify-center">
-          <OnIt className="h-[3rem] w-[14.8rem] md:hidden" viewBox="80 0 50 50" />
-          <OnIt className="hidden h-[4.5rem] w-[21.7rem] md:block" viewBox="80 0 50 50" />
           <Image
-            src={songDetails ? songLoaderGif : loaderGif}
+            alt="Lumber Logo"
+            src="/assets/On-It.svg"
+            width="40"
+            height="0"
+            className="h-[3rem] w-[14.8rem] md:h-[4.5rem] md:w-[21.7rem]"
+          />
+          <Image
+            src={songDetails ? "/assets/Song-Loader.gif" : "/assets/Text-Loader.gif"}
+            width="0"
+            height="0"
             alt="my gif"
             className="-mt-[6rem] h-[32rem] w-[32rem] md:h-[40rem] md:w-[40rem]"
             unoptimized={true}

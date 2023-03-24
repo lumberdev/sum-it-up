@@ -1,7 +1,7 @@
+import Image from "next/image";
 import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
 import { MarkdownResponse, ResponseType } from "~/types";
 import { encodeStateToUrl } from "~/utils/generateLinkToShare";
-import CopyUrlIcon from "../../../assets/copy-url-icon.svg";
 
 const ShareLinkButton = ({
   originalContent,
@@ -33,7 +33,7 @@ const ShareLinkButton = ({
       {!disabled && !didCopy && (
         <span className="absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 transform bg-gradient-to-r from-transparent to-white opacity-40 group-hover:animate-shine group-active:animate-shine"></span>
       )}
-      <CopyUrlIcon />
+      <Image alt="Copy icon" src="/assets/copy-url-icon.svg" width="20" height="0" />
       <span className="ml-2">{didCopy ? "Copied" : "Copy Link"}</span>
     </button>
   );
