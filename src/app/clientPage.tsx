@@ -89,6 +89,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       wordLimit: Number(customLength || summaryLength),
       type,
       text,
+      title: songInfo,
     });
   };
   const handleNewSearchBtnClick = () => {

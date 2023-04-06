@@ -2,7 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchArticleData } from "~/query/fetch-article-data";
 import { ChatGPTModelRequest, ContentType, RequestBody, MarkdownResponse } from "~/types";
-import { generatePromptSongMarkdown, generateTextSummaryMarkdown } from "~/utils/generatePrompt";
+import { buildPromptObject } from "~/utils/build-prompt-object";
+
 import { getSummaryFromUrl } from "~/utils/open-ai-fetch";
 import { fetchServerSent } from "~/utils/sse-fetch";
 import { textToChunks } from "~/utils/text-to-chunks";
@@ -52,15 +53,10 @@ const useOpenAiSSEResponse = ({
 
   const streamContent = useCallback(({ data, textContent }: { data: RequestBody; textContent: string }) => {
     const { onStream, onSuccess, onError } = callbackFunctionRefs.current;
-    const { wordLimit, type } = data;
+    const { wordLimit, type, title = "" } = data;
     if (!data || !Object.keys(data).length) return;
 
-    const promptObject =
-      type === "text" || type === "article"
-        ? generateTextSummaryMarkdown(textContent, wordLimit)
-        : type === "song"
-        ? generatePromptSongMarkdown(textContent, wordLimit)
-        : [];
+    const promptObject = buildPromptObject(type, textContent, wordLimit, title);
 
     const multiplier = Math.min(wordLimit > 100 ? 2.5 : 1.3);
     const maxTokenLimit = Math.min(Math.round(wordLimit * multiplier) + 600, 2000);
@@ -169,17 +165,11 @@ const useOpenAiSSEResponse = ({
     return { textContent, data };
   };
 
-  useEffect(() => {
-    setStreamedResult("");
-    if (!textContent || !data || earlyClose.current) return;
-    streamContent({ data, textContent });
-  }, [textContent, data, earlyClose, streamContent]);
-
   const { mutate, reset, isLoading } = useMutation({
     mutationFn: initiate,
-    onSuccess: (res) => {
+    onSuccess: (res, variables) => {
       setTextContent(res.textContent);
-      setData(res.data);
+      setData(variables);
     },
     onError: (res, variables) => {
       const { onError } = callbackFunctionRefs.current;
@@ -188,7 +178,7 @@ const useOpenAiSSEResponse = ({
     },
   });
 
-  function forceClose() {
+  const forceClose = useCallback(() => {
     earlyClose.current = true;
     reset();
     setData(null);
@@ -196,7 +186,17 @@ const useOpenAiSSEResponse = ({
     setIsLoadingSSE(false);
     if (!fetchRef.current) return;
     fetchRef.current();
-  }
+  }, [reset]);
+
+  useEffect(() => {
+    setStreamedResult("");
+    if (!textContent || !data || earlyClose.current) return;
+
+    streamContent({ data, textContent });
+    return () => {
+      forceClose();
+    };
+  }, [textContent, data, earlyClose, streamContent, forceClose]);
 
   return { streamedResult, mutate, isLoading, isLoadingSSE, isError, forceClose, readabilityData };
 };
