@@ -43,7 +43,7 @@ export function generateTextSummaryMarkdown(text: string, wordLimit: number): Ch
     {
       role: "system",
       content: `Generate a markdown summary of the following user text content following this format.
-      
+    
       ## (Title of summary)
       summary content (${markdownModifier(wordLimit)})
       \n\n
@@ -61,16 +61,19 @@ export function generateTextSummaryMarkdown(text: string, wordLimit: number): Ch
   ];
 }
 
-export function generatePromptSongMarkdown(text: string, wordLimit: number): ChatGPTPromptPropsItem[] {
+export function generatePromptSongMarkdown(text: string, wordLimit: number, title?: string): ChatGPTPromptPropsItem[] {
   return [
     {
       role: "system",
-      content: `Generate a markdown interpretation of the meaning of the song lyrics submitted following this format
+      content: `Generate a markdown interpretation of the meaning of the ${
+        title ? `song "${title}"` : "content"
+      } submitted following this format:
         
-        ## (Title)
-        interpretation of the meaning of the song (${markdownModifier(wordLimit)})
+        ## ${title ? `(Title of song and artist ${title})` : "Title Evoked by interpretation"}
+        
+        interpretation of the meaning of the content (${markdownModifier(wordLimit)})
 
-       - Mood evoked by song: {mood}
+       - Mood evoked by lyrics: {mood}
         `,
     },
     { role: "user", content: text },

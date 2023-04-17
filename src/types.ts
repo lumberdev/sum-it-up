@@ -50,6 +50,7 @@ export type RequestBody = {
   text?: string;
   type: ContentType;
   wordLimit: number;
+  title?: string;
 };
 
 export type OpenAiRequestProps = {
