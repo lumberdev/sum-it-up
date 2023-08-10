@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { initTextMappedPoints } from "~/constants";
 import { ChatGPTModelRequest, MarkdownResponse, RequestBody } from "~/types";
 import { buildPromptObject } from "~/utils/build-prompt-object";
+import { getOpenAiKey } from "~/utils/get-open-ai-key";
 import { fetchServerSent } from "~/utils/sse-fetch";
 
 export function useStreamOpenAI() {
@@ -41,12 +42,15 @@ export function useStreamOpenAI() {
         presence_penalty: 0.5,
       };
       let mappedResult = initTextMappedPoints;
+
+      const apiKey = getOpenAiKey();
+
       fetchRef.current = fetchServerSent(
         "https://api.openai.com/v1/chat/completions",
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer " + process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+            Authorization: "Bearer " + apiKey,
           },
           method: "POST",
           payload: JSON.stringify({

@@ -1,5 +1,7 @@
 import { ContentType, MarkdownResponse } from "./types";
 
+export const openAiStorageKey = "open_ai_client_key";
+
 export const initTextMappedPoints = {
   markdown: "",
   inputCharacterLength: 0,

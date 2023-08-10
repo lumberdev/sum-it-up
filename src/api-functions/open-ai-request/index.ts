@@ -4,6 +4,7 @@ import {
   generateInsufficientLengthErrorPromptObjectArray,
 } from "~/utils/generatePrompt";
 import { ChatGPTPromptPropsItem, ContentType, OpenAiSummarizeProps } from "~/types";
+import { getOpenAiKey } from "~/utils/get-open-ai-key";
 
 function checkIfChunkedContentExceedsLimit(chunkedTextContent: Array<string>) {
   const totalWordsOfArticle = chunkedTextContent.flatMap((value) => value.split(" ")).length;
@@ -50,12 +51,18 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
   }
 }
 
-const configuration = new Configuration({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+const configureOpenAi = () => {
+  const apiKey = getOpenAiKey();
+  const configuration = new Configuration({
+    apiKey: apiKey,
+  });
+
+  const openai = new OpenAIApi(configuration);
+  return openai;
+};
 
 const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_tokens: number): Promise<string> => {
+  const openai = configureOpenAi();
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: promptObject,
