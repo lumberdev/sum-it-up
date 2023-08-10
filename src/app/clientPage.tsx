@@ -156,7 +156,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
           <div className="mx-auto w-2/3 rounded-[20px] border-2 border-primary bg-background py-12 px-8 md:my-20 md:p-20">
             <form onSubmit={submitOpenAiKey} className="flex flex-col justify-center gap-2">
               <label htmlFor="openAiKey" className="text-center text-lg">
-                Enter your OpenAi Secret key below. Create a secret at{" "}
+                Enter your OpenAI secret key below. Create a secret at{" "}
                 <a className="text-primary" href="https://platform.openai.com/account/api-keys">
                   OpenAI
                 </a>
@@ -169,7 +169,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
                   value={openAiKeyValue}
                   onChange={(e) => setOpenAiKeyValue(e.target.value)}
                   type="password"
-                  placeholder="Enter your OpenAI key"
+                  placeholder="Enter your OpenAI secret key"
                   required
                 />
                 <SummarizeButton className="md:!h-[5.7rem] md:rounded-l-none ">Submit</SummarizeButton>
