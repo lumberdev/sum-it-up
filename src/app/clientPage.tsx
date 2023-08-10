@@ -13,9 +13,8 @@ import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 import { isValidJSON } from "~/utils/isValidJSON";
 import About from "~/components/About";
 import MinHeightBodyContainer from "~/components/utility-components/MinHeightBodyContainer";
-import SummarizeButton from "~/components/utility-components/input/SummarizeButton";
-import { openAiStorageKey } from "~/constants";
 import { checkOpenAiKeyStatus } from "~/utils/check-open-ai-key-status";
+import OpenAiKeyModal from "~/components/OpenAiModal";
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
@@ -39,7 +38,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   );
   const [songDetails, setSongDetails] = useState(searchParams.songDetails.length > 0 ? searchParams.songDetails : "");
 
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const onOpenModal = () => setModalOpen(true);
   const onCloseModal = () => setModalOpen(false);
@@ -78,7 +77,6 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   ) => {
     event.preventDefault();
     const userHasValidKey = await checkOpenAiKeyStatus();
-
     if (!userHasValidKey) {
       onOpenModal(); // request token from user in pop up
       return;
@@ -130,15 +128,6 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     }
   };
 
-  const [openAiKeyValue, setOpenAiKeyValue] = useState("");
-
-  const submitOpenAiKey = (event: React.SyntheticEvent) => {
-    event.preventDefault();
-    localStorage.setItem(openAiStorageKey, openAiKeyValue);
-    onCloseModal();
-    setOpenAiKeyValue("");
-  };
-
   if (isError) return <Error handleNewSearchBtnClick={handleNewSearchBtnClick} errorMessage={errorMessage} />;
   if (isLoading || (!displayResult && isLoadingSSE))
     return (
@@ -151,36 +140,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
 
   return (
     <>
-      {modalOpen && (
-        <div className="fixed z-50 flex h-full w-full items-center justify-center bg-slate-400/30 backdrop-blur">
-          <div className="mx-auto w-2/3 rounded-[20px] border-2 border-primary bg-background py-12 px-8 md:my-20 md:p-20">
-            <form onSubmit={submitOpenAiKey} className="flex flex-col justify-center gap-2">
-              <label htmlFor="openAiKey" className="text-center text-lg">
-                Enter your OpenAI secret key below. Create a secret at{" "}
-                <a className="text-primary" href="https://platform.openai.com/account/api-keys">
-                  OpenAI
-                </a>
-              </label>
-              <div className="flex flex-col md:flex-row">
-                <input
-                  className="mb-8 flex h-20 items-center justify-center rounded-full border-2 border-primary px-4 pl-6 font-medium transition-all duration-200 placeholder:font-normal placeholder:!text-dark/70 focus:outline-none focus:ring-2 focus:ring-inset md:mb-0 md:h-[5.7rem] md:flex-1 md:rounded-r-none"
-                  name="openAiKey"
-                  id="openAiKey"
-                  value={openAiKeyValue}
-                  onChange={(e) => setOpenAiKeyValue(e.target.value)}
-                  type="password"
-                  placeholder="Enter your OpenAI secret key"
-                  required
-                />
-                <SummarizeButton className="md:!h-[5.7rem] md:rounded-l-none ">Submit</SummarizeButton>
-              </div>
-              <span className="mx-auto font-medium">
-                we will never use your key (we don’t even send it to our servers)
-              </span>
-            </form>
-          </div>
-        </div>
-      )}
+      {modalOpen && <OpenAiKeyModal onCloseModal={onCloseModal} />}
       {displayResult ? (
         <MinHeightBodyContainer>
           <Result

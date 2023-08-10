@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SummaryLengthSlider from "../../utility-components/input/SummaryLengthSlider";
 import { InputFormSubmissionType } from "~/types";
-import SummarizeButton from "../../utility-components/input/SummarizeButton";
+import StyledInputWithSubmit from "~/components/utility-components/input/StyledInput";
 
 const WebsiteInputField = ({
   handleFormSubmit,
@@ -28,23 +28,18 @@ const WebsiteInputField = ({
           return;
         }}
       >
-        <div className="mx-auto flex w-full flex-col justify-center md:flex-row">
-          <input
-            className="mb-8 flex h-20 items-center justify-center rounded-full border-2 border-primary px-4 pl-6 font-medium transition-all duration-200 placeholder:font-normal placeholder:!text-dark/70 focus:outline-none focus:ring-2 focus:ring-inset md:mb-0 md:h-[5.7rem] md:flex-1 md:rounded-r-none"
-            name="article-url"
-            value={inputUrl}
-            placeholder="Enter an article page URL"
-            required
-            onChange={(e) => {
-              if (!urlRegex.test(e.target.value)) e.target.setCustomValidity("Please enter a valid URL");
-              else e.target.setCustomValidity("");
-              setInputUrl(e.target.value);
-            }}
-          />
-
-          <SummarizeButton className="md:!h-[5.7rem] md:rounded-l-none ">Summarize</SummarizeButton>
-        </div>
-
+        <StyledInputWithSubmit
+          name="article-url"
+          value={inputUrl}
+          placeholder="Enter an article page URL"
+          required
+          onChange={(e) => {
+            if (!urlRegex.test(e.target.value)) e.target.setCustomValidity("Please enter a valid URL");
+            else e.target.setCustomValidity("");
+            setInputUrl(e.target.value);
+          }}
+          buttonTitle="Summarize"
+        />
         <SummaryLengthSlider
           summaryLength={summaryLength}
           setSummaryLength={setSummaryLength}
