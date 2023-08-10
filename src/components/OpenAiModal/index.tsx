@@ -32,7 +32,7 @@ const OpenAiKeyModal = ({ onCloseModal }: { onCloseModal: () => void }) => {
         <form onSubmit={submitOpenAiKey} className="flex flex-col justify-center gap-2">
           <label htmlFor="openAiKey" className="text-center text-lg">
             Enter your OpenAI secret key below. Create a secret at{" "}
-            <a className="text-primary" href="https://platform.openai.com/account/api-keys">
+            <a className="underline" href="https://platform.openai.com/account/api-keys" target="blank">
               OpenAI
             </a>
             .
