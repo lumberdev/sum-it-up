@@ -154,11 +154,18 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
       {modalOpen && (
         <div className="fixed z-50 flex h-full w-full items-center justify-center bg-slate-400/30 backdrop-blur">
           <div className="mx-auto w-2/3 rounded-[20px] border-2 border-primary bg-background py-12 px-8 md:my-20 md:p-20">
-            <form onSubmit={submitOpenAiKey}>
+            <form onSubmit={submitOpenAiKey} className="flex flex-col justify-center gap-2">
+              <label htmlFor="openAiKey" className="text-center text-lg">
+                Enter your OpenAi Secret key below. Create a secret at{" "}
+                <a className="text-primary" href="https://platform.openai.com/account/api-keys">
+                  OpenAI
+                </a>
+              </label>
               <div className="flex flex-col md:flex-row">
                 <input
                   className="mb-8 flex h-20 items-center justify-center rounded-full border-2 border-primary px-4 pl-6 font-medium transition-all duration-200 placeholder:font-normal placeholder:!text-dark/70 focus:outline-none focus:ring-2 focus:ring-inset md:mb-0 md:h-[5.7rem] md:flex-1 md:rounded-r-none"
                   name="openAiKey"
+                  id="openAiKey"
                   value={openAiKeyValue}
                   onChange={(e) => setOpenAiKeyValue(e.target.value)}
                   type="password"
@@ -167,6 +174,9 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
                 />
                 <SummarizeButton className="md:!h-[5.7rem] md:rounded-l-none ">Submit</SummarizeButton>
               </div>
+              <span className="mx-auto font-medium">
+                we will never use your key (we don’t even send it to our servers)
+              </span>
             </form>
           </div>
         </div>
