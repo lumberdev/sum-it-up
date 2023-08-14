@@ -41,6 +41,7 @@ const Result = ({
           output: markdownResponse.markdown,
           inputCharacterLength: markdownResponse.inputCharacterLength,
           outputCharacterLength: markdownResponse.outputCharacterLength,
+          model: markdownResponse.model,
         });
       } else {
         const originalContentString = originalContent;
@@ -50,6 +51,7 @@ const Result = ({
           output: JSON.stringify(markdownResponse),
           inputCharacterLength: markdownResponse.inputCharacterLength,
           outputCharacterLength: markdownResponse.outputCharacterLength,
+          model: markdownResponse.model,
         });
       }
       history.replaceState({}, "", encodedUrl);

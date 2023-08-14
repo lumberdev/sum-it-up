@@ -119,6 +119,7 @@ export interface TextResponse extends SharedResponse {
 
 export interface MarkdownResponse extends SharedResponse, SharedReadability {
   markdown: string;
+  model: string;
 }
 
 export interface TextSummaryResponseType extends TextResponse, SharedReadability {}
