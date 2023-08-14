@@ -10,7 +10,8 @@ async function decryptMessage() {
   const { iv, ciphertext, exportedKey } = body;
 
   async function importKey(keyData: string) {
-    let key = await crypto.subtle.importKey("jwk", keyData, { name: "AES-GCM" }, true, ["decrypt", "encrypt"]);
+    // @ts-ignore it does support jwk
+    let key = await window.crypto.subtle.importKey("jwk", keyData, { name: "AES-GCM" }, true, ["decrypt", "encrypt"]);
     return key;
   }
 
