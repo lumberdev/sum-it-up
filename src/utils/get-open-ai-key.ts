@@ -1,8 +1,36 @@
 import { openAiStorageKey } from "~/constants";
 
-export const getOpenAiKey = () => {
-  const apiKey = localStorage.getItem(openAiStorageKey) || process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+/*
+  Call to fetch encrypted key and decrypt it
+  */
+async function decryptMessage() {
+  const res = await fetch("/api/get-encrypted");
+  const body = (await res.json()) as { iv: string; ciphertext: string; exportedKey: string };
 
+  const { iv, ciphertext, exportedKey } = body;
+
+  async function importKey(keyData: string) {
+    let key = await crypto.subtle.importKey("jwk", keyData, { name: "AES-GCM" }, true, ["decrypt", "encrypt"]);
+    return key;
+  }
+
+  const key = await importKey(exportedKey);
+  let decrypted = await window.crypto.subtle.decrypt(
+    {
+      name: "AES-GCM",
+      iv: Buffer.from(iv),
+    },
+    key,
+    Buffer.from(ciphertext),
+  );
+
+  let dec = new TextDecoder();
+  return dec.decode(decrypted);
+}
+
+export const getOpenAiKey = async () => {
+  const key = await decryptMessage();
+  const apiKey = localStorage.getItem(openAiStorageKey) || key;
   if (!apiKey) throw new Error("Missing key");
   return apiKey;
 };

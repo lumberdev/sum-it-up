@@ -3,7 +3,7 @@ import { getOpenAiKey } from "./get-open-ai-key";
 
 export const checkOpenAiKeyStatus = async () => {
   try {
-    const apiKey = getOpenAiKey();
+    const apiKey = await getOpenAiKey();
 
     const configuration = new Configuration({
       organization: "org-FmieSceXLz3IvrwNny0WbVQn",
