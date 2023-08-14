@@ -52,9 +52,9 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
 }
 
 const configureOpenAi = async () => {
-  const apiKey = await getOpenAiKey();
+  const apiKey = (await getOpenAiKey()) as string;
   const configuration = new Configuration({
-    apiKey: apiKey,
+    apiKey,
   });
 
   const openai = new OpenAIApi(configuration);

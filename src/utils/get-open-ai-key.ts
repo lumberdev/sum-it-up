@@ -1,4 +1,5 @@
 import { openAiStorageKey } from "~/constants";
+import { checkOpenAiKeyStatus } from "./check-open-ai-key-status";
 
 /*
   Call to fetch encrypted key and decrypt it
@@ -36,7 +37,9 @@ async function decryptMessage() {
 
 export const getOpenAiKey = async () => {
   const key = await decryptMessage();
-  const apiKey = localStorage.getItem(openAiStorageKey) || key;
-  if (!apiKey) throw new Error("Missing key");
-  return apiKey;
+  const localKey = localStorage.getItem(openAiStorageKey);
+  if (await checkOpenAiKeyStatus(key as string)) return key;
+  if (await checkOpenAiKeyStatus(localKey as string)) return localKey;
+
+  return null;
 };

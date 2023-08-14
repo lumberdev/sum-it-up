@@ -10,10 +10,11 @@ export function useStreamOpenAI() {
 
   const fetchRef = useRef<() => unknown>(() => null);
   const [openAiKey, setOpenAiKey] = useState<string>("");
+
   useEffect(() => {
     (async () => {
       const key = await getOpenAiKey();
-      setOpenAiKey(key);
+      if (key) setOpenAiKey(key);
     })();
   }, []);
   const streamContent = useCallback(
