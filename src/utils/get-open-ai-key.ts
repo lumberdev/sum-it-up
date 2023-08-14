@@ -15,7 +15,7 @@ async function decryptMessage() {
     return key;
   }
 
-  const key = await importKey(exportedKey);
+  const key = await importKey(exportedKey); // Import key to crypto so it's usable
   let decrypted = await window.crypto.subtle.decrypt(
     {
       name: "AES-GCM",

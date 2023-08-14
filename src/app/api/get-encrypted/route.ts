@@ -2,10 +2,14 @@ import { NextResponse } from "next/server";
 
 import crypto from "node:crypto";
 
+/**
+ * https://github.com/mdn/dom-examples/blob/main/web-crypto/encrypt-decrypt/aes-gcm.js
+ *
+ * Return encrypted key to client
+ */
 export async function GET() {
   /*
-    Fetch the contents of the "message" textbox, and encode it
-    in a form we can use for the encrypt operation.
+    encode message.
     */
   function getMessageEncoding() {
     let message = process.env.OPENAI_API_KEY;
@@ -13,8 +17,7 @@ export async function GET() {
     return enc.encode(message);
   }
   /*
-    Get the encoded message, encrypt it and display a representation
-    of the ciphertext in the "Ciphertext" element.
+    Get the encoded message, encrypt it
     */
   async function encryptMessage(key: CryptoKey) {
     let encoded = getMessageEncoding();
