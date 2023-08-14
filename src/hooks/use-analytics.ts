@@ -77,6 +77,7 @@ const useAnalytics = () => {
       output: string;
       inputCharacterLength: number;
       outputCharacterLength: number;
+      model: string;
     }) {
       track(EVENT_NAMES.REQUEST_COMPLETED, properties);
     }

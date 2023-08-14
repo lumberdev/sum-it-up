@@ -70,14 +70,16 @@ export function useStreamOpenAI() {
             onSuccess && onSuccess(mappedResult);
             return;
           }
+          const parsedPayload = JSON.parse(payload as string);
+          const text = parsedPayload.choices?.[0]?.delta?.content ?? "";
 
-          const text = JSON.parse(payload as string).choices?.[0]?.delta?.content ?? "";
           setStreamValue((state) => {
             mappedResult = {
               ...mappedResult,
               markdown: `${state}${text}`,
               outputCharacterLength: `${state}${text}`.length,
               type,
+              model: parsedPayload.model,
             };
 
             onStream && onStream(mappedResult);
