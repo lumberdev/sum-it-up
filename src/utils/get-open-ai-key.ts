@@ -5,9 +5,6 @@ import { openAiStorageKey } from "~/constants";
   */
 async function decryptMessage() {
   const res = await fetch("/api/get-encrypted");
-  const body = (await res.json()) as { iv: string; ciphertext: string; exportedKey: string };
-
-  const { iv, ciphertext, exportedKey } = body;
 
   async function importKey(keyData: string) {
     // @ts-ignore it does support jwk
@@ -15,18 +12,26 @@ async function decryptMessage() {
     return key;
   }
 
-  const key = await importKey(exportedKey); // Import key to crypto so it's usable
-  let decrypted = await window.crypto.subtle.decrypt(
-    {
-      name: "AES-GCM",
-      iv: Buffer.from(iv),
-    },
-    key,
-    Buffer.from(ciphertext),
-  );
+  try {
+    const body = (await res.json()) as { iv: string; ciphertext: string; exportedKey: string };
 
-  let dec = new TextDecoder();
-  return dec.decode(decrypted);
+    const { iv, ciphertext, exportedKey } = body;
+
+    const key = await importKey(exportedKey); // Import key to crypto so it's usable
+    let decrypted = await window.crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv: Buffer.from(iv),
+      },
+      key,
+      Buffer.from(ciphertext),
+    );
+
+    let dec = new TextDecoder();
+    return dec.decode(decrypted);
+  } catch (e) {
+    return "";
+  }
 }
 
 export const getOpenAiKey = async () => {

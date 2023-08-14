@@ -77,6 +77,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   ) => {
     event.preventDefault();
     const userHasValidKey = await checkOpenAiKeyStatus();
+
     if (!userHasValidKey) {
       onOpenModal(); // request token from user in pop up
       return;
