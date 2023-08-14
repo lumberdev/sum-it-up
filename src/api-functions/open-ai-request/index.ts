@@ -51,10 +51,10 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
   }
 }
 
-const configureOpenAi = () => {
-  const apiKey = getOpenAiKey();
+const configureOpenAi = async () => {
+  const apiKey = (await getOpenAiKey()) as string;
   const configuration = new Configuration({
-    apiKey: apiKey,
+    apiKey,
   });
 
   const openai = new OpenAIApi(configuration);
@@ -62,7 +62,7 @@ const configureOpenAi = () => {
 };
 
 const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_tokens: number): Promise<string> => {
-  const openai = configureOpenAi();
+  const openai = await configureOpenAi();
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: promptObject,

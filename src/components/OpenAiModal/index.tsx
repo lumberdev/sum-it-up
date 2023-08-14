@@ -5,18 +5,20 @@ import StyledInputWithSubmit from "../utility-components/input/StyledInput";
 
 const OpenAiKeyModal = ({ onCloseModal }: { onCloseModal: () => void }) => {
   const [openAiKeyValue, setOpenAiKeyValue] = useState<string>("");
-
   const [savedKey, setSavedKey] = useState<boolean>(false);
 
   useEffect(() => {
     let key = "";
-    try {
-      key = getOpenAiKey();
-    } catch (e) {
-      console.log(key);
-    } finally {
-      setSavedKey(!!key);
-    }
+
+    (async () => {
+      try {
+        await getOpenAiKey();
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setSavedKey(!!key);
+      }
+    })();
   }, []);
 
   const submitOpenAiKey = (event: React.SyntheticEvent) => {

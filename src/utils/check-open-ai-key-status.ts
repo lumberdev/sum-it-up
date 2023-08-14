@@ -1,10 +1,7 @@
 import { Configuration, OpenAIApi } from "openai";
-import { getOpenAiKey } from "./get-open-ai-key";
 
-export const checkOpenAiKeyStatus = async () => {
+export const checkOpenAiKeyStatus = async (apiKey: string) => {
   try {
-    const apiKey = getOpenAiKey();
-
     const configuration = new Configuration({
       organization: "org-FmieSceXLz3IvrwNny0WbVQn",
       apiKey,

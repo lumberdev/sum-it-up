@@ -13,8 +13,9 @@ import { getStringOrFirst } from "~/typescript-helpers/type-cast-functions";
 import { isValidJSON } from "~/utils/isValidJSON";
 import About from "~/components/About";
 import MinHeightBodyContainer from "~/components/utility-components/MinHeightBodyContainer";
-import { checkOpenAiKeyStatus } from "~/utils/check-open-ai-key-status";
+
 import OpenAiKeyModal from "~/components/OpenAiModal";
+import { getOpenAiKey } from "~/utils/get-open-ai-key";
 
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
@@ -76,7 +77,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     songInfo = "",
   ) => {
     event.preventDefault();
-    const userHasValidKey = await checkOpenAiKeyStatus();
+    const userHasValidKey = await getOpenAiKey();
     if (!userHasValidKey) {
       onOpenModal(); // request token from user in pop up
       return;
