@@ -13,8 +13,8 @@ import { textToChunks } from "./text-to-chunks";
  */
 export const buildContentToStream = async (type: ContentType, url: string, text: string) => {
   let textContent = "";
-
   let mappedReadabilityObject = { ...initTextMappedPoints };
+
   try {
     if (type === "article" || type === "song") {
       const json = await fetchArticleData(url, 500);
@@ -30,7 +30,6 @@ export const buildContentToStream = async (type: ContentType, url: string, text:
         content: json.content,
         url,
       };
-
       const body = await getSummaryFromUrl(type, json.chunkedTextContent, url);
       textContent = body;
     } else {

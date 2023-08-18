@@ -26,6 +26,11 @@ const useOpenAiSSEResponse = ({
 
   const { resetStream, streamValue, stream } = useStreamOpenAI();
 
+  const onProcessError = (callbackFn?: ((...args: any) => void) | null) => () => {
+    callbackFn && callbackFn();
+    setIsError(true);
+  };
+
   const initiate = async (data: RequestBody) => {
     setIsError(false);
     setIsLoadingSSE(true);
@@ -54,7 +59,8 @@ const useOpenAiSSEResponse = ({
           data: variables,
           textContent: textContent,
           callbackFunctions: {
-            onError,
+            // Call external error fn, set error to true
+            onError: onProcessError(onError),
             onSuccess: (res: MarkdownResponse) => {
               // Call success and set SSE loading to false since it's starting here
               onSuccess && onSuccess(res);
@@ -65,9 +71,10 @@ const useOpenAiSSEResponse = ({
         });
     },
     onError: (res, variables) => {
+      console.error("ERROR:", res);
       const { onError } = callbackFunctionRefs.current;
-      onError && onError(res as { message: string }, variables);
-      setIsError(true);
+      // Call external error fn, set error to true
+      onProcessError(onError ? () => onError(res as { message: string }, variables) : null)();
     },
   });
 

@@ -14,9 +14,6 @@ import { isValidJSON } from "~/utils/isValidJSON";
 import About from "~/components/About";
 import MinHeightBodyContainer from "~/components/utility-components/MinHeightBodyContainer";
 
-import OpenAiKeyModal from "~/components/OpenAiModal";
-import { getOpenAiKey } from "~/utils/get-open-ai-key";
-
 export default function ClientPage({ searchParams }: { searchParams: { [key: string]: string } }) {
   const [originalContent, setOriginalContent] = useState(searchParams.original ?? "");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -39,11 +36,6 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   );
   const [songDetails, setSongDetails] = useState(searchParams.songDetails.length > 0 ? searchParams.songDetails : "");
 
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-  const onOpenModal = () => setModalOpen(true);
-  const onCloseModal = () => setModalOpen(false);
-
   const { trackInputSelection, trackLengthSelection, trackSubmit, trackNewSummary, trackRequestError, trackShare } =
     useAnalytics();
 
@@ -61,6 +53,8 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     onError: (err, data) => {
       if (err?.name === "Length constraint violation") {
         setErrorMessage(err?.message as string);
+      } else {
+        setErrorMessage("Something went wrong, our team has been notified!");
       }
       setDisplayResult(false);
       trackRequestError({ ...data, error: (err?.message as string) ?? "" });
@@ -77,11 +71,6 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     songInfo = "",
   ) => {
     event.preventDefault();
-    const userHasValidKey = await getOpenAiKey();
-    if (!userHasValidKey) {
-      onOpenModal(); // request token from user in pop up
-      return;
-    }
 
     let validURL = inputUrl;
     // Readability requires us to send urls with the correct format, but because we want to support more forms of urls (google.com || www.google.com || https://www.google.com etc) we need to append the protocol before we send the data off.
@@ -130,6 +119,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   };
 
   if (isError) return <Error handleNewSearchBtnClick={handleNewSearchBtnClick} errorMessage={errorMessage} />;
+
   if (isLoading || (!displayResult && isLoadingSSE))
     return (
       <Loading
@@ -141,7 +131,6 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
 
   return (
     <>
-      {modalOpen && <OpenAiKeyModal onCloseModal={onCloseModal} />}
       {displayResult ? (
         <MinHeightBodyContainer>
           <Result
