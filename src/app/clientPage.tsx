@@ -119,6 +119,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   };
 
   if (isError) return <Error handleNewSearchBtnClick={handleNewSearchBtnClick} errorMessage={errorMessage} />;
+
   if (isLoading || (!displayResult && isLoadingSSE))
     return (
       <Loading
