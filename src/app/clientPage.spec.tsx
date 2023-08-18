@@ -6,8 +6,6 @@ import {
   __mock_query_param_text,
 } from "~/test-utils/mocks/queryParamMocks";
 
-jest.mock("~/utils/get-open-ai-key");
-
 test("loads new search page", async () => {
   render(<ClientPage searchParams={{ result: "", songDetails: "", original: "" }} />);
   await waitFor(() => {
