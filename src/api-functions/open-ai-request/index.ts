@@ -52,7 +52,7 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
 
 const configureOpenAi = async () => {
   const openai = new OpenAI({
-    baseURL: `${process.env.NEXT_PUBLIC_SERVER}/openai`,
+    baseURL: `${process.env.NEXT_PUBLIC_PROXY}/openai`,
   });
   return openai;
 };

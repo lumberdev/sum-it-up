@@ -42,7 +42,7 @@ export function useStreamOpenAI() {
       };
       let mappedResult = initTextMappedPoints;
       fetchRef.current = fetchServerSent(
-        `${process.env.NEXT_PUBLIC_SERVER}/openai/v1/chat/completions`,
+        `${process.env.NEXT_PUBLIC_PROXY}/openai/v1/chat/completions`,
         {
           headers: {
             "Content-Type": "application/json",
