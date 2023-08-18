@@ -44,7 +44,6 @@ export const buildContentToStream = async (type: ContentType, url: string, text:
 
     return { textContent, mappedReadabilityObject };
   } catch (err) {
-    console.log(err);
     const error = err as { message: string; name?: string };
     throw error;
   }

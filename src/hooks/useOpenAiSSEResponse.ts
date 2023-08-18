@@ -26,7 +26,8 @@ const useOpenAiSSEResponse = ({
 
   const { resetStream, streamValue, stream } = useStreamOpenAI();
 
-  const onProcessError = (callbackFn?: (...args: any) => void) => () => {
+  const onProcessError = (callbackFn?: ((...args: any) => void) | null) => () => {
+    callbackFn && callbackFn();
     setIsError(true);
   };
 
@@ -70,9 +71,10 @@ const useOpenAiSSEResponse = ({
         });
     },
     onError: (res, variables) => {
+      console.error("ERROR:", res);
       const { onError } = callbackFunctionRefs.current;
       // Call external error fn, set error to true
-      onProcessError(onError && (() => onError(res as { message: string }, variables)))();
+      onProcessError(onError ? () => onError(res as { message: string }, variables) : null)();
     },
   });
 
