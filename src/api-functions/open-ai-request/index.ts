@@ -50,20 +50,16 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
   }
 }
 
-const configureOpenAi = async () => {
-  const openai = new OpenAI({
-    baseURL: `${process.env.NEXT_PUBLIC_PROXY}/openai`,
-  });
-  return openai;
-};
-
 const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_tokens: number): Promise<string> => {
-  const openai = await configureOpenAi();
-  const completion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: promptObject,
-    max_tokens,
+  const body = { model: "gpt-3.5-turbo", messages: promptObject, max_tokens };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_PROXY}/openai/v1/chat/completions`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(body),
   });
+  const completion = await res.json();
 
   if (!completion.choices?.[0]?.message?.content) throw new Error("OpenAI did not produce a response");
 

@@ -25,10 +25,10 @@ export function useStreamOpenAI() {
     }) => {
       const { onSuccess, onError, onStream } = callbackFunctions;
       const { wordLimit, type, title = "" } = data;
-
       setStreamValue("");
 
       if (!data || !Object.keys(data).length) return;
+
       const promptObject = buildPromptObject(type, textContent, wordLimit, title);
 
       const multiplier = Math.min(wordLimit > 100 ? 2.5 : 1.3);

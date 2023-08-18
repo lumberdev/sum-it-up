@@ -53,6 +53,8 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
     onError: (err, data) => {
       if (err?.name === "Length constraint violation") {
         setErrorMessage(err?.message as string);
+      } else {
+        setErrorMessage("Something went wrong, our team has been notified!");
       }
       setDisplayResult(false);
       trackRequestError({ ...data, error: (err?.message as string) ?? "" });
