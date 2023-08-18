@@ -1,13 +1,11 @@
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 
 export const checkOpenAiKeyStatus = async (apiKey: string) => {
   try {
-    const configuration = new Configuration({
-      organization: "org-FmieSceXLz3IvrwNny0WbVQn",
+    const openai = new OpenAI({
       apiKey,
     });
-    const openai = new OpenAIApi(configuration);
-    await openai.listModels();
+    await openai.models.list();
     return true;
   } catch (e) {
     return false;

@@ -1,10 +1,9 @@
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 import {
   generateCondensedSummaryPromptObjectArray,
   generateInsufficientLengthErrorPromptObjectArray,
 } from "~/utils/generatePrompt";
 import { ChatGPTPromptPropsItem, ContentType, OpenAiSummarizeProps } from "~/types";
-import { getOpenAiKey } from "~/utils/get-open-ai-key";
 
 function checkIfChunkedContentExceedsLimit(chunkedTextContent: Array<string>) {
   const totalWordsOfArticle = chunkedTextContent.flatMap((value) => value.split(" ")).length;
@@ -52,26 +51,23 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
 }
 
 const configureOpenAi = async () => {
-  const apiKey = (await getOpenAiKey()) as string;
-  const configuration = new Configuration({
-    apiKey,
+  const openai = new OpenAI({
+    baseURL: `${process.env.NEXT_PUBLIC_SERVER}/openai`,
   });
-
-  const openai = new OpenAIApi(configuration);
   return openai;
 };
 
 const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_tokens: number): Promise<string> => {
   const openai = await configureOpenAi();
-  const completion = await openai.createChatCompletion({
+  const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: promptObject,
     max_tokens,
   });
 
-  if (!completion.data.choices?.[0]?.message?.content) throw new Error("OpenAI did not produce a response");
+  if (!completion.choices?.[0]?.message?.content) throw new Error("OpenAI did not produce a response");
 
-  return completion.data.choices?.[0]?.message?.content;
+  return completion.choices?.[0]?.message?.content;
 };
 
 export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {

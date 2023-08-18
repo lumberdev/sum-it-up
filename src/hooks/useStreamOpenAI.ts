@@ -1,22 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { initTextMappedPoints } from "~/constants";
 import { ChatGPTModelRequest, MarkdownResponse, RequestBody } from "~/types";
 import { buildPromptObject } from "~/utils/build-prompt-object";
-import { getOpenAiKey } from "~/utils/get-open-ai-key";
 import { fetchServerSent } from "~/utils/sse-fetch";
 
 export function useStreamOpenAI() {
   const [streamValue, setStreamValue] = useState<string>("");
 
   const fetchRef = useRef<() => unknown>(() => null);
-  const [openAiKey, setOpenAiKey] = useState<string>("");
 
-  useEffect(() => {
-    (async () => {
-      const key = await getOpenAiKey();
-      if (key) setOpenAiKey(key);
-    })();
-  }, []);
   const streamContent = useCallback(
     ({
       data,
@@ -49,15 +41,11 @@ export function useStreamOpenAI() {
         presence_penalty: 0.5,
       };
       let mappedResult = initTextMappedPoints;
-
-      if (!openAiKey) return;
-
       fetchRef.current = fetchServerSent(
-        "https://api.openai.com/v1/chat/completions",
+        `${process.env.NEXT_PUBLIC_SERVER}/openai/v1/chat/completions`,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer " + openAiKey,
           },
           method: "POST",
           payload: JSON.stringify({
@@ -92,7 +80,7 @@ export function useStreamOpenAI() {
         },
       );
     },
-    [openAiKey],
+    [],
   );
   return {
     resetStream: fetchRef.current,
