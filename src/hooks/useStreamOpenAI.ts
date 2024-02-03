@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { initTextMappedPoints } from "~/constants";
+import { initTextMappedPoints, MAX_TOKEN_SIZE } from "~/constants";
 import { ChatGPTModelRequest, MarkdownResponse, RequestBody } from "~/types";
 import { buildPromptObject } from "~/utils/build-prompt-object";
 import { fetchServerSent } from "~/utils/sse-fetch";
@@ -32,9 +32,9 @@ export function useStreamOpenAI() {
       const promptObject = buildPromptObject(type, textContent, wordLimit, title);
 
       const multiplier = Math.min(wordLimit > 100 ? 2.5 : 1.3);
-      const maxTokenLimit = Math.min(Math.round(wordLimit * multiplier) + 600, 2000);
+      const maxTokenLimit = Math.min(Math.round(wordLimit * multiplier) + 600, MAX_TOKEN_SIZE);
       const openAiPayload: ChatGPTModelRequest = {
-        model: "gpt-3.5-turbo",
+        model: "gpt-3.5-turbo-0125",
         messages: promptObject,
         max_tokens: maxTokenLimit,
         temperature: 0.2,

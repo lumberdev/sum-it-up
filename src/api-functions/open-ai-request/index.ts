@@ -3,13 +3,14 @@ import {
   generateInsufficientLengthErrorPromptObjectArray,
 } from "~/utils/generatePrompt";
 import { ChatGPTPromptPropsItem, ContentType, OpenAiSummarizeProps } from "~/types";
+import { DEFAULT_TOKEN_SIZE, MAX_WORD_LENGTH } from "~/constants";
 
 function checkIfChunkedContentExceedsLimit(chunkedTextContent: Array<string>) {
   const totalWordsOfArticle = chunkedTextContent.flatMap((value) => value.split(" ")).length;
-  const max_word_length = 5000;
-  if (totalWordsOfArticle > max_word_length) {
+
+  if (totalWordsOfArticle > MAX_WORD_LENGTH) {
     const error = new Error(
-      `Error content too long, content exceeds ${max_word_length} words, content length: ${totalWordsOfArticle}`,
+      `Error content too long, content exceeds ${MAX_WORD_LENGTH} words, content length: ${totalWordsOfArticle}`,
     );
     error.name = "Length constraint violation";
 
@@ -18,7 +19,10 @@ function checkIfChunkedContentExceedsLimit(chunkedTextContent: Array<string>) {
 }
 
 async function getInsufficientLengthErrorMessage(url: string) {
-  const errorMessage = await openAICompletion(generateInsufficientLengthErrorPromptObjectArray(url, 50), 50);
+  const errorMessage = await openAICompletion(
+    generateInsufficientLengthErrorPromptObjectArray(url, DEFAULT_TOKEN_SIZE),
+    DEFAULT_TOKEN_SIZE,
+  );
   return errorMessage;
 }
 
@@ -50,7 +54,7 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
 }
 
 const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_tokens: number): Promise<string> => {
-  const body = { model: "gpt-3.5-turbo", messages: promptObject, max_tokens };
+  const body = { model: "gpt-3.5-turbo-0125", messages: promptObject, max_tokens };
   const res = await fetch(`${process.env.NEXT_PUBLIC_PROXY}/openai/v1/chat/completions`, {
     headers: {
       "Content-Type": "application/json",
@@ -73,7 +77,7 @@ export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
       async (string) =>
         await openAICompletion(
           generateCondensedSummaryPromptObjectArray(string, props.wordLimit),
-          props.maxToken ?? 50,
+          props.maxToken ?? 1000,
         ),
     );
     const results = await Promise.allSettled(promises);

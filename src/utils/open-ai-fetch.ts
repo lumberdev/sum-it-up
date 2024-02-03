@@ -4,7 +4,7 @@ import { ContentType } from "~/types";
 
 async function getSummaryFromUrl(type: ContentType, chunkedTextContent: Array<string>, url?: string) {
   // if res is good, process in openAPI
-  return await summarizeChunkedContent(chunkedTextContent, 50, 50, type, url);
+  return await summarizeChunkedContent(chunkedTextContent, 500, 2000, type, url);
 }
 
 async function summarizeChunkedContent(
@@ -17,7 +17,7 @@ async function summarizeChunkedContent(
   const body = {
     type,
     chunkedTextContent,
-    max_token: maxToken,
+    maxToken,
     wordLimit,
     url,
   };

@@ -1,4 +1,4 @@
-import { initTextMappedPoints } from "~/constants";
+import { DEFAULT_CHUNK_SIZE, initTextMappedPoints } from "~/constants";
 import { fetchArticleData } from "~/query/fetch-article-data";
 import { ContentType } from "~/types";
 import { getSummaryFromUrl } from "./open-ai-fetch";
@@ -17,7 +17,7 @@ export const buildContentToStream = async (type: ContentType, url: string, text:
 
   try {
     if (type === "article" || type === "song") {
-      const json = await fetchArticleData(url, 500);
+      const json = await fetchArticleData(url, DEFAULT_CHUNK_SIZE);
       const inputCharacterLength = json.chunkedTextContent?.reduce((acc, value) => (acc += value.length), 0);
 
       mappedReadabilityObject = {
@@ -33,7 +33,7 @@ export const buildContentToStream = async (type: ContentType, url: string, text:
       const body = await getSummaryFromUrl(type, json.chunkedTextContent, url);
       textContent = body;
     } else {
-      const chunkedText = textToChunks(text ?? "", 500);
+      const chunkedText = textToChunks(text ?? "", DEFAULT_CHUNK_SIZE);
       const inputCharacterLength = chunkedText?.reduce((acc, value) => (acc += value.length), 0);
       mappedReadabilityObject = {
         ...mappedReadabilityObject,
