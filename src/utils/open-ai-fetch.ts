@@ -2,9 +2,12 @@ import { openAiGetUseableTextContent } from "~/api-functions/open-ai-request";
 
 import { ContentType } from "~/types";
 
+const MAX_SUMMARY_TOKENS = 2000;
+const MAX_SUMMARY_WORD_LIMIT = 500;
+
 async function getSummaryFromUrl(type: ContentType, chunkedTextContent: Array<string>, url?: string) {
   // if res is good, process in openAPI
-  return await summarizeChunkedContent(chunkedTextContent, 50, 50, type, url);
+  return await summarizeChunkedContent(chunkedTextContent, MAX_SUMMARY_WORD_LIMIT, MAX_SUMMARY_TOKENS, type, url);
 }
 
 async function summarizeChunkedContent(
@@ -17,11 +20,12 @@ async function summarizeChunkedContent(
   const body = {
     type,
     chunkedTextContent,
-    max_token: maxToken,
+    maxToken,
     wordLimit,
     url,
   };
   const response = (await openAiGetUseableTextContent(body)) as string;
+
   return response;
 }
 

@@ -16,7 +16,7 @@ export function generateCondensedSummaryPromptObjectArray(text: string, wordLimi
   return [
     {
       role: "system",
-      content: `generate an extremely short summary of up to ${wordLimit} words based on the text`,
+      content: `You are recieving text content in chunks. You need to generate a detailed summary to store as embeddings for later. keep as much detail as possible without filler words. Summarize it in ${wordLimit} words based on the text`,
     },
     { role: "user", content: text },
   ];

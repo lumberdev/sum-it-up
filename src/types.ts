@@ -33,7 +33,7 @@ export type openAiModelRequest = {
 };
 
 export type ChatGPTModelRequest = {
-  model: "gpt-3.5-turbo";
+  model: string;
   messages: ChatGPTPromptPropsItem[];
   temperature: number;
   max_tokens: number;
