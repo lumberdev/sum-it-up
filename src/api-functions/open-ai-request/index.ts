@@ -3,7 +3,7 @@ import {
   generateInsufficientLengthErrorPromptObjectArray,
 } from "~/utils/generatePrompt";
 import { ChatGPTPromptPropsItem, ContentType, OpenAiSummarizeProps } from "~/types";
-import { DEFAULT_TOKEN_SIZE, MAX_WORD_LENGTH } from "~/constants";
+import { DEFAULT_GPT_MODEL, DEFAULT_TOKEN_SIZE, MAX_WORD_LENGTH } from "~/constants";
 
 function checkIfChunkedContentExceedsLimit(chunkedTextContent: Array<string>) {
   const totalWordsOfArticle = chunkedTextContent.flatMap((value) => value.split(" ")).length;
@@ -53,8 +53,8 @@ async function getValidProps(type: ContentType, chunkedTextContent: Array<string
   }
 }
 
-const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], max_tokens: number): Promise<string> => {
-  const body = { model: "gpt-3.5-turbo-0125", messages: promptObject, max_tokens };
+const openAICompletion = async (promptObject: ChatGPTPromptPropsItem[], maxTokens: number): Promise<string> => {
+  const body = { model: DEFAULT_GPT_MODEL, messages: promptObject, max_tokens: maxTokens };
   const res = await fetch(`${process.env.NEXT_PUBLIC_PROXY}/openai/v1/chat/completions`, {
     headers: {
       "Content-Type": "application/json",
@@ -77,7 +77,7 @@ export async function openAiGetUseableTextContent(props: OpenAiSummarizeProps) {
       async (string) =>
         await openAICompletion(
           generateCondensedSummaryPromptObjectArray(string, props.wordLimit),
-          props.maxToken ?? 1000,
+          props.maxToken ?? DEFAULT_TOKEN_SIZE,
         ),
     );
     const results = await Promise.allSettled(promises);
