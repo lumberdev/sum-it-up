@@ -36,6 +36,8 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   );
   const [songDetails, setSongDetails] = useState(searchParams.songDetails.length > 0 ? searchParams.songDetails : "");
 
+  const [queryURL, setQueryURL] = useState(searchParams?.articleURL);
+
   const { trackInputSelection, trackLengthSelection, trackSubmit, trackNewSummary, trackRequestError, trackShare } =
     useAnalytics();
 
@@ -72,7 +74,6 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   ) => {
     event.preventDefault();
 
-    console.log("inside handleSubmit");
     let validURL = inputUrl;
     // Readability requires us to send urls with the correct format, but because we want to support more forms of urls (google.com || www.google.com || https://www.google.com etc) we need to append the protocol before we send the data off.
     if (inputUrl && !/(https:\/\/)|(http:\/\/)/i.test(inputUrl)) {
@@ -99,6 +100,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   };
   const handleNewSearchBtnClick = () => {
     forceClose();
+    setQueryURL("");
     setDisplayResult(false);
     setCurrentResult(null);
     setOriginalContent("");
@@ -152,7 +154,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
               handleFormSubmit={handleFormSubmit}
               onInputChange={trackInputSelection}
               onLengthChange={trackLengthSelection}
-              queryURL={searchParams.articleURL}
+              queryURL={queryURL}
             />
           </MinHeightBodyContainer>
           <About />
