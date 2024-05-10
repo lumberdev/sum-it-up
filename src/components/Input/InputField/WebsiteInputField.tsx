@@ -25,7 +25,7 @@ const WebsiteInputField = ({
 
   useEffect(() => {
     if (queryURL) {
-      console.log("customTrigger");
+      console.log("customTrigger", queryURL);
       const event = new Event("customTrigger");
       handleFormSubmit(event, type, summaryLength, customLength, queryURL);
     }

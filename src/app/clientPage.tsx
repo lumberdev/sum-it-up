@@ -72,6 +72,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   ) => {
     event.preventDefault();
 
+    console.log("inside handleSubmit");
     let validURL = inputUrl;
     // Readability requires us to send urls with the correct format, but because we want to support more forms of urls (google.com || www.google.com || https://www.google.com etc) we need to append the protocol before we send the data off.
     if (inputUrl && !/(https:\/\/)|(http:\/\/)/i.test(inputUrl)) {
