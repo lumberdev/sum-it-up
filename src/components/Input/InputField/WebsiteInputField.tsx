@@ -25,10 +25,11 @@ const WebsiteInputField = ({
 
   useEffect(() => {
     if (queryURL) {
+      console.log("customTrigger");
       const event = new Event("customTrigger");
       handleFormSubmit(event, type, summaryLength, customLength, queryURL);
     }
-  }, []);
+  }, [queryURL]);
 
   return (
     <div className="mx-auto max-w-[54rem] animate-fadeIn">
