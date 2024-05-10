@@ -13,6 +13,7 @@ export default async function Page({
     original: getStringOrFirst(searchParams?.original),
     result: getStringOrFirst(searchParams?.result),
     songDetails: getStringOrFirst(searchParams?.songDetails),
+    articleURL: getStringOrFirst(searchParams?.articleURL),
   };
 
   return <ClientPage searchParams={parsedSearchParams} />;

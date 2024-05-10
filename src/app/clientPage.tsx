@@ -151,6 +151,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
               handleFormSubmit={handleFormSubmit}
               onInputChange={trackInputSelection}
               onLengthChange={trackLengthSelection}
+              queryURL={searchParams.articleURL}
             />
           </MinHeightBodyContainer>
           <About />
