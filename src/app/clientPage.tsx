@@ -36,6 +36,8 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   );
   const [songDetails, setSongDetails] = useState(searchParams.songDetails.length > 0 ? searchParams.songDetails : "");
 
+  const [queryURL, setQueryURL] = useState(searchParams?.articleURL);
+
   const { trackInputSelection, trackLengthSelection, trackSubmit, trackNewSummary, trackRequestError, trackShare } =
     useAnalytics();
 
@@ -98,6 +100,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
   };
   const handleNewSearchBtnClick = () => {
     forceClose();
+    setQueryURL("");
     setDisplayResult(false);
     setCurrentResult(null);
     setOriginalContent("");
@@ -151,6 +154,7 @@ export default function ClientPage({ searchParams }: { searchParams: { [key: str
               handleFormSubmit={handleFormSubmit}
               onInputChange={trackInputSelection}
               onLengthChange={trackLengthSelection}
+              queryURL={queryURL}
             />
           </MinHeightBodyContainer>
           <About />

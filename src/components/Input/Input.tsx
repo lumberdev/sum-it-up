@@ -11,10 +11,12 @@ const Input = ({
   handleFormSubmit,
   onInputChange,
   onLengthChange,
+  queryURL,
 }: {
   handleFormSubmit: InputFormSubmissionType;
   onInputChange: (properties: { type: string }) => unknown;
   onLengthChange: (properties: { length: number }) => unknown;
+  queryURL?: string;
 }) => {
   const [inputTypeSelected, setInputTypeSelected] = useState<InputType>(InputType.ARTICLE);
   const [summaryLength, setSummaryLength] = useState("200");
@@ -57,6 +59,7 @@ const Input = ({
             setSummaryLength={handleSummaryLengthChange}
             customLength={customLength}
             setCustomLength={setCustomLength}
+            queryURL={queryURL}
           />
         )}
         {inputTypeSelected === InputType.SONG && (

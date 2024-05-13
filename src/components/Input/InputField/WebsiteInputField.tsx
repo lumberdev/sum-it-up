@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import SummaryLengthSlider from "../../utility-components/input/SummaryLengthSlider";
 import { InputFormSubmissionType } from "~/types";
 import StyledInputWithSubmit from "~/components/utility-components/input/StyledInput";
@@ -9,16 +10,25 @@ const WebsiteInputField = ({
   setSummaryLength,
   customLength,
   setCustomLength,
+  queryURL,
 }: {
   handleFormSubmit: InputFormSubmissionType;
   summaryLength: string;
   setSummaryLength: (length: string) => void;
   customLength: string;
   setCustomLength: (length: string) => void;
+  queryURL?: string;
 }) => {
   const [inputUrl, setInputUrl] = useState<string>("");
   const type = "article";
   const urlRegex = /^(http\:\/\/|https\:\/\/)?([a-z0-9]*\.)+[a-z0-9].*$/i; // Match https or http or not, match hostname, match a domain, match anything else
+
+  useEffect(() => {
+    if (queryURL) {
+      const event = new Event("customTrigger");
+      handleFormSubmit(event, type, summaryLength, customLength, queryURL);
+    }
+  }, [queryURL]);
 
   return (
     <div className="mx-auto max-w-[54rem] animate-fadeIn">

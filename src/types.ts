@@ -128,7 +128,7 @@ export interface SongMeaningResponseType extends SharedResponse, SongType, Share
 export type ResponseType = TextSummaryResponseType | SongMeaningResponseType | TextResponse;
 
 export type InputFormSubmissionType = (
-  event: React.SyntheticEvent,
+  event: React.SyntheticEvent | Event,
   type: ContentType,
   summaryLength: string,
   customLength?: string,
